@@ -1,7 +1,3 @@
-# GLFC
-Estimation of Great Lakes Sea Lamprey Abundance
-
-
 GLFC
 ====
 
