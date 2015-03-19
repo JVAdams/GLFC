@@ -5,6 +5,8 @@ Authors@R: person(given="Jean V.", family="Adams", email="jvadams@usgs.gov",
   role=c("aut", "cre"))
 Description: What the package does (one paragraph)
 Depends: R (>= 3.1.0)
+Imports:
+    plyr
 License: GPL
 LazyData: true
 URL: https://github.com/JVAdams/GLFC
