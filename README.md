@@ -3,7 +3,7 @@ GLFC
 
 **GLFC** is a package of functions developed for the [Great Lakes Fishery Commission](http://www.glfc.org/)'s sea lamprey control program using the [R programming language](http://www.r-project.org/).
 
-The pacakge can ge installed from within R.
+The package can be installed from within R.
 
 	library("devtools")
 	devtools::install_github("JVAdams/GLFC")
