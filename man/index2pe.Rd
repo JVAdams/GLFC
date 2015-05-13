@@ -2,14 +2,14 @@
 % Please edit documentation in R/misc-data.R
 \name{index2pe}
 \alias{index2pe}
-\title{Factors to Scale Up the Adult Index to a Lakewide Population}
+\title{Factors to Scale Up the Adult Index to a Lake-Wide Population}
 \format{A named vector of length 5 (for the 5 Great Lakes)
   with factors rounded to the nearest hundredth.}
 \source{
-Great Lakes Fishery Commission Sea Lamprey Control Board Meeting 14-02,
+Great Lakes Fishery Commission (\href{http://www.glfc.org}{GLFC})
+  Sea Lamprey Control Board Meeting 14-02,
   15-17 Oct 2014, Briefing Item 5 - Attachment 2,
-  Transitioning to the New Adult Index in 2015
-  see \href{http://www.glfc.org/boardcomm/slic/slic.php}{GLFC-SLCB}.
+  Transitioning to the New Adult Index in 2015.
 }
 \description{
 Lake-specific conversion factors to scale up indices of adult sea

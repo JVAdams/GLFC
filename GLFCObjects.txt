@@ -1,5 +1,5 @@
 
-cleanup()
+rm(list = ls())
 
 # index streams
 # last updated Oct 2014

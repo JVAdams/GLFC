@@ -36,7 +36,7 @@ NULL
 #' @name
 #'   index2pe
 #' @title
-#'   Factors to Scale Up the Adult Index to a Lakewide Population
+#'   Factors to Scale Up the Adult Index to a Lake-Wide Population
 #' @description
 #'   Lake-specific conversion factors to scale up indices of adult sea
 #'   lamprey abundance in the Great Lakes to lake-wide population estimates.
@@ -51,10 +51,6 @@ NULL
 #' @author
 #'   GLFC Trapping Task Force.
 NULL
-# information on trapped streams (past and present)
-# including: lake, lscode, country, strcode, estr, strname, lat, long
-# last updated 12 May 2015
-
 #' @name
 #'   trappedStreams
 #' @title
@@ -62,10 +58,12 @@ NULL
 #' @description
 #'   Location information on trapped streams (past and present).
 #' @format
-#'   A data frame with 8 elements: lake (lake code),
-#'   lscode (lake + strcode/1000), country, strcode (stream code),
-#'   estr (stream ID for Empiric Stream Treatment Ranking),
-#'   strname (stream name), lat (latitude), long (longitude).
+#'   A data frame with 8 elements: \code{lake} (lake code),
+#'   \code{lscode} (lake + strcode/1000), \code{country}, 
+#'   \code{strcode} (stream code),
+#'   \code{estr} (stream ID for Empiric Stream Treatment Ranking),
+#'   \code{strname} (stream name), \code{lat} (latitude), 
+#'   \code{long} (longitude).
 #' @source
 #'   Great Lakes Fishery Commission (\href{http://www.glfc.org}{GLFC})
 #'   spawner model data base, last updated 12 May 2015.

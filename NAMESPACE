@@ -2,5 +2,5 @@
 
 export(estAIndex)
 export(jackIndex)
-export(predAntilog)
+import(jvamisc)
 import(plyr)

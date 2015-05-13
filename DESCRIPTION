@@ -1,12 +1,15 @@
 Package: GLFC
-Title: Estimation of Great Lakes Sea Lamprey Abundance
+Title: Great Lakes Fishery Commission
 Version: 0.0.0.9001
 Authors@R: person(given="Jean V.", family="Adams", email="jvadams@usgs.gov", 
   role=c("aut", "cre"))
-Description: What the package does (one paragraph)
+Description: Functions developed for the Great Lakes Fishery Commission's 
+  sea lamprey control program, including estimation of the index of adult sea 
+  lamprey abundance. 
 Depends: R (>= 3.1.3)
 Imports:
-    plyr
+  plyr,
+  jvamisc
 License: GPL
-LazyData: true
+LazyData: TRUE
 URL: https://github.com/JVAdams/GLFC

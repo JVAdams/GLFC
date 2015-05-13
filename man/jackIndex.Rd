@@ -11,7 +11,7 @@ jackIndex(m)
 observation years as rows and individual streams as columns.}
 }
 \value{
-A numeric matrix with three columns, the Adult Index, and the lower and
+A numeric matrix with 3 columns, the Adult Index, and the lower and
   upper jackknifed range.
 }
 \description{

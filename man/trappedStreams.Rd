@@ -3,13 +3,15 @@
 \name{trappedStreams}
 \alias{trappedStreams}
 \title{General Information on Great Lakes Streams Trapped for Adult Sea Lampreys}
-\format{A data frame with 8 elements: lake (lake code),
-  lscode (lake + strcode/1000), country, strcode (stream code),
-  estr (stream ID for Empiric Stream Treatment Ranking),
-  strname (stream name), lat (latitude), long (longitude).}
+\format{A data frame with 8 elements: \code{lake} (lake code),
+  \code{lscode} (lake + strcode/1000), \code{country},
+  \code{strcode} (stream code),
+  \code{estr} (stream ID for Empiric Stream Treatment Ranking),
+  \code{strname} (stream name), \code{lat} (latitude),
+  \code{long} (longitude).}
 \source{
-Great Lakes Fishery Commission spawner model data base,
-  last updated 12 May 2015.
+Great Lakes Fishery Commission (\href{http://www.glfc.org}{GLFC})
+  spawner model data base, last updated 12 May 2015.
 }
 \description{
 Location information on trapped streams (past and present).

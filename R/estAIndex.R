@@ -19,17 +19,17 @@
 #'   by printed, default FALSE.
 #'
 #' @return
-#'   A list with two components:
+#'   A list with 2 components:
 #'   streamPE, a data frame of stream mark-recapture and Adult Index estimates
 #'   from previous and current years combined, with the same variables as
 #'   \code{streamPEPrev}; and
-#'   lakeIndex, a numeric matrix with five columns, lake, year, index 
+#'   lakeIndex, a numeric matrix with 5 columns, lake, year, index 
 #'     (the Adult Index), jlo, and jhi (the lower and upper jackknifed range).
 #' @import
-#'   plyr
+#'   plyr jvamisc
 #' @export
 #' @details
-#'   The annual Adult Index is simply the sum of stream PEs for
+#'   The annual Adult Index is simply the sum of stream population estimates for
 #'   each year.  The jackknifed range is produced by recalculating the index,
 #'   leaving out one stream at a time, then scaling up the result to the same
 #'   scale as the Adult Index based on all streams.
@@ -55,7 +55,7 @@ estAIndex <- function(indexStreams, streamPECurr, streamPEPrev=NULL, minNMR=2,
   }
   streamPECurr$complete <- FALSE
 
-  if(!is.null(streamPEPrev)) {
+  if (!is.null(streamPEPrev)) {
     # combine the previous data with the current data
     if (any(is.na(match(varLong, names(streamPEPrev))))) {
       stop("streamPEPrev (if not NULL) must include these variables:",
@@ -84,7 +84,7 @@ estAIndex <- function(indexStreams, streamPECurr, streamPEPrev=NULL, minNMR=2,
     streamPE$Emr[!streamPE$complete & selstreams]
   # fill in missing contributions in new data
   incompMiss <- !streamPE$complete & is.na(streamPE$Emr) & selstreams
-  if(any(incompMiss)) {
+  if (any(incompMiss)) {
     sub <- streamPE[selstreams, ]
   	indfit <- with(sub, aov(log(Emr) ~ as.factor(lscode) + as.factor(year),
       weights=1/CVmr^2))
@@ -117,51 +117,3 @@ estAIndex <- function(indexStreams, streamPECurr, streamPEPrev=NULL, minNMR=2,
 	}
   list(streamPE=streamPE[, varLong], lakeIndex=jack)
 }
-
-
-
-if(FALSE) {
-
-	# annual index (sum across streams)
-	indxdf <- aggregate(COMBmr ~ year + lake, streamPE, sum, na.rm=TRUE,
-    na.action=na.pass)
-	names(indxdf)[names(indxdf)=="COMBmr"] <- "indxraw"
-	indxdf$indxraw[indxdf$indxraw==0] <- NA
-	# only keep lake-wide index for years with at least minNMR mark-recap ests
-	indxdf$n.mr <- n.mr
-	indxdf$indxkeep <- ifelse(indxdf$n.mr > (minNMR - 0.5), indxdf$indxraw, NA)
-	indxdf$indxkeep.lo <- NA
-	indxdf$indxkeep.hi <- NA
-
-	# matrix of stream estimates (rows=years, columns=index streams)
-	streamests <- with(streamPE, tapply(COMBmr, list(year, lscode), mean))
-	# selection of only those streams with a keepable index
-	selkeep <- !is.na(indxdf$indxkeep)
-
-
-
-
-
-	jack <- jackIndex(streamests[selkeep, ])
-	indxdf$indxkeep.lo[selkeep] <- jack[, "lo"]
-	indxdf$indxkeep.hi[selkeep] <- jack[, "hi"]
-
-	# scale up the index to the spawner model PE
-	lk1 <- lk[lk$lake==streamPE$lake[1], ]
-	indxdf2 <- merge(lk1, indxdf, all=TRUE)
-	scaleup <- median(indxdf2$PE / indxdf2$indxkeep, na.rm=TRUE)
-
-	if (show) {
-		cat("\nindfit\n")
-		print(summary(indfit))
-		cat("\nstreamPE\n")
-		print(tail(streamPE[,
-      c("lake", "year", "lscode", "Emr", "CVmr", "Pmr", "COMBmr")]))
-		cat("\nscaleup\n")
-		print(scaleup)
-		cat("\nindxdf\n")
-		print(tail(indxdf[, c("lake", "year", "n.mr", "indxraw", "indxkeep",
-      "indxkeep.lo", "indxkeep.hi")]))
-		}
-	list(indfit=indfit, streamPE=streamPE, scaleup=scaleup, indxdf=indxdf)
-	}

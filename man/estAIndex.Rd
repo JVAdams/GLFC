@@ -25,18 +25,18 @@ needed in a year to generate an index, default 2.}
   by printed, default FALSE.}
 }
 \value{
-A list with two components:
+A list with 2 components:
   streamPE, a data frame of stream mark-recapture and Adult Index estimates
   from previous and current years combined, with the same variables as
   \code{streamPEPrev}; and
-  lakeIndex, a numeric matrix with five columns, lake, year, index
+  lakeIndex, a numeric matrix with 5 columns, lake, year, index
     (the Adult Index), jlo, and jhi (the lower and upper jackknifed range).
 }
 \description{
 Estimate the Adult Index of sea lampreys in a single Great Lake.
 }
 \details{
-The annual Adult Index is simply the sum of stream PEs for
+The annual Adult Index is simply the sum of stream population estimates for
   each year.  The jackknifed range is produced by recalculating the index,
   leaving out one stream at a time, then scaling up the result to the same
   scale as the Adult Index based on all streams.
