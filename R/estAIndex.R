@@ -6,16 +6,16 @@
 #'   in the index, e.g., 1.064 = lake code + (stream code)/1000.
 #' @param streamPECurr
 #'   A data frame of stream mark-recapture estimates from the current year,
-#'   with variables: year, lake, lscode, Emr, CVmr.
+#'   with variables: year, lake, lscode, trapcatch, Emr, CVmr.
 #' @param streamPEPrev
 #'   A data frame of stream mark-recapture and Adult Index estimates
-#'   from previous years, with variables: year, lake, lscode, Emr, CVmr,
-#'   indexContrib, default NULL.
+#'   from previous years, with variables: year, lake, lscode, trapcatch,
+#'   Emr, CVmr, indexContrib, default NULL.
 #' @param minNMR
 #'   A numeric scalar, the minimum number of mark-recapture estimates
 #'   needed in a year to generate an index, default 2.
 #' @param show
-#'   A logical Scalar indicating if a brief summary of the results should
+#'   A logical scalar indicating if a brief summary of the results should
 #'   by printed, default FALSE.
 #'
 #' @return
@@ -23,19 +23,25 @@
 #'   streamPE, a data frame of stream mark-recapture and Adult Index estimates
 #'   from previous and current years combined, with the same variables as
 #'   \code{streamPEPrev}; and
-#'   lakeIndex, a numeric matrix with three columns, the Adult Index,
-#'   and the lower and upper jackknifed range.
+#'   lakeIndex, a numeric matrix with five columns, lake, year, index 
+#'     (the Adult Index), jlo, and jhi (the lower and upper jackknifed range).
 #' @import
 #'   plyr
 #' @export
 #' @details
-#'   The annual Adult Index is simply the sum of the columns in \code{m} for
-#'   each row.  The jackknifed range is produced by recalculating the index,
+#'   The annual Adult Index is simply the sum of stream PEs for
+#'   each year.  The jackknifed range is produced by recalculating the index,
 #'   leaving out one stream at a time, then scaling up the result to the same
 #'   scale as the Adult Index based on all streams.
 #' @examples
-#' streampe <- matrix(1:12, nrow=3, dimnames=list(1996:1998, letters[1:4]))
-#' jackIndex(streampe)
+#' now <- data.frame(year=2000, lake=1, 
+#'   lscode=c(1.1, 1.2, 1.3), trapcatch=c(5, 10, 15), 
+#'   Emr=c(10, 20, 30), CVmr=c(50, 50, 30))
+#' before <- data.frame(year=rep(1998:1999, c(3, 3)), lake=1, 
+#'   lscode=rep(c(1.1, 1.2, 1.3), 2), trapcatch=c(5, 10, 15, 3, 8, 12),
+#'   Emr=c(15, 20, 35, 12, 22, 30), CVmr=c(50, 50, 30, 50, 40, 30), 
+#'   indexContrib=c(15, 20, 35, 12, 22, 30))
+#' estAIndex(c(1.1, 1.2, 1.3), now, before)
 
 estAIndex <- function(indexStreams, streamPECurr, streamPEPrev=NULL, minNMR=2,
   show=FALSE) {
