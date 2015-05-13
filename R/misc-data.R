@@ -8,10 +8,10 @@
 #'   A list of 5 numeric vectors of stream IDs for the 5
 #'   Great Lakes, e.g., 1.064 = (lake code) + (stream code)/1000.
 #' @source
-#'   Great Lakes Fishery Commission Sea Lamprey Control Board Meeting 14-02,
+#'   Great Lakes Fishery Commission (\href{http://www.glfc.org}{GLFC})
+#'   Sea Lamprey Control Board Meeting 14-02,
 #'   15-17 Oct 2014, Briefing Item 5 - Attachment 2,
-#'   Transitioning to the New Adult Index in 2015
-#'   see \href{http://www.glfc.org/boardcomm/slic/slic.php}{GLFC-SLCB}.
+#'   Transitioning to the New Adult Index in 2015.
 #' @author
 #'   GLFC Trapping Task Force.
 NULL
@@ -26,10 +26,10 @@ NULL
 #'   A list of 5 numeric vectors of stream IDs for the 5
 #'   Great Lakes, e.g., 1.064 = (lake code) + (stream code)/1000.
 #' @source
-#'   Great Lakes Fishery Commission Sea Lamprey Control Board Meeting 14-02,
+#'   Great Lakes Fishery Commission (\href{http://www.glfc.org}{GLFC})
+#'   Sea Lamprey Control Board Meeting 14-02,
 #'   15-17 Oct 2014, Briefing Item 5 - Attachment 2,
-#'   Transitioning to the New Adult Index in 2015
-#'   see \href{http://www.glfc.org/boardcomm/slic/slic.php}{GLFC-SLCB}.
+#'   Transitioning to the New Adult Index in 2015.
 #' @author
 #'   GLFC Trapping Task Force.
 NULL
@@ -44,10 +44,10 @@ NULL
 #'   A named vector of length 5 (for the 5 Great Lakes)
 #'   with factors rounded to the nearest hundredth.
 #' @source
-#'   Great Lakes Fishery Commission Sea Lamprey Control Board Meeting 14-02,
+#'   Great Lakes Fishery Commission (\href{http://www.glfc.org}{GLFC})
+#'   Sea Lamprey Control Board Meeting 14-02,
 #'   15-17 Oct 2014, Briefing Item 5 - Attachment 2,
-#'   Transitioning to the New Adult Index in 2015
-#'   see \href{http://www.glfc.org/boardcomm/slic/slic.php}{GLFC-SLCB}.
+#'   Transitioning to the New Adult Index in 2015.
 #' @author
 #'   GLFC Trapping Task Force.
 NULL
@@ -67,8 +67,8 @@ NULL
 #'   estr (stream ID for Empiric Stream Treatment Ranking),
 #'   strname (stream name), lat (latitude), long (longitude).
 #' @source
-#'   Great Lakes Fishery Commission spawner model data base,
-#'   last updated 12 May 2015.
+#'   Great Lakes Fishery Commission (\href{http://www.glfc.org}{GLFC})
+#'   spawner model data base, last updated 12 May 2015.
 #' @author
 #'   GLFC Trapping Task Force.
 NULL
