@@ -3,9 +3,9 @@
 \name{trappedStreams}
 \alias{trappedStreams}
 \title{General Information on Great Lakes Streams Trapped for Adult Sea Lampreys}
-\format{A data frame with 8 elements: \code{lake} (lake code),
-  \code{lscode} (lake + strcode/1000), \code{country},
-  \code{strcode} (stream code),
+\format{A data frame with 8 elements: \code{lake} (lake ID),
+  \code{lscode} (lake-stream ID, lake + strcode/1000), \code{country},
+  \code{strcode} (stream ID),
   \code{estr} (stream ID for Empiric Stream Treatment Ranking),
   \code{strname} (stream name), \code{lat} (latitude),
   \code{long} (longitude).}

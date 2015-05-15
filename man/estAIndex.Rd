@@ -4,51 +4,78 @@
 \alias{estAIndex}
 \title{Estimate Index of Sea Lamprey Adults}
 \usage{
-estAIndex(indexStreams, streamPECurr, streamPEPrev = NULL, minNMR = 2,
-  show = FALSE)
+estAIndex(indexStreams, streamPECurr, streamPEPrev = NULL, minNMR = 2)
 }
 \arguments{
-\item{indexStreams}{A numeric vector of IDs identifying streams to be included
-in the index, e.g., 1.064 = lake code + (stream code)/1000.}
+\item{indexStreams}{A numeric vector of lake-stream IDs identifying streams to be included
+in the index, e.g., 1.064 = lake ID + (stream ID)/1000.}
 
-\item{streamPECurr}{A data frame of stream mark-recapture estimates from the current year,
-with variables: year, lake, lscode, trapcatch, Emr, CVmr.}
+\item{streamPECurr}{A data frame of stream mark-recapture estimates without any previously
+estimated Adult Indices (typically from the current year),
+with variables: \code{year}, \code{lake}, lake-stream ID \code{lscode}
+(see description under \code{indexStreams}), population estimate
+\code{PEmr}, coefficient of variation \code{CVmr}
+(100% * sqrt(variance(PEmr)) / PEmr).  There should be no missing values
+in \code{year}, \code{lake}, or \code{lscode}.  There should be only one
+value for \code{lake} in the data frame.  The data frame may include
+additional variables, but they will be ignored.}
 
-\item{streamPEPrev}{A data frame of stream mark-recapture and Adult Index estimates
-from previous years, with variables: year, lake, lscode, trapcatch,
-Emr, CVmr, indexContrib, default NULL.}
+\item{streamPEPrev}{A data frame of stream mark-recapture estimates with
+estimated Adult Index contributions (typically from previous years),
+with the same variables as in \code{streamPECurr} plus the
+previously estimated contribution \code{indexContrib}, default NULL.
+There should be no missing values
+in \code{year}, \code{lake}, or \code{lscode}.  The data frame may include
+additional variables, but they will be ignored.}
 
-\item{minNMR}{A numeric scalar, the minimum number of mark-recapture estimates
-needed in a year to generate an index, default 2.}
-
-\item{show}{A logical scalar indicating if a brief summary of the results should
-  by printed, default FALSE.}
+\item{minNMR}{An integer scalar greater than or equal to 2,
+  the minimum number of mark-recapture estimates
+  needed in a year to generate an index, default 2.}
 }
 \value{
 A list with 2 components:
-  streamPE, a data frame of stream mark-recapture and Adult Index estimates
-  from previous and current years combined, with the same variables as
-  \code{streamPEPrev}; and
-  lakeIndex, a numeric matrix with 5 columns, lake, year, index
-    (the Adult Index), jlo, and jhi (the lower and upper jackknifed range).
+  \code{streamPE}, a data frame of stream mark-recapture and Adult Index
+  contributions for the current data (\code{streamPECurr}), with the same
+  variables as \code{streamPEPrev}; and
+  \code{lakeIndex}, a data frame of annual lake-wide Adult Indices
+  for the current data (\code{streamPECurr}), with 5 columns: \code{lake},
+  \code{year}, the Adult Index \code{index}, and the lower and upper
+  jackknifed range \code{jlo} and \code{jhi}.
 }
 \description{
 Estimate the Adult Index of sea lampreys in a single Great Lake.
 }
 \details{
 The annual Adult Index is simply the sum of stream population estimates for
-  each year.  The jackknifed range is produced by recalculating the index,
+  each year.  Missing stream estimates are estimated by a lake-specific
+  ANOVA model relating the log of the stream estimates to the main effects
+  of each stream and each year, weighted by the inverse of the CV squared.
+  The jackknifed range is produced by recalculating the index,
   leaving out one stream at a time, then scaling up the result to the same
   scale as the Adult Index based on all streams.
 }
 \examples{
-now <- data.frame(year=2000, lake=1,
-  lscode=c(1.1, 1.2, 1.3), trapcatch=c(5, 10, 15),
-  Emr=c(10, 20, 30), CVmr=c(50, 50, 30))
-before <- data.frame(year=rep(1998:1999, c(3, 3)), lake=1,
-  lscode=rep(c(1.1, 1.2, 1.3), 2), trapcatch=c(5, 10, 15, 3, 8, 12),
-  Emr=c(15, 20, 35, 12, 22, 30), CVmr=c(50, 50, 30, 50, 40, 30),
-  indexContrib=c(15, 20, 35, 12, 22, 30))
-estAIndex(c(1.1, 1.2, 1.3), now, before)
+# estimate the index initially for 1998-1999 data
+str9899 <- data.frame(
+  year=rep(1998:1999, c(3, 3)), lake=1,
+  lscode=rep(c(1.1, 1.2, 1.3), 2),
+  PEmr=c(15, 20, NA, 12, 22, 30),
+  CVmr=c(50, 50, NA, 50, 40, 30))
+istr <- c(1.1, 1.2, 1.3)
+est9899 <- estAIndex(indexStreams=istr, streamPECurr=str9899)
+est9899
+
+# then estimate the index for 2000 data
+str00 <- data.frame(
+  year=2000, lake=1,
+  lscode=c(1.1, 1.2, 1.3),
+  PEmr=c(10, NA, 28),
+  CVmr=c(50, NA, 32))
+estAIndex(indexStreams=istr, streamPECurr=str00,
+  streamPEPrev=est9899$streamPE)
+
+# notice how this is different than
+# estimating the index for 1998-2000 altogether
+estAIndex(indexStreams=istr, streamPECurr=rbind(str9899, str00))
 }
 

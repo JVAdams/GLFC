@@ -5,8 +5,8 @@
 #' @description
 #'   IDs identifying streams to used to generate the Adult Index.
 #' @format
-#'   A list of 5 numeric vectors of stream IDs for the 5
-#'   Great Lakes, e.g., 1.064 = (lake code) + (stream code)/1000.
+#'   A list of 5 numeric vectors of lake-stream IDs for the 5
+#'   Great Lakes, e.g., 1.064 = (lake ID) + (stream ID)/1000.
 #' @source
 #'   Great Lakes Fishery Commission (\href{http://www.glfc.org}{GLFC})
 #'   Sea Lamprey Control Board Meeting 14-02,
@@ -23,8 +23,8 @@ NULL
 #'   IDs identifying streams which will continue to have ongoing trapping
 #'   even if not part of the Adult Index.
 #' @format
-#'   A list of 5 numeric vectors of stream IDs for the 5
-#'   Great Lakes, e.g., 1.064 = (lake code) + (stream code)/1000.
+#'   A list of 5 numeric vectors of lake-stream IDs for the 5
+#'   Great Lakes, e.g., 1.064 = (lake ID) + (stream ID)/1000.
 #' @source
 #'   Great Lakes Fishery Commission (\href{http://www.glfc.org}{GLFC})
 #'   Sea Lamprey Control Board Meeting 14-02,
@@ -58,9 +58,9 @@ NULL
 #' @description
 #'   Location information on trapped streams (past and present).
 #' @format
-#'   A data frame with 8 elements: \code{lake} (lake code),
-#'   \code{lscode} (lake + strcode/1000), \code{country}, 
-#'   \code{strcode} (stream code),
+#'   A data frame with 8 elements: \code{lake} (lake ID),
+#'   \code{lscode} (lake-stream ID, lake + strcode/1000), \code{country}, 
+#'   \code{strcode} (stream ID),
 #'   \code{estr} (stream ID for Empiric Stream Treatment Ranking),
 #'   \code{strname} (stream name), \code{lat} (latitude), 
 #'   \code{long} (longitude).
