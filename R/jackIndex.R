@@ -1,21 +1,23 @@
-#' Index of Sea Lamprey Adults with Jackknifed Range
+#' Index with Jackknifed Range
 #'
-#' Estimated Adult Index of sea lamprey with the observed range
-#' in the index when one stream
-#' at a time is excluded from the estimation.
+#' Given a collection of estimates contributing to an index, this function
+#' provides the estimated index (sum) of observations (across a row) and
+#' the jackknifed range of the index, the result of leaving out
+#' an entire column (e.g., a location) one at a time.
 #' @param m
-#'   A numeric matrix of stream run size estimates with
-#'   observation years as rows and individual streams as columns.
+#'   A numeric matrix of estimates contributing to the index.  Rows are
+#'   observations (e.g., years).  Columns are individuals (e.g., locations).
 #' @return
-#'   A numeric matrix with 3 columns, the Adult Index, and the lower and
-#'   upper jackknifed range.
+#'   A numeric matrix with 3 columns, the index, and the lower and
+#'   upper jackknifed range of the index.
 #' @export
 #' @details
-#'   The annual Adult Index is simply the sum of the columns in \code{m} for
+#'   The index is simply the sum of the columns in \code{m} for
 #'   each row.  The jackknifed range is produced by recalculating the index,
-#'   leaving out one stream at a time, then scaling up the result to the same
-#'   scale as the Adult Index based on all streams.
+#'   leaving out one column at a time, then scaling up the result to the same
+#'   scale as the index based on all columns.
 #' @examples
+#' # 3 years of population estimates from four streams
 #' streampe <- matrix(1:12, nrow=3, dimnames=list(1996:1998, letters[1:4]))
 #' jackIndex(streampe)
 
