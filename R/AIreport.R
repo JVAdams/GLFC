@@ -132,7 +132,7 @@ AIreport <- function(streamPEs, lakeIPEs, targets, csvDir, outFile=NULL) {
   FIG.bubble1 <- function(df, group, var, lab, sug, ptgrp=NULL,
     cols=blindcolz[1+(1:length(sug))], mymap=map5,
     legat="topright", leginset=c(0, 0), dr=range(sqrt(df[, var]), na.rm=TRUE),
-    cr=c(0.04, 0.5), ox=-44, oy=64) {
+    cr=c(0.04, 0.25), ox=-44, oy=64) {
 
     g <- df[, group]
     v <- df[, var]
@@ -197,15 +197,15 @@ AIreport <- function(streamPEs, lakeIPEs, targets, csvDir, outFile=NULL) {
   heading(paste0("Draft Report of the ", YEAR,
     " Lake-Wide Adult Sea Lamprey Index"))
   heading(date(), 2)
+  heading("Authors ...", 2)
 
-  para("Authors ...", Sys.time())
   para("This is a rough draft to be used as a starting point in creating the",
     " final report.",
     "  First, save the document as a *.docx Word file (even though it has a",
     " *.doc file extension already, it's really just an *.rtf file).",
   	"  Then, select all text in the document (Ctrl-a) and increase the font",
     " size to 12.",
-  	"  Finally, delete this paragraph, add page numbers and author names,",
+  	"  Finally, delete this paragraph, add author names,",
     " edit text and insert/delete page breaks as needed.")
 
   para("Lake-wide estimates of the adult sea lamprey population were ...")
@@ -257,21 +257,21 @@ AIreport <- function(streamPEs, lakeIPEs, targets, csvDir, outFile=NULL) {
     sentence[[5]], "  Based on the ",
     YEAR, " point estimates, ",
     numbers2words(abta), " lakes were above targets and ",
-    numbers2words(beta), " were within targets (Table 2).")
+    numbers2words(beta), " were within targets.")
 
-  heading("REFERENCES", 2)
-  para("Mullett, K. M., J. W. Heinrich, J. V. Adams, R. J. Young,",
-    " M. P. Henson, R. B. McDonald, and M. F. Fodale.  2003.",
-    "  Estimating lake-wide abundance",
-    " of adult sea lampreys (Petromyzon marinus) in the Great Lakes:",
-  	" extrapolating from sampled streams using regression models.",
-    "  Journal of Great Lakes Research 29(Supplement 1):240-252.")
+#   heading("REFERENCES", 2)
+#   para("Mullett, K. M., J. W. Heinrich, J. V. Adams, R. J. Young,",
+#     " M. P. Henson, R. B. McDonald, and M. F. Fodale.  2003.",
+#     "  Estimating lake-wide abundance",
+#     " of adult sea lampreys (Petromyzon marinus) in the Great Lakes:",
+#   	" extrapolating from sampled streams using regression models.",
+#     "  Journal of Great Lakes Research 29(Supplement 1):240-252.")
 
 
   TAB.lakewide1 <- with(lakeIPEs, tapply(index, list(year, lake), mean))
   colnames(TAB.lakewide1) <- Lakenames
   tabl("Adult Indices, 1985-", YEAR, ".",
-    TAB=prettytable(TAB.lakewide, 0))
+    TAB=prettytable(TAB.lakewide1, 0))
 
 
   TAB.lakewide2 <- with(lakeIPEs, tapply(pe, list(year, lake), mean))
@@ -295,7 +295,7 @@ AIreport <- function(streamPEs, lakeIPEs, targets, csvDir, outFile=NULL) {
     YEAR, ".",
   	"  Circle size represents size of population estimate,",
     " circle color represents the source of the population estimate.",
-  	FIG=FIG.bubble2, newpage="land")
+  	FIG=FIG.bubble2, newpage="land", h=6)
 
 
 
