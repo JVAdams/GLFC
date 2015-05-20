@@ -68,9 +68,9 @@ AIcheck <- function(streamDat, csvDir, outFile=NULL, otherTabs=NULL) {
 
 
   # create a nice looking, formatted data frame for printing out errors ...
-  df.nice <- prettytable(streamDat[, c("lake", "country", "strcode", "strname",
-    "year", "trapcatch", "PEmr", "CVmr")], 4)
-  df.nice$CVmr <- round(df.nice$CVmr)
+  df.nice <- prettytable(
+    streamDat[, c("lake", "country", "strcode", "strname", "year", "trapcatch",
+      "PEmr", "CVmr")], 0, bigseps=c("", ",")[c(2, 2, 2, 2, 1, 2, 2, 2)])
 
   with(streamDat, {
 

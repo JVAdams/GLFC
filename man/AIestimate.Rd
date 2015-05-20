@@ -48,28 +48,4 @@ The annual Adult Index is simply the sum of stream population estimates for
   leaving out one stream at a time, then scaling up the result to the same
   scale as the Adult Index based on all streams.
 }
-\examples{
-# estimate the index initially for 1998-1999 data
-str9899 <- data.frame(
-  year=rep(1998:1999, c(3, 3)), lake=1,
-  lscode=rep(c(1.1, 1.2, 1.3), 2),
-  PEmr=c(15, 20, NA, 12, 22, 30),
-  CVmr=c(50, 50, NA, 50, 40, 30))
-istr <- c(1.1, 1.2, 1.3)
-est9899 <- estAIndex(indexStreams=istr, streamDatCurr=str9899)
-est9899
-
-# then estimate the index for 2000 data
-str00 <- data.frame(
-  year=2000, lake=1,
-  lscode=c(1.1, 1.2, 1.3),
-  PEmr=c(10, NA, 28),
-  CVmr=c(50, NA, 32))
-estAIndex(indexStreams=istr, streamDatCurr=str00,
-  streamDatPrev=est9899$streamDat)
-
-# notice how this is different than
-# estimating the index for 1998-2000 altogether
-estAIndex(indexStreams=istr, streamDatCurr=rbind(str9899, str00))
-}
 

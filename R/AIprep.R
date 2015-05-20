@@ -13,7 +13,7 @@
 #'   \code{lake}, lake-stream ID \code{lscode}
 #'   (see details), population estimate
 #'   \code{PEmr}, coefficient of variation \code{CVmr}
-#'   (100% * sqrt(variance(PEmr)) / PEmr).   See details.
+#'   (100\% * sqrt(variance(PEmr)) / PEmr).   See details.
 #' @param csvOld
 #'   A character scalar identifying the name of the csv file
 #'   with stream mark-recapture estimates for which Adult Indices
