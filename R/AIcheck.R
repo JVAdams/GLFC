@@ -137,9 +137,9 @@ AIcheck <- function(streamDat, csvDir, outFile=NULL, otherTabs=NULL) {
     paste(casefold(substring(country, 1, 2), upper=TRUE),
     Lakeabbs[lake], estr, sep=" - "))
   sd <- with(streamDat, PEmr * CVmr/100)
-  streamDat$PEplusSD <- with(streamDat, PEmr + sd)
   streamDat$PEminusSD <- with(streamDat, PEmr - sd)
   streamDat$PEminusSD[with(streamDat, !is.na(PEminusSD) & PEminusSD<0)] <- 0
+  streamDat$PEplusSD <- with(streamDat, PEmr + sd)
 
 
 
@@ -169,20 +169,24 @@ AIcheck <- function(streamDat, csvDir, outFile=NULL, otherTabs=NULL) {
   FIG.trapEff <- function() {
     sub <- streamDat[with(streamDat, !is.na(PEmr) & !is.na(trapcatch)), ]
   	with(sub, {
-      suby <- sub[with(sub, year==YEAR), ]
+      yrz <- min(year):max(year)
+      # use the latest observation for each stream
+      sub <- sub[with(sub, order(lscode, -year)), ]
+      suby <- sub[first(sub$lscode)==1, ]
       suby <- suby[with(suby, order(lake, country, estr, strcode)), ]
       sucle <- suby$cle
       suls <- suby$lscode
-      tecol <- colr(suby$trapEff, "blue", "orange")
+      tecol <- colr(suby$trapEff, "orange", "blue")
       nrnc <- n2mfrow(length(suls))[2:1]
-    	par(mfrow=nrnc, mar=c(0, 0, 0, 0), oma=c(4, 4, 3, 1), yaxs="i", cex=1.4)
+    	par(mfrow=nrnc, mar=c(0, 0, 0, 0), oma=c(4, 3, 1, 1), yaxs="i", cex=1.4)
     	for(i in seq(suls)) {
-    		sel <- lscode==suls[i] # & trapEff<1
-    		plot(year[sel], trapEff[sel], type="n",
-          xlim=range(year), ylim=0:1, axes=FALSE, xlab="", ylab="")
-    		abline(h=seq(0.25, 0.75, 0.25), col="lightgray")
-    		abline(v=seq(1985, YEAR+2, 5), col="lightgray")
-    		lines(year[sel], trapEff[sel], type="o", pch=20, cex=0.5, col=tecol[i])
+    		sel <- lscode==suls[i]
+    		plot(1, 1, type="n", xlim=range(year), ylim=0:1, axes=FALSE,
+          xlab="", ylab="")
+    		abline(h=seq(0.25, 0.75, 0.25), col="lightgray", lty=3)
+    		abline(v=seq(1985, YEAR+2, 5), col="lightgray", lty=3)
+    		lines(yrz, trapEff[sel][match(yrz, year[sel])],
+          type="o", pch=20, cex=1, col=tecol[i])
     		if (i <= nrnc[2]) {
           axis(1, at=seq(1990, YEAR+2, 10), outer=TRUE, cex.axis=0.6, las=2,
             tcl=-0.3)
@@ -191,23 +195,72 @@ AIcheck <- function(streamDat, csvDir, outFile=NULL, otherTabs=NULL) {
           axis(2, at=c(0.25, 0.75), labels=c("25", "75"), outer=TRUE,
             cex.axis=0.6, las=1, tcl=-0.3)
     		}
-    		text(1985, 0.85, paste(sucle[i], strname[sel][1], sep="\n"),
-          cex=0.6, adj=0)
+      	mtext(paste(sucle[i], strname[sel][1], sep="\n"),
+          cex=1, adj=0.05, line=-2)
         box(col="darkgray")
     	}
       mtext("Year", side=1, outer=TRUE, cex=1.2, line=3)
-      mtext("Trap efficiency (%)", side=2, outer=TRUE, cex=1.2, line=3)
+      mtext("Trap efficiency (%)", side=2, outer=TRUE, cex=1.2, line=2)
   	})
   }
 
   if(!is.null(streamDat$trapcatch)) {
     # calculate trap efficiency
     streamDat$trapEff <- with(streamDat, trapcatch/PEmr)
-    figu("Trap efficiency estimates, 1984-", YEAR,
-      ".  Color is used to indicate streams with highest (orange) and lowest",
-      " (blue) trap efficiencies in ", YEAR, ".",
+    figu("Trap efficiency estimates (trap catch / mark-recapture PE), through ",
+      YEAR,
+      ".  Color is used to indicate streams with lowest (orange) and highest",
+      " (blue) trap efficiencies in the last year recorded for each stream.",
       FIG=FIG.trapEff, newpage="port")
   }
+
+
+
+  # plot stream PEs (long time series)
+  FIG.PElong <- function() {
+    sub <- streamDat[with(streamDat, !is.na(PEmr)), ]
+    with(sub, {
+      yrz <- min(year):max(year)
+      # use the latest observation for each stream
+      sub <- sub[with(sub, order(lscode, -year)), ]
+      suby <- sub[first(sub$lscode)==1, ]
+      suby <- suby[with(suby, order(lake, country, estr, strcode)), ]
+      sucle <- suby$cle
+      suls <- suby$lscode
+      pecol <- colr(suby$PEmr, "blue", "orange")
+      nrnc <- n2mfrow(length(suls))[2:1]
+    	par(mfrow=nrnc, mar=c(0, 0, 0, 0), oma=c(4, 3, 1, 1), yaxs="i", cex=1.4)
+    	for(i in seq(suls)) {
+    		sel <- lscode==suls[i]
+        selsd <- lscode==suls[i] & !is.na(PEplusSD)
+    		plot(1, 1, type="n", xlim=range(year), ylim=1.1*range(0, PEmr)/1000,
+          axes=FALSE, xlab="", ylab="")
+      	arrows(year[selsd], PEminusSD[selsd]/1000,
+          year[selsd], PEplusSD[selsd]/1000,
+          col="gray", length=0.05, angle=90, code=3)
+      	lines(yrz, PEmr[sel][match(yrz, year[sel])]/1000,
+          type="o", pch=20, cex=1, col=pecol[i])
+    		if (i <= nrnc[2]) {
+          axis(1, at=seq(1990, YEAR+2, 10), outer=TRUE, cex.axis=0.6, las=2,
+            tcl=-0.3)
+    		}
+    		if (i%%nrnc[2] == 1) {
+          axis(2, outer=TRUE, cex.axis=0.6, las=1, tcl=-0.3)
+    		}
+    		mtext(paste(sucle[i], strname[sel][1], sep="\n"),
+          cex=1, adj=0.05, line=-2)
+        box(col="darkgray")
+    	}
+      mtext("Year", side=1, outer=TRUE, cex=1.2, line=3)
+      mtext("Adult PE  (thousands)", side=2, outer=TRUE, cex=1.2, line=2)
+  	})
+  }
+
+  figu("Adult mark-recapture estimates in streams,",
+    " plus or minus 1 standard deviation through ", YEAR,
+    ".  Color is used to indicate streams with lowest (blue) and highest",
+    " (orange) adult abundances in the last year recorded for each stream.",
+    FIG=FIG.PElong, newpage="port")
 
 
 
@@ -223,7 +276,7 @@ AIcheck <- function(streamDat, csvDir, outFile=NULL, otherTabs=NULL) {
       sucle <- suby$cle
       suls <- suby$lscode
       nrnc <- n2mfrow(length(suls))
-    	par(mfrow=nrnc, mar=c(0, 2, 2, 0), oma=c(4, 2, 1, 1), yaxs="i", cex=1.4)
+    	par(mfrow=nrnc, mar=c(0, 2, 2, 0), oma=c(3, 1, 1, 1), yaxs="i", cex=1.4)
     	for(i in seq(suls)) {
     		sel <- lscode==suls[i]
         selsd <- lscode==suls[i] & !is.na(PEplusSD)
@@ -239,9 +292,9 @@ AIcheck <- function(streamDat, csvDir, outFile=NULL, otherTabs=NULL) {
           cex=0.8, adj=0.1)
     		box(col="gray")
     	}
-      mtext("Year", side=1, outer=TRUE, cex=1.2, line=3)
+      mtext("Year", side=1, outer=TRUE, cex=1.2, line=2)
       mtext("Adult sea lampreys  (thousands)", side=2, outer=TRUE, cex=1.2,
-        line=1)
+        line=0)
   	})
   }
 
