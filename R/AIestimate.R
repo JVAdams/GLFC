@@ -31,7 +31,7 @@
 #'   \code{year}, the Adult Index \code{index}, and the lower and upper
 #'   jackknifed range \code{jlo} and \code{jhi}.
 #' @import
-#'   plyr jvamisc
+#'   plyr
 #' @export
 #' @details
 #'   The annual Adult Index is simply the sum of stream population estimates for
@@ -45,7 +45,6 @@
 AIestimate <- function(streamDat, minNMR=2) {
 
 #   library(GLFC)
-#   library(jvamisc)
 #   library(plyr)
 #   streamDat=streamIncomp[streamIncomp$lake==1, ]
 #   minNMR=2

@@ -43,7 +43,7 @@
 #'   A draft report document as an rtf file (with the file type *.doc,
 #'   so that MS Word will open it automatically).
 #' @import
-#'   jvamisc maps
+#'   maps
 #' @export
 #'
 AIreport <- function(streamPEs, lakeIPEs, targets, csvDir, outFile=NULL) {

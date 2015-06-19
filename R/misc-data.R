@@ -70,3 +70,16 @@ NULL
 #' @author
 #'   GLFC Trapping Task Force.
 NULL
+#' @name
+#'   GLFCenv
+#' @title
+#'   GLFC Package Local Environment
+#' @description
+#'   An environment local to the GLFC package, used to hold objects
+#'   outside of the individual package functions
+#' @format
+#'   An environment.
+#' @source
+#'   Post from Hadley Wickham to r-help on 2 Dec 2014
+#'	\href{https://stat.ethz.ch/pipermail/r-help/2014-December/423847.html}{[link]}.
+NULL

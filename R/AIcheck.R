@@ -33,8 +33,6 @@
 #' @return
 #'   An error checking document as an rtf file (with the file type *.doc,
 #'   so that MS Word will open it automatically).
-#' @import
-#'   jvamisc
 #' @export
 #'
 
@@ -232,12 +230,16 @@ AIcheck <- function(streamDat, csvDir, outFile=NULL, otherTabs=NULL) {
     	par(mfrow=nrnc, mar=c(0, 0, 0, 0), oma=c(4, 3, 1, 1), yaxs="i", cex=1.4)
     	for(i in seq(suls)) {
     		sel <- lscode==suls[i]
-        selsd <- lscode==suls[i] & !is.na(PEplusSD)
+        selsd <- sel & !is.na(PEplusSD)
     		plot(1, 1, type="n", xlim=range(year), ylim=1.1*range(0, PEmr)/1000,
           axes=FALSE, xlab="", ylab="")
-      	arrows(year[selsd], PEminusSD[selsd]/1000,
+        # ignore warnings from zero-length arrows
+        oldopt <- getOption("warn")
+        options(warn=-1)
+        arrows(year[selsd], PEminusSD[selsd]/1000,
           year[selsd], PEplusSD[selsd]/1000,
           col="gray", length=0.05, angle=90, code=3)
+        options(warn=oldopt)
       	lines(yrz, PEmr[sel][match(yrz, year[sel])]/1000,
           type="o", pch=20, cex=1, col=pecol[i])
     		if (i <= nrnc[2]) {
@@ -279,13 +281,18 @@ AIcheck <- function(streamDat, csvDir, outFile=NULL, otherTabs=NULL) {
     	par(mfrow=nrnc, mar=c(0, 2, 2, 0), oma=c(3, 1, 1, 1), yaxs="i", cex=1.4)
     	for(i in seq(suls)) {
     		sel <- lscode==suls[i]
-        selsd <- lscode==suls[i] & !is.na(PEplusSD)
+        selsd <- sel & !is.na(PEplusSD)
         mymax <- 1.1*max(c(PEplusSD[sel], PEmr[sel]), na.rm=TRUE)/1000
         plot(year[sel], PEmr[sel]/1000, type="n", axes=FALSE,
           xlim=range(year) + c(-1, 1)*0.3, ylim=c(0, mymax), xlab="", ylab="")
     		lines(year[sel], PEmr[sel]/1000, type="o", pch=16, cex=0.7)
-    		arrows(year[selsd], PEminusSD[selsd]/1000,
-          year[selsd], PEplusSD[selsd]/1000, length=0.05, angle=90, code=3)
+        # ignore warnings from zero-length arrows
+        oldopt <- getOption("warn")
+        options(warn=-1)
+      	arrows(year[selsd], PEminusSD[selsd]/1000,
+          year[selsd], PEplusSD[selsd]/1000,
+          length=0.05, angle=90, code=3)
+        options(warn=oldopt)
     		if (i <= nrnc[2]) axis(1, outer=TRUE, cex.axis=0.6, tcl=-0.2)
       	axis(2, cex.axis=0.6, las=1, tcl=-0.2)
     		mtext(paste(sucle[i], strname[sel][1], sep="\n"), side=3,

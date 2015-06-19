@@ -4,7 +4,8 @@
 \alias{estAIndex}
 \title{Estimate Index of Sea Lamprey Adults}
 \usage{
-estAIndex(indexStreams, streamPECurr, streamPEPrev = NULL, minNMR = 2)
+estAIndex(indexStreams, streamPECurr, streamPEPrev = NULL, varKeep = NULL,
+  minNMR = 2)
 }
 \arguments{
 \item{indexStreams}{A numeric vector of lake-stream IDs identifying streams to be included
@@ -18,7 +19,8 @@ with variables: \code{year}, \code{lake}, lake-stream ID \code{lscode}
 (100% * sqrt(variance(PEmr)) / PEmr).  There should be no missing values
 in \code{year}, \code{lake}, or \code{lscode}.  There should be only one
 value for \code{lake} in the data frame.  The data frame may include
-additional variables, but they will be ignored.}
+additional variables, but they will be ignored unless listed in
+\code{varKeep}.}
 
 \item{streamPEPrev}{A data frame of stream mark-recapture estimates with
 estimated Adult Index contributions (typically from previous years),
@@ -26,7 +28,12 @@ with the same variables as in \code{streamPECurr} plus the
 previously estimated contribution \code{indexContrib}, default NULL.
 There should be no missing values
 in \code{year}, \code{lake}, or \code{lscode}.  The data frame may include
-additional variables, but they will be ignored.}
+additional variables, but they will be ignored unless listed in
+\code{varKeep}.}
+
+\item{varKeep}{A character vector naming additional variables (present in both
+ \code{streamPECurr} and \code{streamPEPrev}) to keep in the output
+data frame (\code{streamPE}), default NULL.}
 
 \item{minNMR}{An integer scalar greater than or equal to 2,
   the minimum number of mark-recapture estimates

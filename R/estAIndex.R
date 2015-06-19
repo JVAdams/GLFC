@@ -13,7 +13,8 @@
 #'   (100% * sqrt(variance(PEmr)) / PEmr).  There should be no missing values
 #'   in \code{year}, \code{lake}, or \code{lscode}.  There should be only one
 #'   value for \code{lake} in the data frame.  The data frame may include
-#'   additional variables, but they will be ignored.
+#'   additional variables, but they will be ignored unless listed in
+#'   \code{varKeep}.
 #' @param streamPEPrev
 #'   A data frame of stream mark-recapture estimates with
 #'   estimated Adult Index contributions (typically from previous years),
@@ -21,7 +22,12 @@
 #'   previously estimated contribution \code{indexContrib}, default NULL.
 #'   There should be no missing values
 #'   in \code{year}, \code{lake}, or \code{lscode}.  The data frame may include
-#'   additional variables, but they will be ignored.
+#'   additional variables, but they will be ignored unless listed in
+#'   \code{varKeep}.
+#' @param varKeep
+#'   A character vector naming additional variables (present in both
+#'   \code{streamPECurr} and \code{streamPEPrev}) to keep in the output
+#'  data frame (\code{streamPE}), default NULL.
 #' @param minNMR
 #'   An integer scalar greater than or equal to 2,
 #'   the minimum number of mark-recapture estimates
@@ -37,7 +43,7 @@
 #'   \code{year}, the Adult Index \code{index}, and the lower and upper
 #'   jackknifed range \code{jlo} and \code{jhi}.
 #' @import
-#'   plyr jvamisc
+#'   plyr
 #' @export
 #' @details
 #'   The annual Adult Index is simply the sum of stream population estimates for
@@ -72,7 +78,8 @@
 #' # estimating the index for 1998-2000 altogether
 #' estAIndex(indexStreams=istr, streamPECurr=rbind(str9899, str00))
 
-estAIndex <- function(indexStreams, streamPECurr, streamPEPrev=NULL, minNMR=2) {
+estAIndex <- function(indexStreams, streamPECurr, streamPEPrev=NULL,
+  varKeep=NULL, minNMR=2) {
 
   if (length(indexStreams)>length(unique(indexStreams))) {
     stop("indexStreams should be unique (without duplicates).")
@@ -85,6 +92,15 @@ estAIndex <- function(indexStreams, streamPECurr, streamPEPrev=NULL, minNMR=2) {
   varShort <- c("year", "lake", "lscode", "PEmr", "CVmr")
   varLong <- c("year", "lake", "lscode", "PEmr", "CVmr",
       "indexContrib")
+  if (!is.null(varKeep)) {
+    if (!is.character(varKeep)) stop("varKeep must be a character vector")
+    if (any(is.na(match(varKeep, names(streamPECurr))))) {
+      stop("streamPECurr must include these variables:",
+        paste(varKeep, collapse=", "), ".")
+    }
+    varShort <- c(varShort, varKeep)
+    varLong <- c(varLong, varKeep)
+  }
   if (any(is.na(match(varShort, names(streamPECurr))))) {
     stop("streamPECurr must include these variables:",
       paste(varShort, collapse=", "), ".")
@@ -94,6 +110,10 @@ estAIndex <- function(indexStreams, streamPECurr, streamPEPrev=NULL, minNMR=2) {
 
   if (!is.null(streamPEPrev)) {
     # combine the previous data with the current data
+    if (any(is.na(match(varKeep, names(streamPEPrev))))) {
+      stop("streamPEPrev (if not NULL) must include these variables:",
+        paste(varKeep, collapse=", "), ".")
+    }
     if (any(is.na(match(varLong, names(streamPEPrev))))) {
       stop("streamPEPrev (if not NULL) must include these variables:",
         paste(varLong, collapse=", "), ".")

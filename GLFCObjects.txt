@@ -28,6 +28,9 @@ lsKeep <- lapply(1:5, function(i) i + lsKeep[[i]]/1000)
 index2pe <- c(3.95, 1.87, 2.87, 1.45, 2.37)
 names(index2pe) <- c("Superior", "Michigan", "Huron", "Erie", "Ontario")
 
+# An environment local to the GLFC package
+GLFCenv <- new.env(parent = emptyenv())
+
 # information on trapped streams (past and present)
 # including: lake, lscode, country, strcode, estr, strname, lat, long
 # last updated 12 May 2015
