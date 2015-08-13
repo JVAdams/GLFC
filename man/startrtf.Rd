@@ -27,7 +27,7 @@ command line, default FALSE.}
 \value{
 An rtf file is created in the specified directory.
   An object of class rtf is created.  This object is referred to in
-  other function to write to the file.
+  other functions to write to the file.
   In addition, two numeric vectors of length 1, \code{tabcount} and
   \code{figcount}, are written to the working directory to keep track
   of the number of tables and figures written to the rtf document, and

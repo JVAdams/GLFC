@@ -39,7 +39,7 @@
 AIcheck <- function(streamDat, csvDir, outFile=NULL, otherTabs=NULL) {
 
 # library(GLFC)
-# streamDat=streamDat
+# streamDat=stream1
 # csvDir=DIRECTORY
 # outFile=NULL
 # otherTabs=othtabs
@@ -53,9 +53,8 @@ AIcheck <- function(streamDat, csvDir, outFile=NULL, otherTabs=NULL) {
   # create a file with error checking results
   doc <<- startrtf(file=outFile, dir=csvDir)#, width=11, height=8.5)
 
-  heading(paste("Error Checking the ", YEAR,
-    " Lake-Wide Adult Sea Lamprey Data"))
-  heading(date(), 2)
+  heading(paste("Error Checking the", YEAR, "Adult Sea Lamprey Data"))
+  heading(format(Sys.time(), "%Y %b %d %H:%M:%S"), 2)
 
   # start by printing any "other tables" first
   if (!is.null(otherTabs)) {
@@ -72,27 +71,60 @@ AIcheck <- function(streamDat, csvDir, outFile=NULL, otherTabs=NULL) {
 
   with(streamDat, {
 
+    # show streams that are missing a current year population estimate
+    tab <- df.nice[year==YEAR & (is.na(PEmr) | is.na(CVmr)), ]
+    if (dim(tab)[1]>0) {
+    	tabl("NOTE:  Some streams were missing a ", YEAR,
+        " population estimate or CV.", TAB=tab, row.names=FALSE)
+    } else {
+      para("GREAT:  All streams had ", YEAR, "population estimates and CVs.")
+    }
+
     # check paired nature of mark-recapture estimates and trap catches
-    tab <- df.nice[((is.na(PEmr) & !is.na(CVmr)) | (!is.na(PEmr) & is.na(CVmr)) |
-        (is.na(trapcatch) & !is.na(PEmr))) & lscode!=3.999, ]
+    tab <- df.nice[((is.na(PEmr) & !is.na(CVmr)) |
+        (!is.na(PEmr) & is.na(CVmr)) | (is.na(trapcatch) & !is.na(PEmr))) &
+        lscode!=3.999, ]
     if (dim(tab)[1]>0) {
     	tabl("ERROR:  Something's missing ... either, trapcatch, PEmr, or CVmr.",
         TAB=tab, row.names=FALSE)
-    } else para("OKAY:  Mark-recapture estimates and trap catches are",
-      " either all there or all missing.")
+    } else para("OKAY:  All mark-recapture estimates have trap catches and",
+      " CVs.")
+
+    # check that non-index streams are included
+    tab <- df.nice[index==FALSE & maintain==TRUE & year==YEAR, ]
+    lastcount <- sum(index==FALSE & maintain==TRUE & year==YEAR-1)
+    nowcount <- sum(index==FALSE & maintain==TRUE & year==YEAR)
+    if (nowcount<lastcount) {
+      if (nowcount<1) {
+      	para("ERROR:  No data was reported from non-index streams.",
+          "  But there are data from ", lastcount, " non-index streams in ",
+      	  YEAR-1, ".")
+      } else {
+        tabl("ERROR:  Data was only reported from ", nowcount,
+          " non-index streams in ", YEAR, ".",
+          "  But there are data from ", lastcount, " in ", YEAR-1, ".",
+          TAB=tab, row.names=FALSE)
+      }
+    } else {
+      tabl("OKAY:  Data was reported from ", nowcount, " non-index streams.",
+        "  The same number as in ", YEAR-1, ".", TAB=tab, row.names=FALSE)
+    }
 
     # check values of trap catch and population estimate
     tab <- df.nice[!is.na(PEmr) & !is.na(trapcatch) & PEmr<=trapcatch, ]
     if (dim(tab)[1]>0) {
-    	tabl("ERROR:  Population estimates shouldn't be smaller than trap catches.",
+    	tabl(
+    	  "ERROR:  Population estimates shouldn't be smaller than trap catches.",
         TAB=tab, row.names=FALSE)
     } else para("OKAY:  Population estimates are greater than trap catches.")
 
     sel1 <- year %in% (YEAR-(5:1))
-    nts <- tapply(!is.na(trapcatch[sel1]) & trapcatch[sel1]>0, lscode[sel1], sum)
+    nts <- tapply(!is.na(trapcatch[sel1]) & trapcatch[sel1]>0, lscode[sel1],
+      sum)
     streamz1 <- names(nts)[nts>0]
     sel2 <- year==YEAR
-    nts <- tapply(!is.na(trapcatch[sel2]) & trapcatch[sel2]>0, lscode[sel2], sum)
+    nts <- tapply(!is.na(trapcatch[sel2]) & trapcatch[sel2]>0, lscode[sel2],
+      sum)
     streamz2 <- names(nts)[nts<1]
     streamz <- as.numeric(intersect(streamz1, streamz2))
     if (length(streamz)>0) {
@@ -130,6 +162,7 @@ AIcheck <- function(streamDat, csvDir, outFile=NULL, otherTabs=NULL) {
     } else para("OKAY:  No unusually small trap catches in ", YEAR, ".")
 
   })
+
 
   streamDat$cle <- with(streamDat,
     paste(casefold(substring(country, 1, 2), upper=TRUE),
