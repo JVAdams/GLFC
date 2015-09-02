@@ -1,6 +1,6 @@
 Package: GLFC
 Title: Great Lakes Fishery Commission
-Version: 0.0.0.9004
+Version: 0.0.0.9005
 Authors@R: person(given="Jean V.", family="Adams", email="jvadams@usgs.gov", 
   role=c("aut", "cre"))
 Description: Functions developed for the Great Lakes Fishery Commission's 

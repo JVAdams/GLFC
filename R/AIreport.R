@@ -26,7 +26,8 @@
 #'   The data frame may contain variables other than those required.
 #' @param targets
 #'   A data frame with the calculated targets for the Adult Index and
-#'   expanded PE of each Great Lake, with 3 columns: \code{lake},
+#'   expanded PE of each Great Lake, with 5 rows (Superior, Michigan, Huron,
+#'   Erie, Ontario) and 3 columns: \code{lake},
 #'   \code{targInd}, and \code{targPE}, typically the output from
 #'   \code{\link{AItarget}}.
 #' @param csvDir
@@ -36,6 +37,10 @@
 #'   Name of the ouput rtf file, default NULL, in which case the file will be
 #'   named "YYYY Adult Index - draft report.doc" where YYYY
 #'   is the latest year represented in \code{streamDat}.
+#' @param proptargets
+#'   A data frame with any proposed targets for the Adult Index,
+#'   with 2 columns \code{lake} and \code{targInd}, default NULL.
+#'   May have from zero to several rows for a single Great Lake.
 #' @details
 #'   Lake-stream IDs are combination of lake ID and stream ID
 #'   e.g., 1.064 = lake ID + (stream ID)/1000.
@@ -46,7 +51,8 @@
 #'   maps
 #' @export
 #'
-AIreport <- function(streamPEs, lakeIPEs, targets, csvDir, outFile=NULL) {
+AIreport <- function(streamPEs, lakeIPEs, targets, csvDir, outFile=NULL,
+  proptargets=NULL) {
 
 # library(GLFC)
 # library(maps)
@@ -85,6 +91,10 @@ AIreport <- function(streamPEs, lakeIPEs, targets, csvDir, outFile=NULL) {
   		plot(1, 1, type="n", xlim=range(year), ylim=c(0, mymax),
         xlab="", ylab="", main=Lakenames[i], las=1)
   		abline(h=targets$targInd[j]/1000, col="gray", lwd=2)
+  		if(!is.null(proptargets)) {
+    		abline(h=proptargets$targInd[proptargets$lake==j]/1000,
+    		  col="gray", lwd=2, lty=2)
+  		}
   		points(year[sel], index[sel]/1000)
   		arrows(year[sel], jlo[sel]/1000, year[sel], jhi[sel]/1000, length=0.03,
         angle=90, code=3)
@@ -213,6 +223,9 @@ AIreport <- function(streamPEs, lakeIPEs, targets, csvDir, outFile=NULL) {
         ylim=1.03*c(0, max(apply(p, 1, sum, na.rm=TRUE)))/1000,
   			xlab="", ylab="", main=Lakenames[i], border=NA)
   		abline(h=targets$targInd[i]/1000)
+  		if(!is.null(proptargets)) {
+    		abline(h=proptargets$targInd[proptargets$lake==i]/1000, lty=2)
+  		}
   		axis(1, at=a[match(pyrz, yrz)], pyrz)
   		axis(2, las=1)
   		box()
@@ -290,8 +303,18 @@ AIreport <- function(streamPEs, lakeIPEs, targets, csvDir, outFile=NULL) {
   }
   para("Based on the ",
     YEAR, " lake-wide adult sea lamprey indices (point estimates only), ",
-    numbers2words(beta), " lakes were at targets", insert2, " and ",
+    numbers2words(beta), " lakes met the targets", insert2, " and ",
     numbers2words(abta), " were above targets", insert1, " (Table 1).")
+
+  if(!is.null(proptargets)) {
+    ptl <- proptargets
+    ptl$targInd <- format(round(ptl$targInd), big.mark=",")
+    ptl <- split(ptl, ptl$lake)
+    pttext <- paste0(Lakenames[as.numeric(names(ptl))], ": ",
+      lapply(ptl, function(df) paste(df$targInd, collapse=", ")), collapse="; ")
+    para("In addition to the accepted targets, there are also the following",
+      " proposed targets, ", pttext, ".  <<< Explain further. >>>")
+  }
 
   insert1 <- ""
   insert2 <- ""
@@ -314,7 +337,7 @@ AIreport <- function(streamPEs, lakeIPEs, targets, csvDir, outFile=NULL) {
       paste(Lakenames[both$lake[sel3]], collapse=", "),
       ")")
   }
-  para("Comparing the jacknifed ranges of the adult sea lamprey indices in ",
+  para("Comparing the jackknifed ranges of the adult sea lamprey indices in ",
     YEAR, " with those in ",
     YEAR-1, ", the number of adults significantly decreased in ",
   	numbers2words(sum(sel1)),
@@ -375,15 +398,19 @@ AIreport <- function(streamPEs, lakeIPEs, targets, csvDir, outFile=NULL) {
     paste(names(index2pe), as.numeric(index2pe), collapse=", "), ").",
     TAB=prettytable(TAB.lakewide2, -3))
 
+  extraphrase <- ""
+  if(!is.null(proptargets)) {
+    extraphrase <- "  Dashed horizontal lines represent proposed targets."
+  }
 
   figu("Adult sea lamprey index estimates (with jackknifed ranges) and targets",
     " for each Great Lake through ", YEAR, ".",
-    "  Targets are represented by the horizontal gray lines.",
+    "  Targets are represented by the horizontal gray lines.", extraphrase,
   	FIG=FIG.lakeCI, newpage="port")#, w=6.5, h=7.5)
 
 
   figu("Adult sea lamprey abundance estimates for index streams.",
-    "  Targets are represented by the horizontal lines.",
+    "  Targets are represented by the horizontal lines.", extraphrase,
     FIG=FIG.bar, newpage="port", w=6, h=7.5)
 
 

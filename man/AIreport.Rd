@@ -4,7 +4,8 @@
 \alias{AIreport}
 \title{Adult Index Report}
 \usage{
-AIreport(streamPEs, lakeIPEs, targets, csvDir, outFile = NULL)
+AIreport(streamPEs, lakeIPEs, targets, csvDir, outFile = NULL,
+  proptargets = NULL)
 }
 \arguments{
 \item{streamPEs}{A data frame of "complete" stream mark-recapture estimates
@@ -30,7 +31,8 @@ and the corresponding expansion to a supposed population estimate,
 The data frame may contain variables other than those required.}
 
 \item{targets}{A data frame with the calculated targets for the Adult Index and
-expanded PE of each Great Lake, with 3 columns: \code{lake},
+expanded PE of each Great Lake, with 5 rows (Superior, Michigan, Huron,
+Erie, Ontario) and 3 columns: \code{lake},
 \code{targInd}, and \code{targPE}, typically the output from
 \code{\link{AItarget}}.}
 
@@ -40,6 +42,10 @@ stored, e.g., \code{csvDir = "C:\\temp\\mydir"}.}
 \item{outFile}{Name of the ouput rtf file, default NULL, in which case the file will be
 named "YYYY Adult Index - draft report.doc" where YYYY
 is the latest year represented in \code{streamDat}.}
+
+\item{proptargets}{A data frame with any proposed targets for the Adult Index,
+with 2 columns \code{lake} and \code{targInd}, default NULL.
+May have from zero to several rows for a single Great Lake.}
 }
 \value{
 A draft report document as an rtf file (with the file type *.doc,
