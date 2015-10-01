@@ -52,6 +52,30 @@ NULL
 #'   GLFC Trapping Task Force.
 NULL
 #' @name
+#'   SMRStratArea
+#' @title
+#'   St. Marys River Strata Areas
+#' @description
+#'   Data frame with three variables: \code{inbplot} indicating whether the 
+#'   stratum is in (=1) a high larval density area or not (=0), \code{region} 
+#'   indicating the general location in the river (1 = North Channel, 
+#'   2 = turning basin, 3 = widening part, 4 = Neebish channels, and 
+#'   5 = most upstream part), and \code{haStrat} area of the stratum in 
+#'   hectares.  Strata of the St. Marys River larval sea lamprey survey are 
+#'   defined by \code{region} and \code{inbplot}.
+#' @format
+#'   A data frame with 9 rows and 3 columns.  Areas are rounded to the 
+#'   nearest hundredth hectare.
+#' @source
+#'   Great Lakes Fishery Commission (\href{http://www.glfc.org}{GLFC})
+#'   Sea Lamprey Control Board Meeting 14-02,
+#'   15-17 Oct 2014, Briefing Item 6 - Attachment 2,
+#'   Larval Assessment Task Force Minutes, item (3c) Follow up on changes to St.
+#'   Marys River area used for estimation calculations (page 6-15).
+#' @author
+#'   GLFC Larval Assessment Task Force.
+NULL
+#' @name
 #'   trappedStreams
 #' @title
 #'   General Information on Great Lakes Streams Trapped for Adult Sea Lampreys

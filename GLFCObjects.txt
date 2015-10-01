@@ -31,6 +31,14 @@ names(index2pe) <- c("Superior", "Michigan", "Huron", "Erie", "Ontario")
 # An environment local to the GLFC package
 GLFCenv <- new.env(parent = emptyenv())
 
+# Areas of the St. Marys River survey strata (defined by region and inbplot)
+# in hectares
+SMRStratArea <- data.frame(
+  inbplot=c(0, 0, 0, 0, 0, 1, 1, 1, 1),
+  region = c(1, 2, 3, 4, 5, 1, 2, 3, 5),
+  haStrat = c(846.86, 1000.57, 3366.97, 1807.39, 203.78, 140.99, 475.95,
+    248.08, 56.65))
+
 # information on trapped streams (past and present)
 # including: lake, lscode, country, strcode, estr, strname, lat, long
 # last updated 12 May 2015
