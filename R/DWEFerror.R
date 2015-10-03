@@ -80,7 +80,7 @@ DWEFerror <- function(Dir, Catch, Lengths, Continue, Source=NULL) {
 
   # table of input files
   tab <- cbind(Source[c("CatchFile", "LengthsFile", "PlotsFile")],
-  	c("Catches", "Lengths", "Treated Hotspots"))
+    c("Catches", "Lengths", "Treated Hotspots"))
   dimnames(tab) <- list(NULL, c("File", "Information"))
   tabl("Input files used.", row.names=FALSE, TAB=tab)
 
@@ -109,19 +109,19 @@ DWEFerror <- function(Dir, Catch, Lengths, Continue, Source=NULL) {
   pdd <- as.numeric(names(propdeep))
   nsamples <- table(Catch$depth)
   fig <- function() {
-  	par(mar=c(4, 4, 1, 1), cex=1.2, las=1)
-  	plot(pdd, propdeep, type="n",
-  	  xlab="Depth  (feet)", ylab="Samples with missing habitat  (%)")
-  	#my.circles(pdd, propdeep, nsamples, add=TRUE, circle.size.range=c(.1, .8))
-  	points(pdd, propdeep, cex=5*nsamples/max(nsamples)+1)
-  	lines(pdd, propdeep, lwd=2)
-  	abline(h=50, lty=2)
-  	}
+    par(mar=c(4, 4, 1, 1), cex=1.2, las=1)
+    plot(pdd, propdeep, type="n",
+      xlab="Depth  (feet)", ylab="Samples with missing habitat  (%)")
+    #my.circles(pdd, propdeep, nsamples, add=TRUE, circle.size.range=c(.1, .8))
+    points(pdd, propdeep, cex=5*nsamples/max(nsamples)+1)
+    lines(pdd, propdeep, lwd=2)
+    abline(h=50, lty=2)
+    }
   figu("Relation between sample depth and the percent of samples that had",
     " missing habitat.  Missing habitat data is typically an indication of",
     " depths that are too shallow or too deep to sample.",
-  	"  A circle was drawn for every depth in the catch data.",
-  	"  Circle size represents the number of samples at that depth.",
+    "  A circle was drawn for every depth in the catch data.",
+    "  Circle size represents the number of samples at that depth.",
     FIG=fig, h=3, w=4)
   rm(propdeep, pdd, nsamples)
 
@@ -130,8 +130,8 @@ DWEFerror <- function(Dir, Catch, Lengths, Continue, Source=NULL) {
   tab <- tab[order(tab$depth, tab$commentwrap, tab$date), ]
   if(dim(tab)[1]>0) tabl("These rows will be deleted prior to joining the ",
     YEAR, " data with data from previous years.",
-  	"  (And they are excluded from the graphs and summaries that follow.)",
-  	"  Check to make sure that these are really cases where no larval sampling",
+    "  (And they are excluded from the graphs and summaries that follow.)",
+    "  Check to make sure that these are really cases where no larval sampling",
     " was conducted.  Are there any shallow sites listed as",
     " 'too deep to sample', or any deep sites listed as",
     " 'too shallow to sample'?",
@@ -147,14 +147,14 @@ DWEFerror <- function(Dir, Catch, Lengths, Continue, Source=NULL) {
   selboth <- sort(unique(c(seldeep, selshal)))
   tab <- smr2[selboth, printvars]
   if(dim(tab)[1]>0) {
-  	tabl("Comment says too deep/shallow to sample, but habitat type and/or",
+    tabl("Comment says too deep/shallow to sample, but habitat type and/or",
     " sl.total is filled in.  For now, DWEFES will assume that the comment is",
     " correct and delete these rows as well.  If this INCORRECT, then the",
     " comment should be changed to 'No comment'.", row.names=FALSE, TAB=tab)
-  	}
+    }
   if(length(selboth)>0) {
-  	smr2 <- smr2[-selboth, ]
-  	}
+    smr2 <- smr2[-selboth, ]
+    }
 
   # fix an error in the 2012 data
   smr2$new.numb[smr2$sampid==201240282] <- 0
@@ -165,91 +165,91 @@ DWEFerror <- function(Dir, Catch, Lengths, Continue, Source=NULL) {
   tab <- with(smr2, smr2[is.na(hab.type) | is.na(region) | is.na(sl.total),
     printvars])
   if(dim(tab)[1]>0) {
-  	errors <- append(errors, paste("Table", GLFCenv$tabcount))
-  	tabl("No sample taken - missing data.", row.names=FALSE, TAB=tab)
-  	}
+    errors <- append(errors, paste("Table", GLFCenv$tabcount))
+    tabl("No sample taken - missing data.", row.names=FALSE, TAB=tab)
+    }
 
   tab <- smr2[!(smr2$region %in% c(NA, 1:6)), printvars]
   if(dim(tab)[1]>0) {
-  	errors <- append(errors, paste("Table", GLFCenv$tabcount))
-  	tabl("Region not equal to 1 through 6.", row.names=FALSE, TAB=tab)
-  	}
+    errors <- append(errors, paste("Table", GLFCenv$tabcount))
+    tabl("Region not equal to 1 through 6.", row.names=FALSE, TAB=tab)
+    }
 
   tab <- with(smr2, smr2[is.element(sampid, sampid[duplicated(sampid)]),
     printvars])
   if(dim(tab)[1]>0) {
-  	errors <- append(errors, paste("Table", GLFCenv$tabcount))
-  	tabl("Duplicate sample ids.", row.names=FALSE, TAB=tab)
-  	}
+    errors <- append(errors, paste("Table", GLFCenv$tabcount))
+    tabl("Duplicate sample ids.", row.names=FALSE, TAB=tab)
+    }
 
   tab <- with(smr2, smr2[(is.na(inbplot) | inbplot<0.5) & !is.na(new.numb) &
       new.numb>0.5, c(printvars, "inbplot")])
   if(dim(tab)[1]>0) {
-  	errors <- append(errors, paste("Table", GLFCenv$tabcount))
-  	tabl("Hotspot number assigned (new.numb), but inbplot not equal to 1.",
-  	  row.names=FALSE, TAB=tab)
-  	}
+    errors <- append(errors, paste("Table", GLFCenv$tabcount))
+    tabl("Hotspot number assigned (new.numb), but inbplot not equal to 1.",
+      row.names=FALSE, TAB=tab)
+    }
 
   tab <- with(smr2, smr2[!is.na(inbplot) & inbplot>0.5 & (is.na(new.numb) |
       new.numb<0.5), c(printvars, "inbplot")])
   if(dim(tab)[1]>0) {
-  	errors <- append(errors, paste("Table", GLFCenv$tabcount))
-  	tabl("Hotspot number not assigned (new.numb), but inbplot=1.",
-  	  row.names=FALSE, TAB=tab)
-  	}
+    errors <- append(errors, paste("Table", GLFCenv$tabcount))
+    tabl("Hotspot number not assigned (new.numb), but inbplot=1.",
+      row.names=FALSE, TAB=tab)
+    }
 
   n <- dim(smr2)[1]
   keep <- matrix(NA, nrow=0, ncol=2)
   for(i in 1:(n-1)) {
   for(j in (i+1):n) {
-  	if(with(smr2, abs(longitude[i] - longitude[j]) < 0.0005 &
-  	    abs(latitude[i] - latitude[j]) < 0.0003)) {
-  		keep <- rbind(keep, c(i, j))
-  		}
-  	}}
+    if(with(smr2, abs(longitude[i] - longitude[j]) < 0.0005 &
+        abs(latitude[i] - latitude[j]) < 0.0003)) {
+      keep <- rbind(keep, c(i, j))
+      }
+    }}
   if(dim(keep)[1] > 0) {
-  	for(i in 1:dim(keep)[1]) {
-  		tab <- smr2[keep[i, ], printvars]
+    for(i in 1:dim(keep)[1]) {
+      tab <- smr2[keep[i, ], printvars]
       dist.in.m <- geodesic_inverse(smr2[keep[i, 1],
         c("longitude", "latitude")],
         smr2[keep[i, 2], c("longitude", "latitude")])[, "distance"]
-  		errors <- append(errors, paste("Table", GLFCenv$tabcount))
-  		tabl(paste0("These two samples are very close together (",
-  		  round(dist.in.m),
-  			" m).  Check to see if the same site was sampled twice."),
-  		  row.names=FALSE, TAB=tab)
-  		}
-  	}
+      errors <- append(errors, paste("Table", GLFCenv$tabcount))
+      tabl(paste0("These two samples are very close together (",
+        round(dist.in.m),
+        " m).  Check to see if the same site was sampled twice."),
+        row.names=FALSE, TAB=tab)
+      }
+    }
   rm(n, keep, i, j)
 
   tab <- with(smr2, smr2[depth>50 | depth<1, printvars])
   if(dim(tab)[1]>0) {
-  	errors <- append(errors, paste("Table", GLFCenv$tabcount))
-  	tabl("Extreme depths.", row.names=FALSE, TAB=tab)
-  	}
+    errors <- append(errors, paste("Table", GLFCenv$tabcount))
+    tabl("Extreme depths.", row.names=FALSE, TAB=tab)
+    }
 
   tab <- with(smr2, smr2[!(sample==2), c(printvars, "sample")])
   if(dim(tab)[1]>0) {
-  	errors <- append(errors, paste("Table", GLFCenv$tabcount))
-  	tabl("Sample is not listed as initial (sample=2).", row.names=FALSE,
-  	  TAB=tab)
-  	}
+    errors <- append(errors, paste("Table", GLFCenv$tabcount))
+    tabl("Sample is not listed as initial (sample=2).", row.names=FALSE,
+      TAB=tab)
+    }
 
   tab <- with(smr2, smr2[!(is.element(mm, 1:12)) | !(is.element(dd, 1:31)) |
       year!=YEAR, printvars])
   if(dim(tab)[1]>0) {
-  	errors <- append(errors, paste("Table", GLFCenv$tabcount))
-  	tabl("Error in sample date.", row.names=FALSE, TAB=tab)
-  	}
+    errors <- append(errors, paste("Table", GLFCenv$tabcount))
+    tabl("Error in sample date.", row.names=FALSE, TAB=tab)
+    }
 
   tab <- Lengths[is.na(match(Lengths$sampid, smr2$sampid)), ]
   tab$sl.larv.adj <- round(tab$sl.larv.adj, 1)
   tab$sl.meta.adj <- round(tab$sl.meta.adj, 1)
   if(dim(tab)[1]>0) {
-  	errors <- append(errors, paste("Table", GLFCenv$tabcount))
-  	tabl("Sample ID in LENGTHS file doesn't match Sample ID in CATCHES file.",
-  	  row.names=FALSE, TAB=tab)
-  	}
+    errors <- append(errors, paste("Table", GLFCenv$tabcount))
+    tabl("Sample ID in LENGTHS file doesn't match Sample ID in CATCHES file.",
+      row.names=FALSE, TAB=tab)
+    }
 
   nll <- dim(Lengths)[1]
   ssc <- with(smr2, sum(sl.total[sl.total>-1], na.rm=TRUE))
@@ -304,14 +304,14 @@ DWEFerror <- function(Dir, Catch, Lengths, Continue, Source=NULL) {
 
   tab <- with(smr2, smr2[comment=="Type 3" & hab.type!=3, printvars])
   if(dim(tab)[1]>0) {
-  	errors <- append(errors, paste("Table", GLFCenv$tabcount))
-  	tabl("Comment says Type 3, but habitat type disagrees.", row.names=FALSE,
-  	  TAB=tab)
-  	}
+    errors <- append(errors, paste("Table", GLFCenv$tabcount))
+    tabl("Comment says Type 3, but habitat type disagrees.", row.names=FALSE,
+      TAB=tab)
+    }
 
   tab <- with(smr2, tapply(sl.total, list(boat, inbplot), sum))
   tabl("Total catch of sea lampreys by BOAT (rows) and INBPLOT (columns).",
-  	"  Extreme differences between boats may indicate a malfunction in one of",
+    "  Extreme differences between boats may indicate a malfunction in one of",
     " the boats.", TAB=tab)
 
   tab <- with(smr2, format(signif(tapply(sl.total, list(boat, inbplot),
@@ -337,14 +337,14 @@ DWEFerror <- function(Dir, Catch, Lengths, Continue, Source=NULL) {
   am2[, match(dimnames(am)[[2]], all5)] <- am
   am2[is.na(am2)] <- 0
   fig <- function() {
-  	par(mar=c(3, 3, 2, 1), mfrow=c(2, 1), oma=c(1, 0, 0, 0), las=1, cex=1.2)
-  	barplot(m2, ylim=c(0, maxfreq+0.2), xlab="", ylab="", main="Catch")
-  	abline(h=0)
-  	barplot(am2, ylim=c(0, maxfreq+0.2), xlab="", ylab="",
-  	  main="Adjusted Catch")
-  	abline(h=0)
-  	mtext("Length  (mm)", side=1, outer=TRUE, cex=1.2)
-  	}
+    par(mar=c(3, 3, 2, 1), mfrow=c(2, 1), oma=c(1, 0, 0, 0), las=1, cex=1.2)
+    barplot(m2, ylim=c(0, maxfreq+0.2), xlab="", ylab="", main="Catch")
+    abline(h=0)
+    barplot(am2, ylim=c(0, maxfreq+0.2), xlab="", ylab="",
+      main="Adjusted Catch")
+    abline(h=0)
+    mtext("Length  (mm)", side=1, outer=TRUE, cex=1.2)
+    }
   figu("Length frequency distributions (unadjusted and adjusted for",
     " length-based gear efficiency) of larval sea lampreys captured during",
     " the ", YEAR, " survey.", FIG=fig, h=6, w=4)
@@ -352,32 +352,32 @@ DWEFerror <- function(Dir, Catch, Lengths, Continue, Source=NULL) {
 
   # survey dates
   fig <- function() {
-  	par(mar=c(4, 4, 1, 1), las=1, cex=1.2)
-  	options(warn=-1)
-  	with(smr2, hist(date, breaks=max(as.numeric(date), na.rm=TRUE) -
+    par(mar=c(4, 4, 1, 1), las=1, cex=1.2)
+    options(warn=-1)
+    with(smr2, hist(date, breaks=max(as.numeric(date), na.rm=TRUE) -
       min(as.numeric(date), na.rm=TRUE) + 1, freq=TRUE, col="gray",
-  		xlab="Date", ylab="Number of DWEF samples", main=""))
-  	options(warn=0)
-  	}
+      xlab="Date", ylab="Number of DWEF samples", main=""))
+    options(warn=0)
+    }
   figu("Number of deepwater electrofisher samples taken over time during the ",
     YEAR, " larval sea lamprey survey.", FIG=fig, h=3, w=6.5)
 
   # distribution of metrics
   fig <- function() {
-  	par(mfrow=c(4, 2), mar=c(3, 4, 2, 1), oma=c(0, 1.5, 0, 0), las=1, cex=1.2)
-  	with(smr2, hist(dec.time, breaks=ceiling(max(dec.time, na.rm=TRUE)) -
+    par(mfrow=c(4, 2), mar=c(3, 4, 2, 1), oma=c(0, 1.5, 0, 0), las=1, cex=1.2)
+    with(smr2, hist(dec.time, breaks=ceiling(max(dec.time, na.rm=TRUE)) -
       floor(min(dec.time, na.rm=TRUE)) + 1, freq=TRUE, col="gray",
-  		xlab="", ylab="", main="Time  (h)"))
-  	plot(as.factor(smr2[, "period"]), xlab="", ylab="", main="Period")
-  	plot(as.factor(smr2[, "boat"]), xlab="", ylab="", main="Boat")
-  	plot(as.factor(smr2[, "sample"]), xlab="", ylab="", main="Sample")
-  	plot(as.factor(smr2[, "hab.type"]), xlab="", ylab="", main="Hab_Type")
-  	hist(smr2[, "depth"], freq=TRUE, col="gray", xlab="", ylab="",
-  	  main="Depth  (m)")
-  	plot(as.factor(smr2[, "region"]), xlab="", ylab="", main="Region")
-  	plot(as.factor(smr2[, "inbplot"]), xlab="", ylab="", main="InBPlot")
-  	mtext("Number of database records", side=2, outer=TRUE, las=0, cex=1.5)
-  	}
+      xlab="", ylab="", main="Time  (h)"))
+    plot(as.factor(smr2[, "period"]), xlab="", ylab="", main="Period")
+    plot(as.factor(smr2[, "boat"]), xlab="", ylab="", main="Boat")
+    plot(as.factor(smr2[, "sample"]), xlab="", ylab="", main="Sample")
+    plot(as.factor(smr2[, "hab.type"]), xlab="", ylab="", main="Hab_Type")
+    hist(smr2[, "depth"], freq=TRUE, col="gray", xlab="", ylab="",
+      main="Depth  (m)")
+    plot(as.factor(smr2[, "region"]), xlab="", ylab="", main="Region")
+    plot(as.factor(smr2[, "inbplot"]), xlab="", ylab="", main="InBPlot")
+    mtext("Number of database records", side=2, outer=TRUE, las=0, cex=1.5)
+    }
   figu("Distributions of other metrics from the ", YEAR,
     " larval sea lamprey survey.\n\n", FIG=fig, newpage="port")
 

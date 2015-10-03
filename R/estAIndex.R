@@ -130,10 +130,10 @@ estAIndex <- function(indexStreams, streamPECurr, streamPEPrev=NULL,
     stop("streamPECurr should have only one row for each year-lscode combination.")
   }
 
-	selstreams <- streamPE$lscode %in% indexStreams
+  selstreams <- streamPE$lscode %in% indexStreams
 
   check1 <- var(streamPE$lake[selstreams])
-	if (is.na(check1) | is.null(check1)) {
+  if (is.na(check1) | is.null(check1)) {
     stop("Either no streams selected or critical data missing.")
   } else {
     if (check1 > 0) {
@@ -160,15 +160,15 @@ estAIndex <- function(indexStreams, streamPECurr, streamPEPrev=NULL,
   incompMiss <- !streamPE$complete & is.na(streamPE$PEmr) & selstreams
   if (any(incompMiss)) {
     sub <- streamPE[selstreams, ]
-  	indfit <- with(sub, aov(log(PEmr) ~ as.factor(lscode) + as.factor(year),
+    indfit <- with(sub, aov(log(PEmr) ~ as.factor(lscode) + as.factor(year),
       weights=1/CVmr^2))
-  	# figure out estimable years (those with at least minNMR m-r estimate)
-  	n.mr <- tapply(!is.na(sub$PEmr), sub$year, sum)
-  	eyrs <- as.numeric(names(n.mr)[n.mr > (minNMR - 0.5)])
+    # figure out estimable years (those with at least minNMR m-r estimate)
+    n.mr <- tapply(!is.na(sub$PEmr), sub$year, sum)
+    eyrs <- as.numeric(names(n.mr)[n.mr > (minNMR - 0.5)])
 
-  	estimable <- streamPE$year %in% eyrs
-  	Pmr <- rep(NA, length(estimable))
-  	Pmr[estimable & selstreams] <-
+    estimable <- streamPE$year %in% eyrs
+    Pmr <- rep(NA, length(estimable))
+    Pmr[estimable & selstreams] <-
         predAntilog(aovfit=indfit, xdata=streamPE[estimable & selstreams, ])
     streamPE$indexContrib[incompMiss] <- Pmr[incompMiss]
   }

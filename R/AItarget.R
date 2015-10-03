@@ -41,7 +41,7 @@ AItarget <- function(lakeIndex,
     pick5 <- lakeIndex$lake==i & is.element(lakeIndex$year, years[[i]])
     targ$targInd[i] <- mean(lakeIndex$index[pick5])*adjust[i]
     targ$targPE[i] <- mean(lakeIndex$pe[pick5])*adjust[i]
-  	}
+    }
 
   targ
 }

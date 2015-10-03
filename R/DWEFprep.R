@@ -90,19 +90,19 @@ DWEFprep <- function(Dir, CatchFile, LengthsFile, PlotsFile, TRTtiming="AFTER",
   # bring in lengths data
   lens <- vector("list", length(LengthsFile))
   for(i in seq(length(lens))) {
-  	filei <- LengthsFile[i]
-  	if(length(grep("\\.xl", filei, ignore.case=TRUE))==1) {
-  		wb <- loadWorkbook(paste(Dir, filei, sep="/"))
-  		lens[[i]] <- readWorksheet(wb, sheet=getSheets(wb)[1])
-  		rm(wb)
-  		} else {
-  		if(length(grep("\\.dbf", filei, ignore.case=TRUE))==1) {
-  			lens[[i]] <- read.dbf(paste(Dir, filei, sep="/"), as.is=TRUE)
-  			} else {
-  			stop("LengthsFile file must be file type *.DBF or *.XLS*")
-  			}
-  		}
-  	}
+    filei <- LengthsFile[i]
+    if(length(grep("\\.xl", filei, ignore.case=TRUE))==1) {
+      wb <- loadWorkbook(paste(Dir, filei, sep="/"))
+      lens[[i]] <- readWorksheet(wb, sheet=getSheets(wb)[1])
+      rm(wb)
+      } else {
+      if(length(grep("\\.dbf", filei, ignore.case=TRUE))==1) {
+        lens[[i]] <- read.dbf(paste(Dir, filei, sep="/"), as.is=TRUE)
+        } else {
+        stop("LengthsFile file must be file type *.DBF or *.XLS*")
+        }
+      }
+    }
   lens <- do.call(rbind, lens)
   names(lens) <- casefold(names(lens))
   lens <- lens[!is.na(lens$length), ]
@@ -121,16 +121,16 @@ DWEFprep <- function(Dir, CatchFile, LengthsFile, PlotsFile, TRTtiming="AFTER",
 
   # bring in catch data
   if(length(grep("\\.xl", filei, ignore.case=TRUE))==1) {
-  	wb <- loadWorkbook(paste(Dir, CatchFile, sep="/"))
-  	fin <- readWorksheet(wb, sheet=getSheets(wb)[1])
-  	rm(wb)
-  	} else {
-  	if(length(grep("\\.dbf", filei, ignore.case=TRUE))==1) {
-  		fin <- read.dbf(paste(Dir, CatchFile, sep="/"), as.is=TRUE)
-  		} else {
-  		stop("CatchFile file must be file type *.DBF or *.XLS*")
-  		}
-  	}
+    wb <- loadWorkbook(paste(Dir, CatchFile, sep="/"))
+    fin <- readWorksheet(wb, sheet=getSheets(wb)[1])
+    rm(wb)
+    } else {
+    if(length(grep("\\.dbf", filei, ignore.case=TRUE))==1) {
+      fin <- read.dbf(paste(Dir, CatchFile, sep="/"), as.is=TRUE)
+      } else {
+      stop("CatchFile file must be file type *.DBF or *.XLS*")
+      }
+    }
   names(fin) <- make.names(casefold(names(fin)), unique=TRUE, allow_=FALSE)
   gps <- strsplit(fin$gpsdate, "/")
 
@@ -168,22 +168,22 @@ DWEFprep <- function(Dir, CatchFile, LengthsFile, PlotsFile, TRTtiming="AFTER",
 
   # determine year of interest
   if(var(fin2$year, na.rm=TRUE)>0) {
-  	stop(paste("CatchFile data contains more than one year of data:",
-  	  sort(unique(fin2$year))))
-  	}
+    stop(paste("CatchFile data contains more than one year of data:",
+      sort(unique(fin2$year))))
+    }
 
   # bring in plot information
   if(length(grep("\\.xl", filei, ignore.case=TRUE))==1) {
-  	wb <- loadWorkbook(paste(Dir, PlotsFile, sep="/"))
-  	plotinfo <- readWorksheet(wb, sheet=getSheets(wb)[1])
-  	rm(wb)
-  	} else {
-  	if(length(grep("\\.dbf", filei, ignore.case=TRUE))==1) {
-  		plotinfo <- read.dbf(paste(Dir, PlotsFile, sep="/"), as.is=TRUE)
-  		} else {
-  		stop("Plot information file must be file type *.DBF or *.XLS*")
-  		}
-  	}
+    wb <- loadWorkbook(paste(Dir, PlotsFile, sep="/"))
+    plotinfo <- readWorksheet(wb, sheet=getSheets(wb)[1])
+    rm(wb)
+    } else {
+    if(length(grep("\\.dbf", filei, ignore.case=TRUE))==1) {
+      plotinfo <- read.dbf(paste(Dir, PlotsFile, sep="/"), as.is=TRUE)
+      } else {
+      stop("Plot information file must be file type *.DBF or *.XLS*")
+      }
+    }
   orig.names <- names(plotinfo)
   names(plotinfo) <- make.names(casefold(names(plotinfo)), unique=TRUE,
     allow_=FALSE)
@@ -203,14 +203,14 @@ DWEFprep <- function(Dir, CatchFile, LengthsFile, PlotsFile, TRTtiming="AFTER",
 
   # if plot numbers were entered, make sure they make sense
   if(is.na(PERIOD)) {
-  	check <- match(b4plots, fin2$new.numb)
-  	if(sum(is.na(check))>0) stop(paste(
-  	  "No catch data corresponds to the hotspots numbers you provided:",
-  	  b4plots[is.na(check)]))
-  	fin2$period <- ifelse(fin2$new.numb %in% b4plots, -1, 1)
-  	} else {
-  	fin2$period <- PERIOD
-  	}
+    check <- match(b4plots, fin2$new.numb)
+    if(sum(is.na(check))>0) stop(paste(
+      "No catch data corresponds to the hotspots numbers you provided:",
+      b4plots[is.na(check)]))
+    fin2$period <- ifelse(fin2$new.numb %in% b4plots, -1, 1)
+    } else {
+    fin2$period <- PERIOD
+    }
 
 
   # any variable names missing?

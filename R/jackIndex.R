@@ -22,18 +22,18 @@
 #' jackIndex(streampe)
 
 jackIndex <- function(m) {
-	if (any(is.na(m))) stop("The input matrix may not have any missing values.")
-	# calculate the index as the sum of the columns for each row
-	rowsum <- apply(m, 1, sum)
-	# calculate the mean of the index
-	avgind <- mean(rowsum)
-	# recalculate the index, leaving out one individual at a time
-	loo <- apply(m, 2, function(column) (rowsum - column))
-	# rescale the loo index, relative to mean
-	looscaled <- apply(loo, 2, function(x) x/mean(x))
-	# convert to original scale
-	looscaled2 <- looscaled * avgind
-	# calculate range
-	ranges <- t(apply(looscaled2, 1, range))
-	cbind(index=rowsum, jlo=ranges[, 1], jhi=ranges[, 2])
-	}
+  if (any(is.na(m))) stop("The input matrix may not have any missing values.")
+  # calculate the index as the sum of the columns for each row
+  rowsum <- apply(m, 1, sum)
+  # calculate the mean of the index
+  avgind <- mean(rowsum)
+  # recalculate the index, leaving out one individual at a time
+  loo <- apply(m, 2, function(column) (rowsum - column))
+  # rescale the loo index, relative to mean
+  looscaled <- apply(loo, 2, function(x) x/mean(x))
+  # convert to original scale
+  looscaled2 <- looscaled * avgind
+  # calculate range
+  ranges <- t(apply(looscaled2, 1, range))
+  cbind(index=rowsum, jlo=ranges[, 1], jhi=ranges[, 2])
+  }

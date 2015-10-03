@@ -60,15 +60,15 @@ AIestimate <- function(streamDat, minNMR=2) {
   incompiMiss <- with(streamDat, !complete & index & is.na(PEmr))
   if (any(incompiMiss)) {
     sub <- streamDat[streamDat$index, ]
-  	indfit <- with(sub,
+    indfit <- with(sub,
       aov(log(PEmr) ~ as.factor(lscode) + as.factor(year), weights=1/CVmr^2)
       )
-  	# figure out estimable years (those with at least minNMR m-r estimate)
-  	n.mr <- tapply(!is.na(sub$PEmr), sub$year, sum)
-  	eyrs <- as.numeric(names(n.mr)[n.mr > (minNMR - 0.5)])
-  	estimable <- streamDat$year %in% eyrs
-  	Pmr <- rep(NA, length(estimable))
-  	Pmr[estimable & streamDat$index] <- predAntilog(aovfit=indfit,
+    # figure out estimable years (those with at least minNMR m-r estimate)
+    n.mr <- tapply(!is.na(sub$PEmr), sub$year, sum)
+    eyrs <- as.numeric(names(n.mr)[n.mr > (minNMR - 0.5)])
+    estimable <- streamDat$year %in% eyrs
+    Pmr <- rep(NA, length(estimable))
+    Pmr[estimable & streamDat$index] <- predAntilog(aovfit=indfit,
       xdata=streamDat[estimable & streamDat$index, ])
     streamDat$indexContrib[incompiMiss] <- Pmr[incompiMiss]
   }

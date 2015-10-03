@@ -74,7 +74,7 @@ AIcheck <- function(streamDat, csvDir, outFile=NULL, otherTabs=NULL) {
     # show streams that are missing a current year population estimate
     tab <- df.nice[year==YEAR & (is.na(PEmr) | is.na(CVmr)), ]
     if (dim(tab)[1]>0) {
-    	tabl("NOTE:  Some streams were missing a ", YEAR,
+      tabl("NOTE:  Some streams were missing a ", YEAR,
         " population estimate or CV.", TAB=tab, row.names=FALSE)
     } else {
       para("GREAT:  All streams had ", YEAR, "population estimates and CVs.")
@@ -85,7 +85,7 @@ AIcheck <- function(streamDat, csvDir, outFile=NULL, otherTabs=NULL) {
         (!is.na(PEmr) & is.na(CVmr)) | (is.na(trapcatch) & !is.na(PEmr))) &
         lscode!=3.999, ]
     if (dim(tab)[1]>0) {
-    	tabl("ERROR:  Something's missing ... either, trapcatch, PEmr, or CVmr.",
+      tabl("ERROR:  Something's missing ... either, trapcatch, PEmr, or CVmr.",
         TAB=tab, row.names=FALSE)
     } else para("OKAY:  All mark-recapture estimates have trap catches and",
       " CVs.")
@@ -96,9 +96,9 @@ AIcheck <- function(streamDat, csvDir, outFile=NULL, otherTabs=NULL) {
     nowcount <- sum(index==FALSE & maintain==TRUE & year==YEAR)
     if (nowcount<lastcount) {
       if (nowcount<1) {
-      	para("ERROR:  No data was reported from non-index streams.",
+        para("ERROR:  No data was reported from non-index streams.",
           "  But there are data from ", lastcount, " non-index streams in ",
-      	  YEAR-1, ".")
+          YEAR-1, ".")
       } else {
         tabl("ERROR:  Data was only reported from ", nowcount,
           " non-index streams in ", YEAR, ".",
@@ -113,8 +113,8 @@ AIcheck <- function(streamDat, csvDir, outFile=NULL, otherTabs=NULL) {
     # check values of trap catch and population estimate
     tab <- df.nice[!is.na(PEmr) & !is.na(trapcatch) & PEmr<=trapcatch, ]
     if (dim(tab)[1]>0) {
-    	tabl(
-    	  "ERROR:  Population estimates shouldn't be smaller than trap catches.",
+      tabl(
+        "ERROR:  Population estimates shouldn't be smaller than trap catches.",
         TAB=tab, row.names=FALSE)
     } else para("OKAY:  Population estimates are greater than trap catches.")
 
@@ -128,9 +128,9 @@ AIcheck <- function(streamDat, csvDir, outFile=NULL, otherTabs=NULL) {
     streamz2 <- names(nts)[nts<1]
     streamz <- as.numeric(intersect(streamz1, streamz2))
     if (length(streamz)>0) {
-    	tab <- df.nice[lscode %in% streamz &
+      tab <- df.nice[lscode %in% streamz &
           ((sel1 & !is.na(trapcatch) & trapcatch>0) | sel2), ]
-    	tabl("Streams with no trap catch in ", YEAR,
+      tabl("Streams with no trap catch in ", YEAR,
         ", but at least one trap catch in previous five years.",
         TAB=tab, row.names=FALSE)
     } else para("OKAY:  All streams with no trap catch in ", YEAR,
@@ -146,17 +146,17 @@ AIcheck <- function(streamDat, csvDir, outFile=NULL, otherTabs=NULL) {
     streamz1 <- names(tnow)[tnow > 1.5*tmax]
     streamz2 <- names(tnow)[tnow < tmin/2]
     if (length(streamz1)>0) {
-    	tab <- df.nice[lscode %in% streamz1 &
+      tab <- df.nice[lscode %in% streamz1 &
           ((sel1 & !is.na(trapcatch) & trapcatch>0) | sel2), ]
-    	tabl("Streams with a ", YEAR,
+      tabl("Streams with a ", YEAR,
         " trap catch more than 50% greater than maximum from",
         " the previous five years.",
         TAB=tab, row.names=FALSE)
     } else para("OKAY:  No unusually large trap catches in ", YEAR, ".")
     if (length(streamz2)>0) {
-    	tab <- df.nice[lscode %in% streamz2 &
+      tab <- df.nice[lscode %in% streamz2 &
           ((sel1 & !is.na(trapcatch) & trapcatch>0) | sel2), ]
-    	tabl("Streams with a ", YEAR,
+      tabl("Streams with a ", YEAR,
         " trap catch less than half of minimum from the previous five years.",
         TAB=tab, row.names=FALSE)
     } else para("OKAY:  No unusually small trap catches in ", YEAR, ".")
@@ -180,15 +180,15 @@ AIcheck <- function(streamDat, csvDir, outFile=NULL, otherTabs=NULL) {
 
   # exploratory plots of the data
   FIG.scatter <- function() {
-  	with(streamDat, {
-    	par(mfrow=c(3, 2), mar=c(4, 4, 2, 1), las=1, cex=1)
-    	plotdf(streamDat[, c("lake", "country", "year")])
-    	sel1 <- !is.na(trapcatch) & trapcatch>0 & !is.na(PEmr) & PEmr>0
-    	plot(trapcatch[sel1], PEmr[sel1], log="xy",
+    with(streamDat, {
+      par(mfrow=c(3, 2), mar=c(4, 4, 2, 1), las=1, cex=1)
+      plotdf(streamDat[, c("lake", "country", "year")])
+      sel1 <- !is.na(trapcatch) & trapcatch>0 & !is.na(PEmr) & PEmr>0
+      plot(trapcatch[sel1], PEmr[sel1], log="xy",
         xlab="Trap Catch", ylab="M-R Estimate")
-    	sel1 <- !is.na(CVmr) & CVmr>0 & !is.na(PEmr) & PEmr>0
-    	plot(PEmr[sel1], CVmr[sel1], log="xy", xlab="M-R Estimate", ylab="CV")
-  	})
+      sel1 <- !is.na(CVmr) & CVmr>0 & !is.na(PEmr) & PEmr>0
+      plot(PEmr[sel1], CVmr[sel1], log="xy", xlab="M-R Estimate", ylab="CV")
+    })
   }
 
   figu("Exploratory plots of ", YEAR, " adult sea lamprey data.",
@@ -199,7 +199,7 @@ AIcheck <- function(streamDat, csvDir, outFile=NULL, otherTabs=NULL) {
   # plot trap efficiencies
   FIG.trapEff <- function() {
     sub <- streamDat[with(streamDat, !is.na(PEmr) & !is.na(trapcatch)), ]
-  	with(sub, {
+    with(sub, {
       yrz <- min(year):max(year)
       # use the latest observation for each stream
       sub <- sub[with(sub, order(lscode, -year)), ]
@@ -209,30 +209,30 @@ AIcheck <- function(streamDat, csvDir, outFile=NULL, otherTabs=NULL) {
       suls <- suby$lscode
       tecol <- colr(suby$trapEff, "orange", "blue")
       nrnc <- n2mfrow(length(suls))[2:1]
-    	par(mfrow=nrnc, mar=c(0, 0, 0, 0), oma=c(4, 3, 1, 1), yaxs="i", cex=1.4)
-    	for(i in seq(suls)) {
-    		sel <- lscode==suls[i]
-    		plot(1, 1, type="n", xlim=range(year), ylim=0:1, axes=FALSE,
+      par(mfrow=nrnc, mar=c(0, 0, 0, 0), oma=c(4, 3, 1, 1), yaxs="i", cex=1.4)
+      for(i in seq(suls)) {
+        sel <- lscode==suls[i]
+        plot(1, 1, type="n", xlim=range(year), ylim=0:1, axes=FALSE,
           xlab="", ylab="")
-    		abline(h=seq(0.25, 0.75, 0.25), col="lightgray", lty=3)
-    		abline(v=seq(1985, YEAR+2, 5), col="lightgray", lty=3)
-    		lines(yrz, trapEff[sel][match(yrz, year[sel])],
+        abline(h=seq(0.25, 0.75, 0.25), col="lightgray", lty=3)
+        abline(v=seq(1985, YEAR+2, 5), col="lightgray", lty=3)
+        lines(yrz, trapEff[sel][match(yrz, year[sel])],
           type="o", pch=20, cex=1, col=tecol[i])
-    		if (i <= nrnc[2]) {
+        if (i <= nrnc[2]) {
           axis(1, at=seq(1990, YEAR+2, 10), outer=TRUE, cex.axis=0.6, las=2,
             tcl=-0.3)
-    		}
-    		if (i%%nrnc[2] == 1) {
+        }
+        if (i%%nrnc[2] == 1) {
           axis(2, at=c(0.25, 0.75), labels=c("25", "75"), outer=TRUE,
             cex.axis=0.6, las=1, tcl=-0.3)
-    		}
-      	mtext(paste(sucle[i], strname[sel][1], sep="\n"),
+        }
+        mtext(paste(sucle[i], strname[sel][1], sep="\n"),
           cex=1, adj=0.05, line=-2)
         box(col="darkgray")
-    	}
+      }
       mtext("Year", side=1, outer=TRUE, cex=1.2, line=3)
       mtext("Trap efficiency (%)", side=2, outer=TRUE, cex=1.2, line=2)
-  	})
+    })
   }
 
   if(!is.null(streamDat$trapcatch)) {
@@ -260,11 +260,11 @@ AIcheck <- function(streamDat, csvDir, outFile=NULL, otherTabs=NULL) {
       suls <- suby$lscode
       pecol <- colr(suby$PEmr, "blue", "orange")
       nrnc <- n2mfrow(length(suls))[2:1]
-    	par(mfrow=nrnc, mar=c(0, 0, 0, 0), oma=c(4, 3, 1, 1), yaxs="i", cex=1.4)
-    	for(i in seq(suls)) {
-    		sel <- lscode==suls[i]
+      par(mfrow=nrnc, mar=c(0, 0, 0, 0), oma=c(4, 3, 1, 1), yaxs="i", cex=1.4)
+      for(i in seq(suls)) {
+        sel <- lscode==suls[i]
         selsd <- sel & !is.na(PEplusSD)
-    		plot(1, 1, type="n", xlim=range(year), ylim=1.1*range(0, PEmr)/1000,
+        plot(1, 1, type="n", xlim=range(year), ylim=1.1*range(0, PEmr)/1000,
           axes=FALSE, xlab="", ylab="")
         # ignore warnings from zero-length arrows
         oldopt <- getOption("warn")
@@ -273,22 +273,22 @@ AIcheck <- function(streamDat, csvDir, outFile=NULL, otherTabs=NULL) {
           year[selsd], PEplusSD[selsd]/1000,
           col="gray", length=0.05, angle=90, code=3)
         options(warn=oldopt)
-      	lines(yrz, PEmr[sel][match(yrz, year[sel])]/1000,
+        lines(yrz, PEmr[sel][match(yrz, year[sel])]/1000,
           type="o", pch=20, cex=1, col=pecol[i])
-    		if (i <= nrnc[2]) {
+        if (i <= nrnc[2]) {
           axis(1, at=seq(1990, YEAR+2, 10), outer=TRUE, cex.axis=0.6, las=2,
             tcl=-0.3)
-    		}
-    		if (i%%nrnc[2] == 1) {
+        }
+        if (i%%nrnc[2] == 1) {
           axis(2, outer=TRUE, cex.axis=0.6, las=1, tcl=-0.3)
-    		}
-    		mtext(paste(sucle[i], strname[sel][1], sep="\n"),
+        }
+        mtext(paste(sucle[i], strname[sel][1], sep="\n"),
           cex=1, adj=0.05, line=-2)
         box(col="darkgray")
-    	}
+      }
       mtext("Year", side=1, outer=TRUE, cex=1.2, line=3)
       mtext("Adult PE  (thousands)", side=2, outer=TRUE, cex=1.2, line=2)
-  	})
+    })
   }
 
   figu("Adult mark-recapture estimates in streams,",
@@ -305,42 +305,42 @@ AIcheck <- function(streamDat, csvDir, outFile=NULL, otherTabs=NULL) {
     streams.pick <- sort(unique(streamDat$lscode[selstreams]))
     sub <- streamDat[with(streamDat,
       is.element(lscode, streams.pick) & year > YEAR - 4.5), ]
-  	with(sub, {
+    with(sub, {
       suby <- sub[with(sub, year==YEAR), ]
       suby <- suby[with(suby, order(lake, country, estr, strcode)), ]
       sucle <- suby$cle
       suls <- suby$lscode
       nrnc <- n2mfrow(length(suls))
-    	par(mfrow=nrnc, mar=c(0, 2, 2, 0), oma=c(3, 1, 1, 1), yaxs="i", cex=1.4)
-    	for(i in seq(suls)) {
-    		sel <- lscode==suls[i]
+      par(mfrow=nrnc, mar=c(0, 2, 2, 0), oma=c(3, 1, 1, 1), yaxs="i", cex=1.4)
+      for(i in seq(suls)) {
+        sel <- lscode==suls[i]
         selsd <- sel & !is.na(PEplusSD)
         mymax <- 1.1*max(c(PEplusSD[sel], PEmr[sel]), na.rm=TRUE)/1000
         plot(year[sel], PEmr[sel]/1000, type="n", axes=FALSE,
           xlim=range(year) + c(-1, 1)*0.3, ylim=c(0, mymax), xlab="", ylab="")
-    		lines(year[sel], PEmr[sel]/1000, type="o", pch=16, cex=0.7)
+        lines(year[sel], PEmr[sel]/1000, type="o", pch=16, cex=0.7)
         # ignore warnings from zero-length arrows
         oldopt <- getOption("warn")
         options(warn=-1)
-      	arrows(year[selsd], PEminusSD[selsd]/1000,
+        arrows(year[selsd], PEminusSD[selsd]/1000,
           year[selsd], PEplusSD[selsd]/1000,
           length=0.05, angle=90, code=3)
         options(warn=oldopt)
-    		if (i <= nrnc[2]) axis(1, outer=TRUE, cex.axis=0.6, tcl=-0.2)
-      	axis(2, cex.axis=0.6, las=1, tcl=-0.2)
-    		mtext(paste(sucle[i], strname[sel][1], sep="\n"), side=3,
+        if (i <= nrnc[2]) axis(1, outer=TRUE, cex.axis=0.6, tcl=-0.2)
+        axis(2, cex.axis=0.6, las=1, tcl=-0.2)
+        mtext(paste(sucle[i], strname[sel][1], sep="\n"), side=3,
           cex=0.8, adj=0.1)
-    		box(col="gray")
-    	}
+        box(col="gray")
+      }
       mtext("Year", side=1, outer=TRUE, cex=1.2, line=2)
       mtext("Adult sea lampreys  (thousands)", side=2, outer=TRUE, cex=1.2,
         line=0)
-  	})
+    })
   }
 
   figu("Recent adult sea lamprey mark-recapture estimates on streams,",
     " plus or minus 1 standard deviation, ", YEAR-4, "-", YEAR, ".",
-  	FIG=FIG.strmest, newpage="port")
+    FIG=FIG.strmest, newpage="port")
 
   endrtf()
 }

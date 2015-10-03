@@ -18,9 +18,9 @@
 #' @export
 
 endrtf <- function(rtf=doc, details=FALSE, ...) {
-	if (details==TRUE) {
-		addPageBreak(rtf, ...)
-		addSessionInfo(rtf)
-		}
-	done(rtf)
-	}
+  if (details==TRUE) {
+    addPageBreak(rtf, ...)
+    addSessionInfo(rtf)
+    }
+  done(rtf)
+  }
