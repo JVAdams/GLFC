@@ -30,8 +30,6 @@
 #'   for the incomplete rows in (\code{streamDat}), with 5 columns: \code{lake},
 #'   \code{year}, the Adult Index \code{index}, and the lower and upper
 #'   jackknifed range \code{jlo} and \code{jhi}.
-#' @import
-#'   plyr
 #' @export
 #' @details
 #'   The annual Adult Index is simply the sum of stream population estimates for

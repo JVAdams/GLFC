@@ -47,8 +47,7 @@
 #' @return
 #'   A draft report document as an rtf file (with the file type *.doc,
 #'   so that MS Word will open it automatically).
-#' @import
-#'   maps
+#' @importFrom maps map
 #' @export
 #'
 AIreport <- function(streamPEs, lakeIPEs, targets, csvDir, outFile=NULL,
@@ -165,7 +164,7 @@ AIreport <- function(streamPEs, lakeIPEs, targets, csvDir, outFile=NULL,
 
     magic <- 20
     par(mar=c(0, 0, 0, 0))
-    map(xlim=xr + c(-1, 1)*bufx, ylim=yr + c(-magic, 1)*bufy, col=NA,
+    maps::map(xlim=xr + c(-1, 1)*bufx, ylim=yr + c(-magic, 1)*bufy, col=NA,
       mar=c(0, 0, 0, 0))
     pusr <- par("usr")
     lines(mymap$x, mymap$y, col="gray", lwd=0.5)

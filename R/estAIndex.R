@@ -42,8 +42,7 @@
 #'   for the current data (\code{streamPECurr}), with 5 columns: \code{lake},
 #'   \code{year}, the Adult Index \code{index}, and the lower and upper
 #'   jackknifed range \code{jlo} and \code{jhi}.
-#' @import
-#'   plyr
+#' @importFrom plyr rbind.fill
 #' @export
 #' @details
 #'   The annual Adult Index is simply the sum of stream population estimates for
@@ -119,7 +118,7 @@ estAIndex <- function(indexStreams, streamPECurr, streamPEPrev=NULL,
         paste(varLong, collapse=", "), ".")
     }
     streamPEPrev$complete <- TRUE
-    streamPE <- rbind.fill(streamPEPrev[, c(varLong, "complete")],
+    streamPE <- plyr::rbind.fill(streamPEPrev[, c(varLong, "complete")],
       streamPECurr[, c(varShort, "complete")])
   } else {
     streamPE <- streamPECurr[, c(varShort, "complete")]

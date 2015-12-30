@@ -47,8 +47,7 @@
 #'   estimate that will be used in the Adult Index (NA for csvNew); and
 #'   \code{complete} a logical identifying streams and years for which the
 #'   Adult Index has already been estimated (FALSE for csvNew).
-#' @import
-#'   plyr
+#' @importFrom plyr rbind.fill
 #' @export
 
 AIprep <- function(csvDir, csvNew, csvOld=NULL, streamInfo=trappedStreams,
@@ -91,7 +90,7 @@ AIprep <- function(csvDir, csvNew, csvOld=NULL, streamInfo=trappedStreams,
     }
 
     # combine the previous data with the current data
-    streamPE <- rbind.fill(strold, strnew)
+    streamPE <- plyr::rbind.fill(strold, strnew)
   } else {
     streamPE <- strnew
   }

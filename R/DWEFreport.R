@@ -57,8 +57,10 @@
 #'
 #'   Three csv files are written to \code{Dir}, with the final catch, lengths,
 #'   and plot data.
+#' @importFrom maps map
+#' @importFrom plotrix rescale
 #' @import
-#'   survey lubridate maps plotrix
+#'   lubridate 
 #' @export
 
 DWEFreport <- function(Dir, CatchClean, LengthsClean, Plots, Downstream,
@@ -555,7 +557,7 @@ DWEFreport <- function(Dir, CatchClean, LengthsClean, Plots, Downstream,
   sel.hit <- smr3$sl.total > 0
   fig <- function() {
     par(yaxs="i", xaxs="i")
-    map(type="n", xlim=range(smr3$longitude, na.rm=TRUE)+c(-0.002, 0.002),
+    maps::map(type="n", xlim=range(smr3$longitude, na.rm=TRUE)+c(-0.002, 0.002),
       ylim=range(smr3$latitude, na.rm=TRUE), mar=c(0, 0, 0, 0))
     # all plots
     points(smr3$longitude[smr3$inbplot==1], smr3$latitude[smr3$inbplot==1],
@@ -631,10 +633,10 @@ DWEFreport <- function(Dir, CatchClean, LengthsClean, Plots, Downstream,
   colz <- ifelse(dens.cat==0, "white", brewcol(dens.cat))
   sel.trt <- pid3$new.numb %in% treated.plots
   sel.z <- dens.cat==0
-  symsize <- 4*rescale(sqrt(pid3$meannperha), 0:1)
+  symsize <- 4*plotrix::rescale(sqrt(pid3$meannperha), 0:1)
   fig <- function() {
     par(yaxs="i", xaxs="i")
-    map(type="n", xlim=range(pid3$meanlong, na.rm=TRUE)+c(-0.002, 0.002),
+    maps::map(type="n", xlim=range(pid3$meanlong, na.rm=TRUE)+c(-0.002, 0.002),
       ylim=range(pid3$meanlat, na.rm=TRUE), mar=c(0, 0, 0, 0))
     # river boundary
     addsmr(col="lightgray")

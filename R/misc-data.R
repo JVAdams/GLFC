@@ -16,6 +16,40 @@
 #'   GLFC Trapping Task Force.
 NULL
 #' @name
+#'   Lakenames
+#' @title
+#'   Great Lakes Names
+#' @description
+#'   A vector with the names of the five Great Lakes.
+#' @format
+#'   A character vector, length 5.
+NULL
+#' @name
+#'   Lakeabbs
+#' @title
+#'   Great Lakes Abbreviations
+#' @description
+#'   A vector with the first initials of the five Great Lakes.
+#' @format
+#'   A character vector, length 5.
+NULL
+#' @name
+#'   blindcolz
+#' @title
+#'   Color-blind Friendly Colors
+#' @description
+#'   A vector with nine color-blind friendly colors in hex code.
+#' @format
+#'   A character vector, length 9.
+#' @source
+#'   How to make figures and presentations that are friendly to color blind
+#'   people,
+#'   20 November 2002,
+#'   \href{http://jfly.iam.u-tokyo.ac.jp/html/color_blind/}{[link]}.
+#' @author
+#'   Masataka Okabe and Kei Ito.
+NULL
+#' @name
 #'   lsKeep
 #' @title
 #'   Great Lakes Streams with Commitment to Adult Sea Lamprey Trapping

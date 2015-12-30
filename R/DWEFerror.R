@@ -32,8 +32,7 @@
 #'   frames (CAT2, LEN2), a character vector of the table references for any
 #'   remaining errors (ERR), a character vector of the SOURCE directory and
 #'   file names, and a character vector of the output file names (OUT).
-#' @import
-#'   geosphere
+#' @importFrom geosphere geodesic_inverse
 #' @export
 
 DWEFerror <- function(Dir, Catch, Lengths, Continue, Source=NULL) {
@@ -210,7 +209,7 @@ DWEFerror <- function(Dir, Catch, Lengths, Continue, Source=NULL) {
   if(dim(keep)[1] > 0) {
     for(i in 1:dim(keep)[1]) {
       tab <- smr2[keep[i, ], printvars]
-      dist.in.m <- geodesic_inverse(smr2[keep[i, 1],
+      dist.in.m <- geosphere::geodesic_inverse(smr2[keep[i, 1],
         c("longitude", "latitude")],
         smr2[keep[i, 2], c("longitude", "latitude")])[, "distance"]
       errors <- append(errors, paste("Table", GLFCenv$tabcount))

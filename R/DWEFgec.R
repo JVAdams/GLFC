@@ -26,7 +26,7 @@
 #'  Journal of Great Lakes Research 40(3):739-747.
 #'  \href{http://www.sciencedirect.com/science/article/pii/S0380133014001385}{[link]}
 #' @examples
-#' catch <- 1:5
+#' catch <- 1:6
 #' lenmm <- seq(80, 180, 20)
 #' adjcatch <- catch*DWEFgec(lenmm)
 #' cbind(catch, lenmm, adjcatch)
