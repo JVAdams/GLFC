@@ -6,10 +6,10 @@ Authors@R: person(given="Jean V.", family="Adams", email="jvadams@usgs.gov",
 Description: Functions developed for the Great Lakes Fishery Commission's
     sea lamprey control program, including estimation of the index of adult sea
     lamprey abundance.
-Depends:
+Depends: 
     R (>= 3.2.3),
     maps
-Imports:
+Imports: 
     geosphere,
     lubridate,
     plotrix,
@@ -20,3 +20,6 @@ License: GPL
 LazyData: TRUE
 URL: https://github.com/JVAdams/GLFC
 RoxygenNote: 5.0.1
+Suggests: knitr,
+    rmarkdown
+VignetteBuilder: knitr

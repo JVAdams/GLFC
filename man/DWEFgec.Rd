@@ -23,6 +23,7 @@ in the deepwater electrofisher to derive a gear efficiency correction factor.
 \details{
 Lake-stream IDs are combination of lake ID and stream ID
   e.g., 1.064 = lake ID + (stream ID)/1000.
+
   For both estimate files (csvNew and csvOld), there should be no missing
   values in \code{year}, \code{lake}, or \code{lscode}.
   Both files may contain variables other than those required.
