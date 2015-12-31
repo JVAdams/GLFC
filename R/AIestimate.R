@@ -9,7 +9,7 @@
 #'   \code{lake}, lake-stream ID \code{lscode}
 #'   (see details), population estimate
 #'   \code{PEmr}, coefficient of variation \code{CVmr}
-#'   (100% * sqrt(variance(PEmr)) / PEmr), \code{index}, a logical
+#'   (100\% * sqrt(variance(PEmr)) / PEmr), \code{index}, a logical
 #'   identifying the index streams; \code{maintain} a logical identifying the
 #'   streams that will continue to have ongoing trapping even if not part of
 #'   the Adult Index; \code{indexContrib} a numeric, the stream population
@@ -23,11 +23,11 @@
 #'
 #' @return
 #'   A list with 2 components:
-#'   \code{streamDat}, a data frame of stream mark-recapture and Adult Index
-#'   contributions for the incomplete rows in \code{streamDat}, with
-#'   the same variables as \code{streamDat}; and
+#'   \code{streamPE}, a data frame of stream mark-recapture and Adult Index
+#'   contributions for the incomplete rows in \code{streamPE}, with
+#'   the same variables as \code{streamPE}; and
 #'   \code{lakeIndex}, a data frame of annual lake-wide Adult Indices
-#'   for the incomplete rows in (\code{streamDat}), with 5 columns: \code{lake},
+#'   for the incomplete rows in (\code{streamPE}), with 5 columns: \code{lake},
 #'   \code{year}, the Adult Index \code{index}, and the lower and upper
 #'   jackknifed range \code{jlo} and \code{jhi}.
 #' @export

@@ -17,7 +17,7 @@
 #'   These will be used to generate Adult Index targets.
 #' @param adjust
 #'   A numeric vector of length 5 (for each Great Lake),
-#'   specifying adjustments to be made to the caculated means to
+#'   specifying adjustments to be made to the calculated means to
 #'   generate Adult Index targets, default c(1, 1, 0.25, 1, 1).  Since Lake
 #'   Huron did not have a time period with acceptable sea lamprey wounding
 #'   rates, the target is set to 25\% of the mean for 1989-1993.

@@ -25,7 +25,7 @@ Adult Index has already been estimated (FALSE for new).}
 \item{csvDir}{A character scalar identifying the path where the rtf file will be
 stored, e.g., \code{csvDir = "C:\\temp\\mydir"}.}
 
-\item{outFile}{Name of the ouput rtf file, default NULL, in which case the file will be
+\item{outFile}{Name of the output rtf file, default NULL, in which case the file will be
 named "YYYY Adult Index - error checking.doc" where YYYY
 is the latest year represented in \code{streamDat}.}
 

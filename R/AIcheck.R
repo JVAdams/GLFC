@@ -10,7 +10,7 @@
 #'   \code{lake}, lake-stream ID \code{lscode}
 #'   (see details), population estimate
 #'   \code{PEmr}, coefficient of variation \code{CVmr}
-#'   (100% * sqrt(variance(PEmr)) / PEmr), \code{index}, a logical
+#'   (100\% * sqrt(variance(PEmr)) / PEmr), \code{index}, a logical
 #'   identifying the index streams; \code{maintain} a logical identifying the
 #'   streams that will continue to have ongoing trapping even if not part of
 #'   the Adult Index; \code{indexContrib} a numeric, the stream population
@@ -21,7 +21,7 @@
 #'   A character scalar identifying the path where the rtf file will be
 #'   stored, e.g., \code{csvDir = "C:\\temp\\mydir"}.
 #' @param outFile
-#'   Name of the ouput rtf file, default NULL, in which case the file will be
+#'   Name of the output rtf file, default NULL, in which case the file will be
 #'   named "YYYY Adult Index - error checking.doc" where YYYY
 #'   is the latest year represented in \code{streamDat}.
 #' @param otherTabs

@@ -22,7 +22,7 @@ list(1994:1998, 1988:1992, 1989:1993, 1991:1995, 1993:1997).
 These will be used to generate Adult Index targets.}
 
 \item{adjust}{A numeric vector of length 5 (for each Great Lake),
-specifying adjustments to be made to the caculated means to
+specifying adjustments to be made to the calculated means to
 generate Adult Index targets, default c(1, 1, 0.25, 1, 1).  Since Lake
 Huron did not have a time period with acceptable sea lamprey wounding
 rates, the target is set to 25\% of the mean for 1989-1993.}

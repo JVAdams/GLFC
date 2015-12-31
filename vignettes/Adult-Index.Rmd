@@ -1,5 +1,5 @@
 ---
-title: "Adult Sea Lamprey Index Estimation"
+title: "Adult Index Estimation"
 author: "Jean V. Adams"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
@@ -9,26 +9,43 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-The R package **GLFC** includes functions to estimate indices of adult sea lamprey abundance in the Great Lakes.  The [Great Lakes Fishery Commission](http://www.glfc.org) made the decision to switch to a lake-wide index of adult abundance in December 2014 (GLFC-TTF 2014).  Prior to that decision, lakewide population estimates were generated following Mullett et al. (2003).  This vignette walks you through the process of generating adult index estimates.
+```{r, echo=FALSE}
+library(knitr) 
+opts_chunk$set(echo=TRUE, warning=FALSE, message=FALSE, width=80)
+```
+
+The R package **GLFC** includes functions to estimate indices of adult sea lamprey abundance in the Great Lakes.  The [Great Lakes Fishery Commission](http://www.glfc.org) made the decision to switch to a lake-wide index of adult abundance in December 2014 (GLFC-TTF 2014).  Prior to that decision, lakewide population estimates (PE) were generated following Mullett et al. (2003).  This vignette walks you through the process of generating Adult Index estimates.
+
+The five main functions of the **GLFC** package are:
+
+* `AIprep()` - to prepare the Adult Index data
+* `AIcheck()` - to error check the Adult Index data
+* `AIestimat()` - to estimate the Adult Index
+* `AItarget()` - to calculate targets for the Adult Index
+* `AIreport()` - to generate a draft Adult Index report
+
+
 
 ## Install
 
 Install the latest version of **[R](https://www.r-project.org/)** from [CRAN](https://cran.r-project.org/bin/windows/base/).
 
-Install the latest version of the **GLFC** package following the instructions at [Readme](https://github.com/JVAdams/GLFC/blob/master/README.md).  The easiest way to do this, if you already have the package *devtools* installed, is:
+Install the latest version of the **GLFC** package following the instructions at [Readme](https://github.com/JVAdams/GLFC/blob/master/README.md).  The easiest way to do this, if you already have the package **devtools** installed, is:
 
-```{r install_package, eval=FALSE}
+```{r install_glfc, eval=FALSE}
 devtools::install_github("JVAdams/GLFC")
 ```
 
-If, instead, you install the **GLFC** package by first downloading the [zip file](https://github.com/JVAdams/GLFC/raw/master/GLFC.zip) and installing from the R Menu (*Packages*, *Install package(s) from local zip files...*), then you should run the following lines of code, to ensure that all the packages on which **GLFC** depends are installed.
+If, instead, you install the **GLFC** package by downloading the [zip file](https://github.com/JVAdams/GLFC/raw/master/GLFC.zip) and installing it from the R Menu (*Packages*, *Install package(s) from local zip files...*), then you should run the following lines of code, to ensure that all the packages on which **GLFC** depends are installed.
 
-```{r}
+```{r install_packages}
 wantpkgs <- c("geosphere", "lubridate", "maps", "plotrix", "plyr", "rtf",
   "XLConnect")
 needpkgs <- setdiff(wantpkgs, row.names(installed.packages()))
 if(length(needpkgs) > 0) install.packages(needpkgs)
 ```
+
+
 
 ## Prepare the data
 
@@ -39,36 +56,36 @@ STREAMDATAPREV <- "AdultStreamThru2014.csv"
 LAKEDATAPREV <- "AdultLakeThru2014.csv"
 ```
 
-Three csv files are needed to generate adult index estimates, one each with new stream data, old stream data, and old lake data.
+Three csv files are needed to generate Adult Index estimates, one each with new stream data, previous stream data, and previous lake data.
 
 **(1)** `STREAMDATANEW` should contain stream mark-recapture estimates of adult sea lampreys for the year of interest.  The first row of `STREAMDATANEW` should be a header row with the following column names:
 
-* year - survey year
-* lake - lake code (1=Superior, 2=Michigan, 3=Huron, 4=Erie, and 5=Ontario)
-* lscode - lake-stream code, a combination of lake and stream codes e.g., lscode = 1.064 = lake code + (stream code)/1000. 
-* trapcatch = no. of adult sea lampreys captured
-* PEmr = stream population estimate of adult sea lampreys from mark-recapture study
-* CVmr = coefficient of variation of PEmr
-* Comments = comments
+* `year` - survey year
+* `lake` - lake code (1=Superior, 2=Michigan, 3=Huron, 4=Erie, and 5=Ontario)
+* `lscode` - lake-stream code, a combination of lake and stream codes e.g., lscode = 1.064 = lake code + (stream code)/1000
+* `trapcatch` = no. of adult sea lampreys captured
+* `PEmr` = stream population estimate of adult sea lampreys from mark-recapture study
+* `CVmr` = coefficient of variation of PEmr
+* `comments` = comments
 
 where $$ CV_{mr} = 100\% \frac{\sqrt{Var(PE_{mr})}}{PE_{mr}} $$
 
 ```{r, echo=FALSE}
 new <- read.csv(paste(DIRECTORY, STREAMDATANEW, sep="\\"), as.is=TRUE)
 new2 <- new[7:11, c("year", "lake", "lscode", "trapcatch", "PEmr", "CVmr",
-  "Comments")]
-new2[1, "Comments"] <- "no recaps"
+  "comments")]
+new2[1, "comments"] <- "no recaps"
 knitr::kable(new2, row.names=FALSE)
 ```
 
 **(2)** `STREAMDATAPREV` should contain stream mark-recapture estimates of adult sea lampreys for all of the years prior to the year of interest. The first row of `STREAMDATAPREV` should be a header row with the following column names:
 
-* year - survey year
-* lake - lake code (1=Superior, 2=Michigan, 3=Huron, 4=Erie, and 5=Ontario)
-* lscode - lake-stream code, a combination of lake and stream codes e.g., 1.064 = lake code + (stream code)/1000. 
-* PEmr = stream population estimate of adult sea lampreys from mark-recapture study
-* CVmr = coefficient of variation
-* indexContrib = the stream population estimate used in the Adult Index
+* `year` - survey year
+* `lake` - lake code
+* `lscode` - lake-stream code, a combination of lake and stream codes 
+* `PEmr` = stream population estimate of adult sea lampreys from mark-recapture study
+* `CVmr` = coefficient of variation
+* `indexContrib` = the stream population estimate used in the Adult Index
 
 ```{r, echo=FALSE}
 old <- read.csv(paste(DIRECTORY, STREAMDATAPREV, sep="\\"), as.is=TRUE)
@@ -82,16 +99,17 @@ knitr::kable(old2, row.names=FALSE)
 
 **(3)** `LAKEDATAPREV` should contain annual lake-wide adult sea lamprey indices for all of the years prior to the year of interest. The first row of `LAKEDATAPREV` should be a header row with the following column names:
 
-* year - survey year
-* lake - lake code (1=Superior, 2=Michigan, 3=Huron, 4=Erie, and 5=Ontario)
-* index - estimated lake-wide index of adult sea lamprey abundance
-* jlo - lower jackknifed range (lower limit of index error)
-* jhi - upper jackknifed range (upper limit of index error)
+* `year` - survey year
+* `lake` - lake code
+* `index` - estimated lake-wide index of adult sea lamprey abundance
+* `jlo` - lower jackknifed range (see *[Estimate the Adult Index](#est)*)
+* `jhi` - upper jackknifed range (see *[Estimate the Adult Index](#est)*)
 
 ```{r, echo=FALSE}
-lake1 <- read.csv(paste(DIRECTORY, LAKEDATAPREV, sep="\\"), as.is=TRUE, 
+lakeprev <- read.csv(paste(DIRECTORY, LAKEDATAPREV, sep="\\"), as.is=TRUE, 
   header=TRUE)
-lake2 <- lake1[119:123, c("year", "lake", "index", "jlo", "jhi")]
+lakeprev <- lakeprev[, c("year", "lake", "index", "jlo", "jhi")]
+lake2 <- lakeprev[119:123, ]
 lake2$index <- round(lake2$index, 0)
 lake2$jlo <- round(lake2$jlo, 0)
 lake2$jhi <- round(lake2$jhi, 0)
@@ -103,7 +121,7 @@ For all 3 files,
 * the names of the columns must be **exactly as described here** (same spelling, same case)
 * the order of the columns is not important
 * additional columns may be included
-* there should be no missing values in *year*, *lake*, or *lscode*
+* there should be no missing values in `year`, `lake`, or `lscode`
 
 All 3 files should all be stored in a single directory, `DIRECTORY`.
 
@@ -116,50 +134,224 @@ STREAMDATAPREV <- "AdultStreamThru2014.csv"
 LAKEDATAPREV <- "AdultLakeThru2014.csv"
 ```
 
+Load the **GLFC** package to have access to the Adult Index functions.
+
+```{r}
+library(GLFC)
+```
+
+Use the `AIprep()` function to read in the adult sea lamprey stream trapping data and prepare them for error checking and estimation.  Simply provide the function with the name of the directory where the files are stored and the names of the new and previous stream data.
+
+```{r}
+streamprev <- AIprep(csvDir=DIRECTORY, csvNew=STREAMDATANEW, 
+  csvOld=STREAMDATAPREV)
+```
+
+The `AIprep()` function brings in additional information built in to the **GLFC** package by default, including 
+
+* `trappedStreams` a data frame with stream information,
+
+```{r, echo=FALSE}
+knitr::kable(head(trappedStreams, 5), row.names=FALSE)
+```
+
+* `lsIndex` a list of lake-stream codes identifying index streams, 
+
+```{r, echo=FALSE}
+# knitr::kable(sapply(lsIndex, function(x) paste(x, collapse=", ")), row.names=FALSE)
+```
+
+* `lsKeep` a list of lake-stream codes identifying streams which will continue to have ongoing trapping even if not part of the Adult Index.
+
+```{r, echo=FALSE}
+m <- sapply(lsKeep, function(x) paste(x, collapse=", "))
+m2 <- paste(m[m!=""], collapse=", ")
+# knitr::kable(m2, row.names=FALSE)
+```
+
+The returned object from the `AIprep()` function is a single data frame (called `streamprev` in this example) with information from all of the inputs, including new variables: 
+
+* `index` - a logical (TRUE/FALSE) identifying the index streams
+* `maintain` - a logical identifying the streams that will continue to have ongoing trapping even if not part of the Adult Index
+* `indexContrib` - the stream population estimate that will be used in the Adult Index (initially set to missing for `csvNew`)
+* `complete` - a logical identifying streams and years for which the Adult Index has already been estimated (initially set to FALSE for `csvNew`)
+
+```{r, echo=FALSE}
+knitr::kable(tail(streamprev, 5), row.names=FALSE)
+```
+
+Use the `read.csv()` function to read in the annual lake-wide adult sea lamprey indices for all of the years prior to the year of interest.
+
+```{r, echo=-2}
+lakeprev <- read.csv(paste(DIRECTORY, LAKEDATAPREV, sep="\\"), as.is=TRUE, 
+  header=TRUE)
+lakeprev <- lakeprev[, c("year", "lake", "index", "jlo", "jhi")]
+```
+
+
+
 ## Error check the data
 
-Load the **GLFC** package and other necessary packages.
+Use the `AIcheck()` function to check the data for errors and generate a report of tables and figures.  
 
-```{r load_package1, message=FALSE}
-library(GLFC)
-library(maps)
-library(plyr)
+```{r, eval=FALSE}
+AIcheck(streamDat=streamprev, csvDir=DIRECTORY)
 ```
 
-Create some information tables for inclusion in the error-checking report, including the dates of the input files being used,
+The generated report is an *rtf* (rich text format) file but it has a *\*.doc* extension so that it will be automatically opened by Microsoft Word. The report is named `YYYY Adult Index - error checking.doc`, where *YYYY* is the latest year represented in `streamDat`, and placed in the directory `csvDir`.  In this example, the path to the error checking report is `C:\temp\2015 Adult Index - error checking.doc`.
+
+The following conditions are highlighted as potential errors in the data:
+
+* mark-recapture estimates without trap catches or CVs
+* population estimates less than trap catches
+* for the most recent year
+    * streams missing population estimates or CVs
+    * unusually large trap catches
+    * unusually small trap catches
+
+The error checking report also includes two multi-panel (one panel per stream) time series plots:
+
+* adult sea lamprey trap efficiency estimates (trap catch / mark-recapture PE)  
+![trap efficiency estimates](figures/TE.jpg)
+
+* adult sea lamprey mark-recapture estimates  
+![mark-recapture estimates](figures/MR.jpg)
+
+
+
+<a id="est"></a>
+
+## Estimate the Adult Index 
+
+Use the `AIestimate()` function to estimate the Adult Index of sea lampreys in a single Great Lake.  For example, for Lake Ontario,
 
 ```{r}
-ins <- c(LAKEDATAPREV, STREAMDATAPREV, STREAMDATANEW)
-dins <- paste(DIRECTORY, ins, sep="\\")
-finfo <- lapply(dins, function(x) file.info(x)$mtime)
-tabinfiles <- as.matrix(data.frame(
-  inputs=c("LAKEDATAPREV", "STREAMDATAPREV", "STREAMDATANEW"),
-  files=ins, date.modified=do.call(c, finfo)))
-tabinfiles <- apply(tabinfiles, 2, format)
+ai <- AIestimate(streamDat=streamprev[streamprev$lake==5, ])
 ```
+
+The annual Adult Index is simply the sum of stream population estimates for each year.  Missing stream estimates are estimated by a lake-specific ANOVA model relating the log of the stream estimates to the main effects of each stream and each year, weighted by the inverse of the CV squared. 
+
+The jackknifed range is produced by recalculating the index, leaving out one stream at a time, then scaling up the result to the same scale as the Adult Index based on all streams.
+
+The returned object from the function (`ai` in this example) is a list with 2 components: 
+
+* `streamPE` - a data frame of stream mark-recapture and Adult Index contributions for the incomplete rows in `streamDat`, with the same variables as `streamDat` 
 
 ```{r, echo=FALSE}
-knitr::kable(tabinfiles, row.names=FALSE)
+ss <- ai$streamPE
+ssc <- strsplit(ss$comments, ",")
+ssc2 <- sapply(ssc, "[", 1)
+ss$comments <- gsub("recapture", "recap", ssc2)
+ss$indexContrib <- round(ss$indexContrib)
+knitr::kable(ss, row.names=FALSE)
 ```
 
-and a list of the index streams and "maintenance" streams for each lake,
+* `lakeIndex` - a data frame of annual lake-wide Adult Indices for the incomplete rows in `streamDat`, with 5 columns: `lake`, `year`, `index`, and the jackknifed range `jlo` and `jhi`.
+
+```{r, echo=FALSE}
+knitr::kable(ai$lakeIndex, row.names=FALSE)
+```
+
+Use the `lapply()` function to generate estimates for all 5 Great Lakes at once.  
 
 ```{r}
-tabstreams <- as.matrix(data.frame(lake=Lakenames,
-  index=sapply(lsIndex, paste, collapse=","),
-  keep=sapply(lsKeep, paste, collapse=",")))
-tabstreams <- apply(tabstreams, 2, format)
+aiAll5 <- lapply(1:5, function(L) AIestimate(streamprev[streamprev$lake==L, ]))
 ```
+
+Then use the `do.call()` function to combine the estimates from the resulting list into two data frames (one for stream estimates one for lake estimates).
+
+```{r}
+streamall5 <- do.call(rbind, lapply(aiAll5, "[[", 1))
+lakeall5 <- do.call(rbind, lapply(aiAll5, "[[", 2))
+```
+
+Use the `rbind()` function to combine the newly generated estimates with the previous estimates.
+
+```{r}
+streamnew <- rbind(streamprev[streamprev$complete==TRUE, ], streamall5)
+lakenew <- rbind(lakeprev, lakeall5)
+```
+
+Use `index2pe`, lake-specific conversion factors built in to the **GLFC** package, to scale up indices of adult sea lamprey abundance in the Great Lakes to lake-wide population estimates.
 
 ```{r, echo=FALSE}
-knitr::kable(tabstreams, row.names=FALSE)
+m <- as.matrix(index2pe)
+row.names(m) <- Lakenames
+# knitr::kable(index2pe)
+```
+
+```{r, echo=-5}
+lakenewpe <- merge(lakenew[, c("lake", "year", "index", "jlo", "jhi")],
+  cbind(lake=1:5, i2pe=index2pe))
+lakenewpe$pe <- with(lakenewpe, index*i2pe)
+lakenewpe$pelo <- with(lakenewpe, jlo*i2pe)
+lakenewpe$pehi <- with(lakenewpe, jhi*i2pe)
+knitr::kable(tail(lakenewpe, 5), row.names=FALSE)
 ```
 
 
-# *****
-# This is a work in progress
-# More to come
-# *****
+
+## Determine the targets
+
+Use the `AItarget()` function to calculate lake-wide targets for the Adult Index of sea lamprey populations in the Great Lakes from the mean of specified years.  The `AItarget()` function takes three arguments, but only the first one needs to be provided.
+
+```{r}
+targ <- AItarget(lakeIndex=lakenewpe)
+```
+
+* `lakeIndex`	- a data frame of annual lake-wide Adult Indices with (at least these) 4 columns: `lake`, `year`, `index`, and `pe`
+* `years`	- A list of 5 vectors (one for each Great Lake), specifying the 5 years during which there were acceptable sea lamprey wounding rates on lake trout
+* `adjust` - A vector of 5 adjustments (one for each Great Lake) to be made to the mean indices when calculating the target (this is needed if the wounding rates were not acceptable during the specified years)
+
+Default values are provided for `years` and `adjust` based on the decisions made by the Great Lakes Fishery Commission.  Currently, these values are 
+
+```{r, echo=FALSE}
+a <- as.character(formals(AItarget)$years)[-1]
+b <- eval(formals(AItarget)$adjust)
+ab <- data.frame(lake=Lakenames, years=a, adjust=b)
+knitr::kable(ab, row.names=FALSE)
+```
+
+The returned object from the `AItarget()` function (called `targ` in this example) is a data frame with the calculated targets for the Adult Index and expanded PE of each Great Lake.
+
+```{r, echo=FALSE}
+look <- targ
+look$targInd <- round(look$targInd)
+look$targPE <- round(look$targPE)
+knitr::kable(look, row.names=FALSE)
+```
+
+
+
+## Generate a draft report
+
+Use the `AIreport()` function to create a draft template-style report of the Adult Index estimates of sea lamprey in the Great Lakes.
+
+```{r}
+targ[2, ] <- targ[1, ]
+
+#AIreport(streamPEs=streamnew, lakeIPEs=lakenewpe, targets=targ,
+#  csvDir=DIRECTORY)
+```
+
+As with the error checking report, the document generated by `AIreport()` is an *rtf* file with a *\*.doc* extension, named `YYYY Adult Index - draft report.doc`.
+
+The report has few paragraphs summarizing the latest estimates, along with 3 tables, 
+
+* adult sea lamprey indices for the year of interest for each lake with errors and targets
+* adult sea lamprey indices for all years and all lakes
+* lake-wide adult sea lamprey abundances for all years and all lakes
+
+and 3 figures,
+
+* 5-panel time series plot of adult sea lamprey indices (with jackknifed ranges) and targets for each Great Lake  
+![Adult Index](figures/AI.jpg)
+
+* 5-panel bar plot of adult sea lamprey abundance estimates for index streams  
+![Index PEs](figures/BP.jpg)
+
+* map showing the index streams in the Great Lakes and the relative size of the most recent population estimates  
+![Index map](figures/MP.jpg)
 
 
 

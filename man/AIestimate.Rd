@@ -28,11 +28,11 @@ needed in a year to generate an index, default 2.}
 }
 \value{
 A list with 2 components:
-  \code{streamDat}, a data frame of stream mark-recapture and Adult Index
-  contributions for the incomplete rows in \code{streamDat}, with
-  the same variables as \code{streamDat}; and
+  \code{streamPE}, a data frame of stream mark-recapture and Adult Index
+  contributions for the incomplete rows in \code{streamPE}, with
+  the same variables as \code{streamPE}; and
   \code{lakeIndex}, a data frame of annual lake-wide Adult Indices
-  for the incomplete rows in (\code{streamDat}), with 5 columns: \code{lake},
+  for the incomplete rows in (\code{streamPE}), with 5 columns: \code{lake},
   \code{year}, the Adult Index \code{index}, and the lower and upper
   jackknifed range \code{jlo} and \code{jhi}.
 }
