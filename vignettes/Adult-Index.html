@@ -58,12 +58,12 @@ code > span.er { color: #ff0000; font-weight: bold; }
 </div>
 
 
-<p>The R package <strong>GLFC</strong> includes functions to estimate indices of adult sea lamprey abundance in the Great Lakes. The <a href="http://www.glfc.org">Great Lakes Fishery Commission</a> made the decision to switch to a lake-wide index of adult abundance in December 2014 (GLFC-TTF 2014). Prior to that decision, lakewide population estimates (PE) were generated following Mullett et al. (2003). This vignette walks you through the process of generating Adult Index estimates.</p>
+<p>The R package <strong>GLFC</strong> includes functions to estimate indices of adult sea lamprey abundance in the Great Lakes. The <a href="http://www.glfc.org">Great Lakes Fishery Commission</a> made the decision to switch to a lake-wide index of adult abundance in December 2014 (GLFC-TTF 2014). Prior to that decision, lake-wide population estimates (PE) were generated following Mullett et al. (2003). This vignette walks you through the process of generating Adult Index estimates.</p>
 <p>The five main functions of the <strong>GLFC</strong> package are:</p>
 <ul>
 <li><code>AIprep()</code> - to prepare the Adult Index data</li>
 <li><code>AIcheck()</code> - to error check the Adult Index data</li>
-<li><code>AIestimat()</code> - to estimate the Adult Index</li>
+<li><code>AIestimate()</code> - to estimate the Adult Index</li>
 <li><code>AItarget()</code> - to calculate targets for the Adult Index</li>
 <li><code>AIreport()</code> - to generate a draft Adult Index report</li>
 </ul>
@@ -360,9 +360,37 @@ LAKEDATAPREV &lt;-<span class="st"> &quot;AdultLakeThru2014.csv&quot;</span></co
 </tbody>
 </table>
 <ul>
-<li><p><code>lsIndex</code> a list of lake-stream codes identifying index streams,</p></li>
-<li><p><code>lsKeep</code> a list of lake-stream codes identifying streams which will continue to have ongoing trapping even if not part of the Adult Index.</p></li>
+<li><code>lsIndex</code> a list of lake-stream codes identifying index streams,</li>
 </ul>
+<table>
+<tbody>
+<tr class="odd">
+<td align="left">1.001, 1.002, 1.009, 1.029, 1.031, 1.032, 1.062</td>
+</tr>
+<tr class="even">
+<td align="left">2.005, 2.006, 2.015, 2.024, 2.026, 2.035</td>
+</tr>
+<tr class="odd">
+<td align="left">3.01, 3.016, 3.027, 3.032, 3.999, 3.038</td>
+</tr>
+<tr class="even">
+<td align="left">4.001, 4.002, 4.003, 4.007, 4.009</td>
+</tr>
+<tr class="odd">
+<td align="left">5.005, 5.009, 5.022, 5.023, 5.036</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><code>lsKeep</code> a list of lake-stream codes identifying streams which will continue to have ongoing trapping even if not part of the Adult Index.</li>
+</ul>
+<table>
+<tbody>
+<tr class="odd">
+<td align="left">1.023, 1.059, 2.013, 2.068, 4.001, 5.013, 5.021</td>
+</tr>
+</tbody>
+</table>
 <p>The returned object from the <code>AIprep()</code> function is a single data frame (called <code>streamprev</code> in this example) with information from all of the inputs, including new variables:</p>
 <ul>
 <li><code>index</code> - a logical (TRUE/FALSE) identifying the index streams</li>
@@ -679,6 +707,30 @@ lakeall5 &lt;-<span class="st"> </span><span class="kw">do.call</span>(rbind, <s
 <pre class="sourceCode r"><code class="sourceCode r">streamnew &lt;-<span class="st"> </span><span class="kw">rbind</span>(streamprev[streamprev$complete==<span class="ot">TRUE</span>, ], streamall5)
 lakenew &lt;-<span class="st"> </span><span class="kw">rbind</span>(lakeprev, lakeall5)</code></pre>
 <p>Use <code>index2pe</code>, lake-specific conversion factors built in to the <strong>GLFC</strong> package, to scale up indices of adult sea lamprey abundance in the Great Lakes to lake-wide population estimates.</p>
+<table>
+<tbody>
+<tr class="odd">
+<td align="left">Superior</td>
+<td align="right">3.95</td>
+</tr>
+<tr class="even">
+<td align="left">Michigan</td>
+<td align="right">1.87</td>
+</tr>
+<tr class="odd">
+<td align="left">Huron</td>
+<td align="right">2.87</td>
+</tr>
+<tr class="even">
+<td align="left">Erie</td>
+<td align="right">1.45</td>
+</tr>
+<tr class="odd">
+<td align="left">Ontario</td>
+<td align="right">2.37</td>
+</tr>
+</tbody>
+</table>
 <pre class="sourceCode r"><code class="sourceCode r">lakenewpe &lt;-<span class="st"> </span><span class="kw">merge</span>(lakenew[, <span class="kw">c</span>(<span class="st">&quot;lake&quot;</span>, <span class="st">&quot;year&quot;</span>, <span class="st">&quot;index&quot;</span>, <span class="st">&quot;jlo&quot;</span>, <span class="st">&quot;jhi&quot;</span>)],
   <span class="kw">cbind</span>(<span class="dt">lake=</span><span class="dv">1</span>:<span class="dv">5</span>, <span class="dt">i2pe=</span>index2pe))
 lakenewpe$pe &lt;-<span class="st"> </span><span class="kw">with</span>(lakenewpe, index*i2pe)
@@ -778,27 +830,27 @@ lakenewpe$pehi &lt;-<span class="st"> </span><span class="kw">with</span>(lakene
 <tbody>
 <tr class="odd">
 <td align="left">Superior</td>
-<td align="left">1994:1998</td>
+<td align="left">1994-1998</td>
 <td align="right">1.00</td>
 </tr>
 <tr class="even">
 <td align="left">Michigan</td>
-<td align="left">1988:1992</td>
+<td align="left">1988-1992</td>
 <td align="right">1.00</td>
 </tr>
 <tr class="odd">
 <td align="left">Huron</td>
-<td align="left">1989:1993</td>
+<td align="left">1989-1993</td>
 <td align="right">0.25</td>
 </tr>
 <tr class="even">
 <td align="left">Erie</td>
-<td align="left">1991:1995</td>
+<td align="left">1991-1995</td>
 <td align="right">1.00</td>
 </tr>
 <tr class="odd">
 <td align="left">Ontario</td>
-<td align="left">1993:1997</td>
+<td align="left">1993-1997</td>
 <td align="right">1.00</td>
 </tr>
 </tbody>
@@ -844,10 +896,8 @@ lakenewpe$pehi &lt;-<span class="st"> </span><span class="kw">with</span>(lakene
 <div id="generate-a-draft-report" class="section level2">
 <h2>Generate a draft report</h2>
 <p>Use the <code>AIreport()</code> function to create a draft template-style report of the Adult Index estimates of sea lamprey in the Great Lakes.</p>
-<pre class="sourceCode r"><code class="sourceCode r">targ[<span class="dv">2</span>, ] &lt;-<span class="st"> </span>targ[<span class="dv">1</span>, ]
-
-<span class="co">#AIreport(streamPEs=streamnew, lakeIPEs=lakenewpe, targets=targ,</span>
-<span class="co">#  csvDir=DIRECTORY)</span></code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">AIreport</span>(<span class="dt">streamPEs=</span>streamnew, <span class="dt">lakeIPEs=</span>lakenewpe, <span class="dt">targets=</span>targ,
+  <span class="dt">csvDir=</span>DIRECTORY)</code></pre>
 <p>As with the error checking report, the document generated by <code>AIreport()</code> is an <em>rtf</em> file with a <em>*.doc</em> extension, named <code>YYYY Adult Index - draft report.doc</code>.</p>
 <p>The report has few paragraphs summarizing the latest estimates, along with 3 tables,</p>
 <ul>
