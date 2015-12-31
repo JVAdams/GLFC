@@ -137,7 +137,6 @@ AIreport <- function(streamPEs, lakeIPEs, targets, csvDir, outFile=NULL,
 #     sug=c("Index w/ mark-recap", "Index w/o mark-recap", "Non-index")
 #     ptgrp=3
 #     cols=blindcolz[1+(1:length(sug))]
-#     mymap=map5
 #     legat="topright"
 #     leginset=c(0, 0)
 #     dr=range(sqrt(df[, var]), na.rm=TRUE)
@@ -146,9 +145,9 @@ AIreport <- function(streamPEs, lakeIPEs, targets, csvDir, outFile=NULL,
 #     oy=64
 
   FIG.bubble1 <- function(df, group, var, lab, sug, ptgrp=NULL,
-    cols=blindcolz[1+(1:length(sug))], mymap=map5,
-    legat="topright", leginset=c(0, 0), dr=range(sqrt(df[, var]), na.rm=TRUE),
-    cr=c(0.04, 0.25), ox=-44, oy=64) {
+    cols=blindcolz[1+(1:length(sug))], lonR=-c(92.14, -75.97),
+    latR=c(41.36, 49.02), legat="topright", leginset=c(0, 0),
+    dr=range(sqrt(df[, var]), na.rm=TRUE), cr=c(0.04, 0.25), ox=-44, oy=64) {
 
     g <- df[, group]
     v <- df[, var]
@@ -160,8 +159,8 @@ AIreport <- function(streamPEs, lakeIPEs, targets, csvDir, outFile=NULL,
       seln <- g!=sug[ptgrp]
     }
 
-    xr <- range(mymap$x, na.rm=TRUE)
-    yr <- range(mymap$y, na.rm=TRUE)
+    xr <- lonR
+    yr <- latR
     xrw <- diff(xr)
     yrw <- diff(yr)
     bufx <- xrw/40
@@ -169,10 +168,9 @@ AIreport <- function(streamPEs, lakeIPEs, targets, csvDir, outFile=NULL,
 
     magic <- 20
     par(mar=c(0, 0, 0, 0))
-    maps::map(xlim=xr + c(-1, 1)*bufx, ylim=yr + c(-magic, 1)*bufy, col=NA,
-      mar=c(0, 0, 0, 0))
+    maps::map("world", col="gray", lwd=0.5, xlim=xr + c(-1, 1)*bufx,
+      ylim=yr + c(-magic, 1)*bufy, mar=c(0, 0, 0, 0))
     pusr <- par("usr")
-    lines(mymap$x, mymap$y, col="gray", lwd=0.5)
     with(df, {
       textx <- rep(NA, dim(df)[1])
       textx[seln] <- seq(pusr[1], pusr[2],

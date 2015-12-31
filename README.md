@@ -5,15 +5,13 @@ GLFC
 
 The package can be installed from within R.
 
-	library("devtools")
 	devtools::install_github("JVAdams/GLFC")
 	library(GLFC)
 
 You may need to download and install (as administrator, if using a PC) Rtools from [CRAN](http://cran.r-project.org/bin/windows/Rtools/), the Comprehensive R Archive Network, then run the following lines of code before submitting the code above:
 
 	install.packages("devtools")
-	library(devtools)
-	find_rtools()
+	devtools::find_rtools()
 
 An alternative approach for Windows users is to download this 
 [zip file](https://github.com/JVAdams/GLFC/raw/master/GLFC.zip)
