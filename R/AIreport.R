@@ -60,6 +60,11 @@ AIreport <- function(streamPEs, lakeIPEs, targets, csvDir, outFile=NULL,
 # targets=oldtarg
 # csvDir=DIRECTORY
 # outFile=NULL
+# proptargets=pt
+
+
+
+
 
   YEAR <- max(streamPEs$year)
 
@@ -81,33 +86,33 @@ AIreport <- function(streamPEs, lakeIPEs, targets, csvDir, outFile=NULL,
 
   # plot lake-wide totals w/ confidence intervals on different scales
   FIG.lakeCI <- function(lakeids=1:5, k=index2pe) {
-    attach(lakeIPEs)
-    par(mfrow=c(3, 2), mar=c(3, 3, 2, 3), oma=c(2, 2, 0, 2), cex=1)
-    for(i in seq(lakeids)) {
-      j <- lakeids[i]
-      sel <- lake==j
-      mymax <- max(jhi[sel & year>=1985])/1000
-      plot(1, 1, type="n", xlim=range(year), ylim=c(0, mymax),
-        xlab="", ylab="", main=Lakenames[i], las=1)
-      abline(h=targets$targInd[j]/1000, col="gray", lwd=2)
-      if(!is.null(proptargets)) {
-        abline(h=proptargets$targInd[proptargets$lake==j]/1000,
-          col="gray", lwd=2, lty=2)
+    with(lakeIPEs, {
+      par(mfrow=c(3, 2), mar=c(3, 3, 2, 3), oma=c(2, 2, 0, 2), cex=1)
+      for(i in seq(lakeids)) {
+        j <- lakeids[i]
+        sel <- lake==j
+        mymax <- max(jhi[sel & year>=1985])/1000
+        plot(1, 1, type="n", xlim=range(year), ylim=c(0, mymax),
+          xlab="", ylab="", main=Lakenames[i], las=1)
+        abline(h=targets$targInd[j]/1000, col="gray", lwd=2)
+        if(!is.null(proptargets)) {
+          abline(h=proptargets$targInd[proptargets$lake==j]/1000,
+            col="gray", lwd=2, lty=2)
+        }
+        points(year[sel], index[sel]/1000)
+        arrows(year[sel], jlo[sel]/1000, year[sel], jhi[sel]/1000, length=0.03,
+          angle=90, code=3)
+        p4 <- pretty(k[i]*c(0, mymax))
+        axis(4, at=p4/k[i], labels=p4, las=1)
+        if (i==1) {
+          frame()
+        }
       }
-      points(year[sel], index[sel]/1000)
-      arrows(year[sel], jlo[sel]/1000, year[sel], jhi[sel]/1000, length=0.03,
-        angle=90, code=3)
-      p4 <- pretty(k[i]*c(0, mymax))
-      axis(4, at=p4/k[i], labels=p4, las=1)
-      if (i==1) {
-        frame()
-      }
-    }
-    mtext("Year", outer=TRUE, side=1, cex=1.4)
-    mtext("Adult index  (thousands)", outer=TRUE, side=2, cex=1.4)
-    mtext("Lake-wide adult abundance  (thousands)", outer=TRUE, side=4, cex=1.4)
-    detach(lakeIPEs)
-    }
+      mtext("Year", outer=TRUE, side=1, cex=1.4)
+      mtext("Adult index  (thousands)", outer=TRUE, side=2, cex=1.4)
+      mtext("Lake-wide adult abundance  (thousands)", outer=TRUE, side=4, cex=1.4)
+    })
+  }
 
 
 
@@ -168,27 +173,27 @@ AIreport <- function(streamPEs, lakeIPEs, targets, csvDir, outFile=NULL,
       mar=c(0, 0, 0, 0))
     pusr <- par("usr")
     lines(mymap$x, mymap$y, col="gray", lwd=0.5)
-    attach(df)
-    textx <- rep(NA, dim(df)[1])
-    textx[seln] <- seq(pusr[1], pusr[2],
-      length=n+2)[-c(1, n+2)][rank(long[seln], ties.method="first")]
+    with(df, {
+      textx <- rep(NA, dim(df)[1])
+      textx[seln] <- seq(pusr[1], pusr[2],
+        length=n+2)[-c(1, n+2)][rank(long[seln], ties.method="first")]
 
-    for(i in seq_along(sug)) {
-      sel <- g==sug[i]
-      if (sum(sel)>0) {
-        if (is.null(ptgrp) | ptgrp!=i) {
-          circles(long[sel], lat[sel], sqrt(v)[sel], data.range=dr,
-            circle.size.range=cr, outx=ox, outy=oy, add=TRUE, fg=cols[i], lwd=3)
-          text(textx[sel], yr[1] - (magic-1)*bufy, df[sel, lab],
-            adj=0, srt=90, col=cols[i], cex=0.8)
-          segments(textx[sel], yr[1] - 2*bufy, long[sel], lat[sel], col=cols[i],
-            lty=2)
-        } else {
-          points(long[sel], lat[sel], pch=3, col=cols[i], lwd=3)
+      for(i in seq_along(sug)) {
+        sel <- g==sug[i]
+        if (sum(sel)>0) {
+          if (is.null(ptgrp) | ptgrp!=i) {
+            circles(long[sel], lat[sel], sqrt(v)[sel], data.range=dr,
+              circle.size.range=cr, outx=ox, outy=oy, add=TRUE, fg=cols[i], lwd=3)
+            text(textx[sel], yr[1] - (magic-1)*bufy, df[sel, lab],
+              adj=0, srt=90, col=cols[i], cex=0.8)
+            segments(textx[sel], yr[1] - 2*bufy, long[sel], lat[sel], col=cols[i],
+              lty=2)
+          } else {
+            points(long[sel], lat[sel], pch=3, col=cols[i], lwd=3)
+          }
         }
       }
-    }
-    detach(df)
+    })
 
     par(xpd=NA)
     legend(legat, sug, col=cols, lwd=3, bty="n", inset=leginset, cex=1.4)
@@ -261,14 +266,12 @@ AIreport <- function(streamPEs, lakeIPEs, targets, csvDir, outFile=NULL,
     lakeIPEs[lakeIPEs$year==YEAR, ],
     by="lake", suffixes = c(".last",".this"), all=TRUE)
 
-  attach(both)
-  thyr <- round(index.this)
-  layr <- round(index.last)
-  hier <- jlo.this > jhi.last
-  loer <- jhi.this < jlo.last
+  thyr <- round(both$index.this)
+  layr <- round(both$index.last)
+  hier <- with(both, jlo.this > jhi.last)
+  loer <- with(both, jhi.this < jlo.last)
   phrase <- rep("not significantly different from", 5)
-  delta <- round(100*abs(index.this - index.last) / index.last)
-  detach(both)
+  delta <- with(both, round(100*abs(index.this - index.last) / index.last))
 
   phrase[is.na(hier)] <- "not comparable to"
   phrase[!is.na(hier) & hier] <-

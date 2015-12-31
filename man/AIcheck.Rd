@@ -14,7 +14,7 @@ include: \code{year},
 \code{lake}, lake-stream ID \code{lscode}
 (see details), population estimate
 \code{PEmr}, coefficient of variation \code{CVmr}
-(100% * sqrt(variance(PEmr)) / PEmr), \code{index}, a logical
+(100\% * sqrt(variance(PEmr)) / PEmr), \code{index}, a logical
 identifying the index streams; \code{maintain} a logical identifying the
 streams that will continue to have ongoing trapping even if not part of
 the Adult Index; \code{indexContrib} a numeric, the stream population

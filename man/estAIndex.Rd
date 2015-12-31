@@ -16,7 +16,7 @@ estimated Adult Indices (typically from the current year),
 with variables: \code{year}, \code{lake}, lake-stream ID \code{lscode}
 (see description under \code{indexStreams}), population estimate
 \code{PEmr}, coefficient of variation \code{CVmr}
-(100% * sqrt(variance(PEmr)) / PEmr).  There should be no missing values
+(100\% * sqrt(variance(PEmr)) / PEmr).  There should be no missing values
 in \code{year}, \code{lake}, or \code{lscode}.  There should be only one
 value for \code{lake} in the data frame.  The data frame may include
 additional variables, but they will be ignored unless listed in
