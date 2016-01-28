@@ -4,15 +4,21 @@
 \alias{jackIndex}
 \title{Index with Jackknifed Range}
 \usage{
-jackIndex(m)
+jackIndex(m, simple = TRUE)
 }
 \arguments{
 \item{m}{A numeric matrix of estimates contributing to the index.  Rows are
 observations (e.g., years).  Columns are individuals (e.g., locations).}
+
+\item{simple}{A logical scalar indicating if just the estimated index should be returned
+(default, TRUE) or if the raw numbers should also be returned (FALSE).}
 }
 \value{
-A numeric matrix with 3 columns, the index, and the lower and
-  upper jackknifed range of the index.
+If simple=TRUE, a numeric matrix with 3 columns, the index, and the lower
+  and upper jackknifed range of the index.  If simple=FALSE, a list with the
+  previously described matrix as the first element, \code{jack.range}, and
+  a second matrix the same dimensions as \code{m} with the scaled up raw
+  contributions to the jackknifed range, \code{jack.raw}.
 }
 \description{
 Given a collection of estimates contributing to an index, this function
@@ -29,6 +35,6 @@ The index is simply the sum of the columns in \code{m} for
 \examples{
 # 3 years of population estimates from four streams
 streampe <- matrix(1:12, nrow=3, dimnames=list(1996:1998, letters[1:4]))
-jackIndex(streampe)
+jackIndex(streampe, simple=FALSE)
 }
 

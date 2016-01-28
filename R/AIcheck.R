@@ -90,26 +90,6 @@ AIcheck <- function(streamDat, csvDir, outFile=NULL, otherTabs=NULL) {
     } else para("OKAY:  All mark-recapture estimates have trap catches and",
       " CVs.")
 
-    # check that non-index streams are included
-    tab <- df.nice[index==FALSE & maintain==TRUE & year==YEAR, ]
-    lastcount <- sum(index==FALSE & maintain==TRUE & year==YEAR-1)
-    nowcount <- sum(index==FALSE & maintain==TRUE & year==YEAR)
-    if (nowcount<lastcount) {
-      if (nowcount<1) {
-        para("ERROR:  No data was reported from non-index streams.",
-          "  But there are data from ", lastcount, " non-index streams in ",
-          YEAR-1, ".")
-      } else {
-        tabl("ERROR:  Data was only reported from ", nowcount,
-          " non-index streams in ", YEAR, ".",
-          "  But there are data from ", lastcount, " in ", YEAR-1, ".",
-          TAB=tab, row.names=FALSE)
-      }
-    } else {
-      tabl("OKAY:  Data was reported from ", nowcount, " non-index streams.",
-        "  The same number as in ", YEAR-1, ".", TAB=tab, row.names=FALSE)
-    }
-
     # check values of trap catch and population estimate
     tab <- df.nice[!is.na(PEmr) & !is.na(trapcatch) & PEmr<=trapcatch, ]
     if (dim(tab)[1]>0) {
@@ -208,30 +188,32 @@ AIcheck <- function(streamDat, csvDir, outFile=NULL, otherTabs=NULL) {
       sucle <- suby$cle
       suls <- suby$lscode
       tecol <- colr(suby$trapEff, "orange", "blue")
-      nrnc <- n2mfrow(length(suls))[2:1]
-      par(mfrow=nrnc, mar=c(0, 0, 0, 0), oma=c(4, 3, 1, 1), yaxs="i", cex=1.4)
-      for(i in seq(suls)) {
-        sel <- lscode==suls[i]
-        plot(1, 1, type="n", xlim=range(year), ylim=0:1, axes=FALSE,
-          xlab="", ylab="")
-        abline(h=seq(0.25, 0.75, 0.25), col="lightgray", lty=3)
-        abline(v=seq(1985, YEAR+2, 5), col="lightgray", lty=3)
-        lines(yrz, trapEff[sel][match(yrz, year[sel])],
-          type="o", pch=20, cex=1, col=tecol[i])
-        if (i <= nrnc[2]) {
-          axis(1, at=seq(1990, YEAR+2, 10), outer=TRUE, cex.axis=0.6, las=2,
-            tcl=-0.3)
+      if(length(suls)>0) {
+        nrnc <- n2mfrow(length(suls))[2:1]
+        par(mfrow=nrnc, mar=c(0, 0, 0, 0), oma=c(4, 3, 1, 1), yaxs="i", cex=1.4)
+        for(i in seq(suls)) {
+          sel <- lscode==suls[i]
+          plot(1, 1, type="n", xlim=range(year), ylim=0:1, axes=FALSE,
+            xlab="", ylab="")
+          abline(h=seq(0.25, 0.75, 0.25), col="lightgray", lty=3)
+          abline(v=seq(1985, YEAR+2, 5), col="lightgray", lty=3)
+          lines(yrz, trapEff[sel][match(yrz, year[sel])],
+            type="o", pch=20, cex=1, col=tecol[i])
+          if (i <= nrnc[2]) {
+            axis(1, at=seq(1990, YEAR+2, 10), outer=TRUE, cex.axis=0.6, las=2,
+              tcl=-0.3)
+          }
+          if (i%%nrnc[2] == 1) {
+            axis(2, at=c(0.25, 0.75), labels=c("25", "75"), outer=TRUE,
+              cex.axis=0.6, las=1, tcl=-0.3)
+          }
+          mtext(paste(sucle[i], strname[sel][1], sep="\n"),
+            cex=1, adj=0.05, line=-2)
+          box(col="darkgray")
         }
-        if (i%%nrnc[2] == 1) {
-          axis(2, at=c(0.25, 0.75), labels=c("25", "75"), outer=TRUE,
-            cex.axis=0.6, las=1, tcl=-0.3)
-        }
-        mtext(paste(sucle[i], strname[sel][1], sep="\n"),
-          cex=1, adj=0.05, line=-2)
-        box(col="darkgray")
+        mtext("Year", side=1, outer=TRUE, cex=1.2, line=3)
+        mtext("Trap efficiency (%)", side=2, outer=TRUE, cex=1.2, line=2)
       }
-      mtext("Year", side=1, outer=TRUE, cex=1.2, line=3)
-      mtext("Trap efficiency (%)", side=2, outer=TRUE, cex=1.2, line=2)
     })
   }
 
@@ -259,35 +241,37 @@ AIcheck <- function(streamDat, csvDir, outFile=NULL, otherTabs=NULL) {
       sucle <- suby$cle
       suls <- suby$lscode
       pecol <- colr(suby$PEmr, "blue", "orange")
-      nrnc <- n2mfrow(length(suls))[2:1]
-      par(mfrow=nrnc, mar=c(0, 0, 0, 0), oma=c(4, 3, 1, 1), yaxs="i", cex=1.4)
-      for(i in seq(suls)) {
-        sel <- lscode==suls[i]
-        selsd <- sel & !is.na(PEplusSD)
-        plot(1, 1, type="n", xlim=range(year), ylim=1.1*range(0, PEmr)/1000,
-          axes=FALSE, xlab="", ylab="")
-        # ignore warnings from zero-length arrows
-        oldopt <- getOption("warn")
-        options(warn=-1)
-        arrows(year[selsd], PEminusSD[selsd]/1000,
-          year[selsd], PEplusSD[selsd]/1000,
-          col="gray", length=0.05, angle=90, code=3)
-        options(warn=oldopt)
-        lines(yrz, PEmr[sel][match(yrz, year[sel])]/1000,
-          type="o", pch=20, cex=1, col=pecol[i])
-        if (i <= nrnc[2]) {
-          axis(1, at=seq(1990, YEAR+2, 10), outer=TRUE, cex.axis=0.6, las=2,
-            tcl=-0.3)
+      if(length(suls)>0) {
+        nrnc <- n2mfrow(length(suls))[2:1]
+        par(mfrow=nrnc, mar=c(0, 0, 0, 0), oma=c(4, 3, 1, 1), yaxs="i", cex=1.4)
+        for(i in seq(suls)) {
+          sel <- lscode==suls[i]
+          selsd <- sel & !is.na(PEplusSD)
+          plot(1, 1, type="n", xlim=range(year), ylim=1.1*range(0, PEmr)/1000,
+            axes=FALSE, xlab="", ylab="")
+          # ignore warnings from zero-length arrows
+          oldopt <- getOption("warn")
+          options(warn=-1)
+          arrows(year[selsd], PEminusSD[selsd]/1000,
+            year[selsd], PEplusSD[selsd]/1000,
+            col="gray", length=0.05, angle=90, code=3)
+          options(warn=oldopt)
+          lines(yrz, PEmr[sel][match(yrz, year[sel])]/1000,
+            type="o", pch=20, cex=1, col=pecol[i])
+          if (i <= nrnc[2]) {
+            axis(1, at=seq(1990, YEAR+2, 10), outer=TRUE, cex.axis=0.6, las=2,
+              tcl=-0.3)
+          }
+          if (i%%nrnc[2] == 1) {
+            axis(2, outer=TRUE, cex.axis=0.6, las=1, tcl=-0.3)
+          }
+          mtext(paste(sucle[i], strname[sel][1], sep="\n"),
+            cex=1, adj=0.05, line=-2)
+          box(col="darkgray")
         }
-        if (i%%nrnc[2] == 1) {
-          axis(2, outer=TRUE, cex.axis=0.6, las=1, tcl=-0.3)
-        }
-        mtext(paste(sucle[i], strname[sel][1], sep="\n"),
-          cex=1, adj=0.05, line=-2)
-        box(col="darkgray")
+        mtext("Year", side=1, outer=TRUE, cex=1.2, line=3)
+        mtext("Adult PE  (thousands)", side=2, outer=TRUE, cex=1.2, line=2)
       }
-      mtext("Year", side=1, outer=TRUE, cex=1.2, line=3)
-      mtext("Adult PE  (thousands)", side=2, outer=TRUE, cex=1.2, line=2)
     })
   }
 
@@ -310,35 +294,37 @@ AIcheck <- function(streamDat, csvDir, outFile=NULL, otherTabs=NULL) {
       suby <- suby[with(suby, order(lake, country, estr, strcode)), ]
       sucle <- suby$cle
       suls <- suby$lscode
-      nrnc <- n2mfrow(length(suls))
-      par(mfrow=nrnc, mar=c(0, 2, 2, 0), oma=c(3, 1, 1, 1), yaxs="i", cex=1.4)
-      for(i in seq(suls)) {
-        sel <- lscode==suls[i]
-        selsd <- sel & !is.na(PEplusSD)
-        mymax <- 1.1*max(c(PEplusSD[sel], PEmr[sel]), na.rm=TRUE)/1000
-        plot(year[sel], PEmr[sel]/1000, type="n", axes=FALSE,
-          xlim=range(year) + c(-1, 1)*0.3, ylim=c(0, mymax), xlab="", ylab="")
-        lines(year[sel], PEmr[sel]/1000, type="o", pch=16, cex=0.7)
-        # ignore warnings from zero-length arrows
-        oldopt <- getOption("warn")
-        options(warn=-1)
-        arrows(year[selsd], PEminusSD[selsd]/1000,
-          year[selsd], PEplusSD[selsd]/1000,
-          length=0.05, angle=90, code=3)
-        options(warn=oldopt)
-        if (i <= nrnc[2]) axis(1, outer=TRUE, cex.axis=0.6, tcl=-0.2)
-        axis(2, cex.axis=0.6, las=1, tcl=-0.2)
-        mtext(paste(sucle[i], strname[sel][1], sep="\n"), side=3,
-          cex=0.8, adj=0.1)
-        box(col="gray")
+      if(length(suls)>0) {
+        nrnc <- n2mfrow(length(suls))
+        par(mfrow=nrnc, mar=c(0, 2, 2, 0), oma=c(3, 1, 1, 1), yaxs="i", cex=1.4)
+        for(i in seq(suls)) {
+          sel <- lscode==suls[i]
+          selsd <- sel & !is.na(PEplusSD)
+          mymax <- 1.1*max(c(PEplusSD[sel], PEmr[sel]), na.rm=TRUE)/1000
+          plot(year[sel], PEmr[sel]/1000, type="n", axes=FALSE,
+            xlim=range(year) + c(-1, 1)*0.3, ylim=c(0, mymax), xlab="", ylab="")
+          lines(year[sel], PEmr[sel]/1000, type="o", pch=16, cex=0.7)
+          # ignore warnings from zero-length arrows
+          oldopt <- getOption("warn")
+          options(warn=-1)
+          arrows(year[selsd], PEminusSD[selsd]/1000,
+            year[selsd], PEplusSD[selsd]/1000,
+            length=0.05, angle=90, code=3)
+          options(warn=oldopt)
+          if (i <= nrnc[2]) axis(1, outer=TRUE, cex.axis=0.6, tcl=-0.2)
+          axis(2, cex.axis=0.6, las=1, tcl=-0.2)
+          mtext(paste(sucle[i], strname[sel][1], sep="\n"), side=3,
+            cex=0.8, adj=0.1)
+          box(col="gray")
+        }
+        mtext("Year", side=1, outer=TRUE, cex=1.2, line=2)
+        mtext("Adult sea lampreys  (thousands)", side=2, outer=TRUE, cex=1.2,
+          line=0)
       }
-      mtext("Year", side=1, outer=TRUE, cex=1.2, line=2)
-      mtext("Adult sea lampreys  (thousands)", side=2, outer=TRUE, cex=1.2,
-        line=0)
     })
   }
 
-  figu("Recent adult sea lamprey mark-recapture estimates on streams,",
+  figu("Recent adult sea lamprey mark-recapture estimates on index streams,",
     " plus or minus 1 standard deviation, ", YEAR-4, "-", YEAR, ".",
     FIG=FIG.strmest, newpage="port")
 

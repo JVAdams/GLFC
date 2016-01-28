@@ -27,9 +27,8 @@
 #' @param targets
 #'   A data frame with the calculated targets for the Adult Index and
 #'   expanded PE of each Great Lake, with 5 rows (Superior, Michigan, Huron,
-#'   Erie, Ontario) and 3 columns: \code{lake},
-#'   \code{targInd}, and \code{targPE}, typically the output from
-#'   \code{\link{AItarget}}.
+#'   Erie, Ontario) and 2 columns: \code{lake} and
+#'   \code{targInd}, typically the output from \code{\link{AItarget}}.
 #' @param csvDir
 #'   A character scalar identifying the path where the rtf file will be
 #'   stored, e.g., \code{csvDir = "C:\\temp\\mydir"}.
@@ -59,8 +58,8 @@ AIreport <- function(streamPEs, lakeIPEs, targets, csvDir, outFile=NULL,
 # lakeIPEs=lakeIndPE
 # targets=oldtarg
 # csvDir=DIRECTORY
-# outFile=NULL
-# proptargets=pt
+# outFile="TestReport"
+# proptargets=NULL
 
 
 
@@ -79,7 +78,7 @@ AIreport <- function(streamPEs, lakeIPEs, targets, csvDir, outFile=NULL,
     ifelse(!is.na(index) & !is.na(targInd) & index > targInd, "***", ""))
   targ2$above[with(targ2, is.na(index) | is.na(targInd))] <- " ? "
   targ2 <- targ2[, c("above", "targInd", "index", "jlo", "jhi",
-    "targPE", "pe", "pelo", "pehi")]
+    "pe", "pelo", "pehi")]
   TAB.targs <- prettytable(targ2, c(0, 0, 0, 0, 0, -3, -3, -3, -3))
 
 
@@ -135,7 +134,6 @@ AIreport <- function(streamPEs, lakeIPEs, targets, csvDir, outFile=NULL,
 #     var="indexContrib"
 #     lab="cleplus"
 #     sug=c("Index w/ mark-recap", "Index w/o mark-recap", "Non-index")
-#     ptgrp=3
 #     cols=blindcolz[1+(1:length(sug))]
 #     legat="topright"
 #     leginset=c(0, 0)
@@ -144,20 +142,14 @@ AIreport <- function(streamPEs, lakeIPEs, targets, csvDir, outFile=NULL,
 #     ox=-44
 #     oy=64
 
-  FIG.bubble1 <- function(df, group, var, lab, sug, ptgrp=NULL,
-    cols=blindcolz[1+(1:length(sug))], lonR=-c(92.14, -75.97),
+  FIG.bubble1 <- function(df, group, var, lab, sug,
+    cols=blindcolz[1+(1:length(sug))], lonR=-c(92.14, 75.97),
     latR=c(41.36, 49.02), legat="topright", leginset=c(0, 0),
     dr=range(sqrt(df[, var]), na.rm=TRUE), cr=c(0.04, 0.25), ox=-44, oy=64) {
 
     g <- df[, group]
     v <- df[, var]
-    if(is.null(ptgrp)) {
-      n <- length(g)
-      seln <- rep(TRUE, n)
-    } else {
-      n <- sum(table(g)[-ptgrp])
-      seln <- g!=sug[ptgrp]
-    }
+    n <- length(g)
 
     xr <- lonR
     yr <- latR
@@ -173,22 +165,18 @@ AIreport <- function(streamPEs, lakeIPEs, targets, csvDir, outFile=NULL,
     pusr <- par("usr")
     with(df, {
       textx <- rep(NA, dim(df)[1])
-      textx[seln] <- seq(pusr[1], pusr[2],
-        length=n+2)[-c(1, n+2)][rank(long[seln], ties.method="first")]
+      textx <- seq(pusr[1], pusr[2],
+        length=n+2)[-c(1, n+2)][rank(long, ties.method="first")]
 
       for(i in seq_along(sug)) {
         sel <- g==sug[i]
         if (sum(sel)>0) {
-          if (is.null(ptgrp) | ptgrp!=i) {
-            circles(long[sel], lat[sel], sqrt(v)[sel], data.range=dr,
-              circle.size.range=cr, outx=ox, outy=oy, add=TRUE, fg=cols[i], lwd=3)
-            text(textx[sel], yr[1] - (magic-1)*bufy, df[sel, lab],
-              adj=0, srt=90, col=cols[i], cex=0.8)
-            segments(textx[sel], yr[1] - 2*bufy, long[sel], lat[sel], col=cols[i],
-              lty=2)
-          } else {
-            points(long[sel], lat[sel], pch=3, col=cols[i], lwd=3)
-          }
+          circles(long[sel], lat[sel], sqrt(v)[sel], data.range=dr,
+            circle.size.range=cr, outx=ox, outy=oy, add=TRUE, fg=cols[i], lwd=3)
+          text(textx[sel], yr[1] - (magic-1)*bufy, df[sel, lab],
+            adj=0, srt=90, col=cols[i], cex=0.8)
+          segments(textx[sel], yr[1] - 2*bufy, long[sel], lat[sel], col=cols[i],
+            lty=2)
         }
       }
     })
@@ -198,10 +186,10 @@ AIreport <- function(streamPEs, lakeIPEs, targets, csvDir, outFile=NULL,
   }
 
   FIG.bubble2 <- function() {
-    FIG.bubble1(df=streamPEs[streamPEs$year==YEAR, ], group="categ",
-        var="indexContrib", lab="cleplus",
-        sug=c("Index w/ mark-recap", "Index w/o mark-recap", "Non-index"),
-        ptgrp=3)
+    FIG.bubble1(
+      df=streamPEs[streamPEs$year==YEAR & streamPEs$categ!="Non-index", ],
+      group="categ", var="indexContrib", lab="cleplus",
+      sug=c("Index w/ mark-recap", "Index w/o mark-recap"))
   }
 
   ### bar plot of individual index stream PEs
@@ -414,10 +402,10 @@ AIreport <- function(streamPEs, lakeIPEs, targets, csvDir, outFile=NULL,
     FIG=FIG.bar, newpage="port", w=6, h=7.5)
 
 
-  figu("Distribution of adult sea lampreys in the Great Lakes index streams, ",
-    YEAR, ".",
-    "  Circle size represents size of population estimate,",
-    " circle color represents the source of the population estimate.",
+  figu("Relative size of adult sea lamprey population estimates (PEs)",
+    " in Great Lakes index streams, ", YEAR, ".",
+    "  Circle size represents size of PE,",
+    " circle color represents the source of PE.",
     FIG=FIG.bubble2, newpage="land", h=6)
 
 

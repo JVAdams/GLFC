@@ -22,14 +22,18 @@
 #'   needed in a year to generate an index, default 2.
 #'
 #' @return
-#'   A list with 2 components:
-#'   \code{streamPE}, a data frame of stream mark-recapture and Adult Index
-#'   contributions for the incomplete rows in \code{streamPE}, with
-#'   the same variables as \code{streamPE}; and
-#'   \code{lakeIndex}, a data frame of annual lake-wide Adult Indices
-#'   for the incomplete rows in (\code{streamPE}), with 5 columns: \code{lake},
-#'   \code{year}, the Adult Index \code{index}, and the lower and upper
-#'   jackknifed range \code{jlo} and \code{jhi}.
+#'   A list with 3 components:
+#'   \describe{
+#'     \item{streamPE}{a data frame of stream mark-recapture and Adult Index
+#'   contributions for the incomplete rows in \code{streamDat}, with
+#'   the same variables as \code{streamDat};}
+#'     \item{lakeIndex}{a data frame of annual lake-wide Adult Indices
+#'   with 5 columns: \code{lake}, \code{year}, the Adult Index \code{index},
+#'   and the lower and upper jackknifed range \code{jlo} and \code{jhi}; and}
+#'     \item{lakeJackRaw}{a data frame of the raw contributions to the jackknifed
+#'   range with columns for \code{lake}, \code{year}, and each of the index
+#'   streams (see \code{\link{jackIndex}}).}
+#'   }
 #' @export
 #' @details
 #'   The annual Adult Index is simply the sum of stream population estimates for
@@ -81,14 +85,19 @@ AIestimate <- function(streamDat, minNMR=2) {
   se2 <- streamests[!apply(is.na(streamests), 1, any), ]
   # THEN, get rid of streams with missing estimates
   se3 <- se2[, !apply(is.na(se2), 2, any)]
-  jack <- jackIndex(se3)
-  jack <- cbind(lake=streamDat$lake[1], year=as.numeric(row.names(jack)), jack)
+  jacklist <- jackIndex(se3, simple=FALSE)
+  jack <- cbind(lake=streamDat$lake[1],
+    year=as.numeric(row.names(jacklist$jack.range)), jacklist$jack.range,
+    jacklist$jack.raw)
   row.names(jack) <- 1:dim(jack)[1]
   jack <- as.data.frame(jack)
 
   # subset the output to only include the year-lakes in streamDatCurr
   uyl <- with(streamDat[incompindex, ], unique(paste0(year, lake)))
   streamDatOut <- streamDat[with(streamDat, paste0(year, lake)) %in% uyl, ]
-  lakeIndexOut <- jack[with(jack, paste0(year, lake)) %in% uyl, ]
-  list(streamPE=streamDatOut, lakeIndex=lakeIndexOut)
+  jsel <- with(jack, paste0(year, lake)) %in% uyl
+  lakeIndexOut <- jack[jsel, c("lake", "year", "index", "jlo", "jhi")]
+  lakeIndexRaw <- jack[jsel,
+    c("lake", "year", dimnames(jacklist$jack.raw)[[2]])]
+  list(streamPE=streamDatOut, lakeIndex=lakeIndexOut, lakeJackRaw=lakeIndexRaw)
 }

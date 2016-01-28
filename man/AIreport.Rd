@@ -32,9 +32,8 @@ The data frame may contain variables other than those required.}
 
 \item{targets}{A data frame with the calculated targets for the Adult Index and
 expanded PE of each Great Lake, with 5 rows (Superior, Michigan, Huron,
-Erie, Ontario) and 3 columns: \code{lake},
-\code{targInd}, and \code{targPE}, typically the output from
-\code{\link{AItarget}}.}
+Erie, Ontario) and 2 columns: \code{lake} and
+\code{targInd}, typically the output from \code{\link{AItarget}}.}
 
 \item{csvDir}{A character scalar identifying the path where the rtf file will be
 stored, e.g., \code{csvDir = "C:\\temp\\mydir"}.}
