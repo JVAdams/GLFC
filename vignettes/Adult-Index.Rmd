@@ -111,7 +111,7 @@ lake2 <- lakeprev[119:123, ]
 lake2$index <- round(lake2$index, 0)
 lake2$jlo <- round(lake2$jlo, 0)
 lake2$jhi <- round(lake2$jhi, 0)
-lake2$jhi <- round(lake2$pMeet, 3)
+lake2$pMeet <- round(lake2$pMeet, 3)
 knitr::kable(lake2, row.names=FALSE)
 ```
 

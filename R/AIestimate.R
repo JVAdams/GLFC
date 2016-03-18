@@ -23,16 +23,16 @@
 #'
 #' @return
 #'   A list with 3 components:
-#'   \describe{
-#'     \item{streamPE}{a data frame of stream mark-recapture and Adult Index
+#'   \itemize{
+#'     \item \code{streamPE} - a data frame of stream mark-recapture and Adult Index
 #'   contributions for the incomplete rows in \code{streamDat}, with
-#'   the same variables as \code{streamDat};}
-#'     \item{lakeIndex}{a data frame of annual lake-wide Adult Indices
+#'   the same variables as \code{streamDat};
+#'     \item \code{lakeIndex} - a data frame of annual lake-wide Adult Indices
 #'   with 5 columns: \code{lake}, \code{year}, the Adult Index \code{index},
-#'   and the lower and upper jackknifed range \code{jlo} and \code{jhi}; and}
-#'     \item{lakeJackRaw}{a data frame of the raw contributions to the jackknifed
+#'   and the lower and upper jackknifed range \code{jlo} and \code{jhi}; and
+#'     \item \code{lakeJackRaw} - a data frame of the raw contributions to the jackknifed
 #'   range with columns for \code{lake}, \code{year}, and each of the index
-#'   streams (see \code{\link{jackIndex}}).}
+#'   streams (see \code{\link{jackIndex}}).
 #'   }
 #' @export
 #' @details

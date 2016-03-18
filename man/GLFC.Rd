@@ -22,8 +22,10 @@ Use \code{\link{AIprep}} to prepare the Adult Index data,
 \code{\link{AItarget}} to calculate targets for the Adult Index, and
 \code{\link{AIreport}} to generate a draft Adult Index report.
 
+Or use \code{\link{AIpresto}} to do it all in one fell swoop.
+
 \emph{U.S. Geological Survey} (USGS) Computer Program \pkg{GLFC}
-  version 0.2.0.9000
+  version 0.3.0.9000
 Written by Jean V. Adams, USGS - Great Lakes Science Center
 \href{http://www.glsc.usgs.gov/}{glsc.usgs.gov}, Ann Arbor, Michigan, USA.
 Written in programming language R (R Core Team, 2015, www.R-project.org),
