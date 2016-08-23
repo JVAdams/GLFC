@@ -81,9 +81,9 @@ old <- read.csv(paste(Dir, StreamPrev, sep="\\"), as.is=TRUE)
 old2 <- old[c(896:897, 955:957), c("year", "lake", "lscode", 
   "PEmr", "CVmr", "indexContrib", "indexContribCV")]
 old2$PEmr <- round(old2$PEmr, 0)
-old2$CVmr <- round(old2$CVmr, 1)
+old2$CVmr <- round(old2$CVmr, 0)
 old2$indexContrib <- round(old2$indexContrib, 0)
-old2$indexContribCV<- round(old2$indexContribCV, 2)
+old2$indexContribCV<- round(old2$indexContribCV, 0)
 knitr::kable(old2, row.names=FALSE)
 ```
 
@@ -204,9 +204,9 @@ The returned object from the `AIprep()` function is a single data frame (called 
 sel <- !is.na(streamall$indexContrib)
 look <- tail(streamall[sel, ], 5)
 look$PEmr <- round(look$PEmr, 0)
-look$CVmr <- round(look$CVmr, 2)
+look$CVmr <- round(look$CVmr, 0)
 look$indexContrib <- round(look$indexContrib, 0)
-look$indexContribCV<- round(look$indexContribCV, 2)
+look$indexContribCV<- round(look$indexContribCV, 0)
 knitr::kable(look, row.names=FALSE)
 ```
 
@@ -269,8 +269,8 @@ ss <- ainewOnt$streamPE
 ssc <- strsplit(ss$comments, ",")
 ssc2 <- sapply(ssc, "[", 1)
 ss$comments <- gsub("recapture", "recap", ssc2)
-ss$indexContrib <- round(ss$indexContrib)
-ss$indexContribCV <- round(ss$indexContribCV)
+ss$indexContrib <- round(ss$indexContrib, 0)
+ss$indexContribCV <- round(ss$indexContribCV, 0)
 knitr::kable(ss, row.names=FALSE)
 ```
 
