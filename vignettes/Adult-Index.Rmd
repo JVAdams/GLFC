@@ -11,8 +11,8 @@ vignette: >
 
 ```{r, echo=FALSE}
 library(knitr) 
-opts_chunk$set(echo=TRUE, warning=FALSE, message=FALSE, width=80,
-  autodep=TRUE, cache=TRUE, cache.lazy=FALSE)
+opts_chunk$set(echo=TRUE, warning=FALSE, message=FALSE, width=80)
+# , autodep=TRUE, cache=TRUE, cache.lazy=FALSE)
 ```
 
 The R package **GLFC** includes functions to estimate indices of adult sea lamprey abundance in the Great Lakes.  The [Great Lakes Fishery Commission](http://www.glfc.org) made the decision to switch to a lake-wide index of adult abundance in December 2014 (GLFC-TTF 2014).  Prior to that decision, lake-wide population estimates (PE) were generated following Mullett et al. (2003).  This vignette walks you through the process of generating Adult Index estimates.
@@ -201,7 +201,13 @@ The returned object from the `AIprep()` function is a single data frame (called 
 * `complete` - a logical identifying streams and years for which the Adult Index has already been estimated (initially set to FALSE for `csvNew`)
 
 ```{r, echo=FALSE}
-knitr::kable(tail(streamall, 5), row.names=FALSE)
+sel <- !is.na(streamall$indexContrib)
+look <- tail(streamall[sel, ], 5)
+look$PEmr <- round(look$PEmr, 0)
+look$CVmr <- round(look$CVmr, 2)
+look$indexContrib <- round(look$indexContrib, 0)
+look$indexContribCV<- round(look$indexContribCV, 2)
+knitr::kable(look, row.names=FALSE)
 ```
 
 
@@ -367,7 +373,7 @@ The report has few paragraphs summarizing the latest estimates, along with 3 tab
 
 and 3 figures,
 
-* 5-panel time series plot of adult sea lamprey indices (with jackknifed ranges) and targets for each Great Lake  
+* 5-panel time series plot of adult sea lamprey indices (with 95% confidence intervals) and targets for each Great Lake  
 ![Adult Index](figures/AI.jpg)
 
 * 5-panel bar plot of adult sea lamprey abundance estimates for index streams  

@@ -11,7 +11,7 @@ unnamed-chunk-9	AIprep	Dir	StreamNew	StreamPrev
 unnamed-chunk-10	::	head	trappedStreams
 unnamed-chunk-11	::	cbind	Lakenames	lsIndex	paste	sapply
 unnamed-chunk-12	!=	::	data.frame	lsKeep	paste	sapply
-unnamed-chunk-13	::	streamall	tail
+unnamed-chunk-13	::	names	streamall	tail
 unnamed-chunk-14	AIcheck	Dir	streamall
 unnamed-chunk-15	message
 unnamed-chunk-16	$	==	AIestimate	streamall
