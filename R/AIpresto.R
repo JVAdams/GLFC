@@ -3,6 +3,7 @@
 #' Carry out a series of steps in the Adult Index estimation process in one
 #' fell swoop.  This function prepares and error checks the data, estimates
 #' the Adult Index, calculates the targets, and generates a draft report.
+#'
 #' @param DIRECTORY
 #'   A character scalar identifying the path where the csv files are
 #'   stored, e.g., \code{DIRECTORY = "C:\\\\temp\\\\mydir"}.
@@ -19,33 +20,36 @@
 #'   with stream mark-recapture estimates for which Adult Indices
 #'   have already been estimated (typically from previous years),
 #'   with the same variables as in \code{NEWDATARAW} plus the
-#'   previously estimated contribution \code{indexContrib}, default NULL.
+#'   previously estimated contribution \code{indexContrib}.
 #' @param LAKEDATAPREV
 #'   A character scalar identifying the name of the csv file
 #'   with annual lake-wide Adult Index estimates (typically from previous
 #'   years), with 5 columns: \code{lake}, \code{year}, \code{index}, and the
-#'   lower and upper jackknifed range \code{jlo} and \code{jhi}, and the
-#'   proportion of jackknifed contributions that met the target
+#'   lower and upper 95\% confidence intervals \code{ilo} and \code{ihi}.
 #' @return
 #'   Four data summaries are saved as csv files to \code{DIRECTORY}, where
 #'   \code{YYYY} represents the most recent year of data in \code{NEWDATARAW}:
 #'   \itemize{
-#'     \item \code{AdultStreamYYYY.csv} - an updated version of \code{NEWDATARAW}
+#'     \item \code{AdultStreamYYYY.csv} - an updated version of
+#'       \code{NEWDATARAW}
 #'       with the additional column of the lake-stream IDs, \code{lscode},
 #'       which are combination of lake ID and stream ID, e.g.,
 #'       1.064 = lake ID 1 + (stream ID 64)/1000
 #'     \item \code{AdultStreamThruYYYY.csv} - an updated version of
 #'       \code{STREAMDATAPREV} with the latest year of data added
-#'     \item \code{AdultLakeThruYYYY.csv} - an updated version of \code{LAKEDATAPREV}
+#'     \item \code{AdultLakeThruYYYY.csv} - an updated version of
+#'       \code{LAKEDATAPREV}
 #'       with the latest year of data added
-#'     \item \code{AdultTargetYYYY.csv} - the calculated targets for the Adult Index
+#'     \item \code{AdultTargetYYYY.csv} - the calculated targets for the Adult
+#'       Index
 #'       of each Great Lake, with 2 columns: \code{lake} and \code{targInd}
 #'   }
 #'
 #'   Two rich text documents are saved as doc files (so that MS Word will open
 #'   them automatically) to \code{DIRECTORY}:
 #'   \itemize{
-#'     \item \code{YYYY Adult Index - error checking.doc} - error checking document
+#'     \item \code{YYYY Adult Index - error checking.doc} - error checking
+#'       document
 #'     \item \code{YYYY Adult Index - draft report.doc} - draft report document
 #'   }
 #'
@@ -87,13 +91,13 @@ AIpresto <- function(DIRECTORY, NEWDATARAW, STREAMDATAPREV, LAKEDATAPREV) {
   # Prepare csv file with stream mark-recapture estimates
   # Header must include: year, lake, lscode, PEmr, CVmr
   new <- read.csv(paste(DIRECTORY, NEWDATARAW, sep="\\"), as.is=TRUE)
-  new$lscode <- new$lake + new$streamcode/1000
-  new2 <- new[, c("year", "lake", "lscode", "trapcatch", "PEmr", "CVmr",
-    "comments")]
+#  new$lscode <- new$lake + new$streamcode/1000
+  # new2 <- new[, c("year", "lake", "lscode", "trapcatch", "PEmr", "CVmr",
+  #   "comments")]
 
   YEAR <- max(new$year)
   STREAMDATANEW <- paste0("AdultStream", YEAR, ".csv")
-
+  write.csv(new, paste(DIRECTORY, STREAMDATANEW, sep="\\"))
 
   # create some information tables for inclusion in error report
 
@@ -152,32 +156,17 @@ AIpresto <- function(DIRECTORY, NEWDATARAW, STREAMDATAPREV, LAKEDATAPREV) {
 
 
 
-  #### Quantify the likelihood of being at target ####
 
-  # create an empty list for the results
-  jproplist <- vector("list", 5)
-  # cycle through the five lakes
-  for(i in 1:5) {
-    # get the raw contribution to the jackknifed range from lake i
-    jri <- makeitso[[i]][[3]]
-    # get the target from lake i
-    ti <- targ$targInd[targ$lake==i]
-    # calculate the proportion of contributions that meet the target
-    jproplist[[i]] <- jackProp(jackRaw=jri, target=ti)
-  }
-  # combine the results into a single data frame
-  jpropdf <- do.call(rbind, jproplist)
-  # merge the results with the lake index data frame
-  lakecomp2 <- merge(lakecomp, jpropdf, all=TRUE)
+  lakecomp2 <- lakecomp
 
 
 
   #### expand indices to supposed lake-wide PEs ####
 
   lakeInd <- plyr::rbind.fill(lake1, lakecomp2)
-  lakeIndPE <- merge(lakeInd[, c("lake", "year", "index", "jlo", "jhi", "pMeet")],
+  lakeIndPE <- merge(lakeInd[, c("lake", "year", "index", "ilo", "ihi")],
     cbind(lake=1:5, i2pe=index2pe))
-  pes <- lakeIndPE[, c("index", "jlo", "jhi")]*lakeIndPE$i2pe
+  pes <- lakeIndPE[, c("index", "ilo", "ihi")]*lakeIndPE$i2pe
   names(pes) <- c("pe", "pelo", "pehi")
   lakeIndPE <- cbind(lakeIndPE, pes)
   lakeIndPE <- lakeIndPE[with(lakeIndPE, order(lake, year)), ]
@@ -205,7 +194,7 @@ AIpresto <- function(DIRECTORY, NEWDATARAW, STREAMDATAPREV, LAKEDATAPREV) {
   OUTSTREAM <- paste0("AdultStreamThru", YEAR, ".csv")
   OUTLAKE <- paste0("AdultLakeThru", YEAR, ".csv")
   OUTTARG <- paste0("AdultTarget", YEAR, ".csv")
-  write.csv(new2, paste(DIRECTORY, STREAMDATANEW, sep="\\"), row.names=FALSE)
+  write.csv(new, paste(DIRECTORY, STREAMDATANEW, sep="\\"), row.names=FALSE)
   write.csv(streamPE, paste(DIRECTORY, OUTSTREAM, sep="\\"), row.names=FALSE)
   write.csv(lakeIndPE, paste(DIRECTORY, OUTLAKE, sep="\\"), row.names=FALSE)
   write.csv(targ, paste(DIRECTORY, OUTTARG, sep="\\"), row.names=FALSE)
@@ -235,6 +224,5 @@ AIpresto <- function(DIRECTORY, NEWDATARAW, STREAMDATAPREV, LAKEDATAPREV) {
     ), row.names=FALSE)
 
   message("\n\nOutput *.csv and *.doc files in directory ", DIRECTORY, ".\n\n")
-  #cat(paste0("\n\n\nOutput *.csv and *.doc files in directory, ", DIRECTORY, ".\n\n\n"))
 
 }

@@ -285,7 +285,8 @@ AIcheck <- function(streamDat, csvDir, outFile=NULL, otherTabs=NULL) {
 
   # line plots showing summary of stream PEs over past 5 years
   FIG.strmest <- function() {
-    selstreams <- with(streamDat, year > YEAR - 4.5 & !is.na(indexContrib))
+#    selstreams <- with(streamDat, year > YEAR - 4.5 & !is.na(indexContrib))
+    selstreams <- with(streamDat, year > YEAR - 4.5 & !is.na(PEmr))
     streams.pick <- sort(unique(streamDat$lscode[selstreams]))
     sub <- streamDat[with(streamDat,
       is.element(lscode, streams.pick) & year > YEAR - 4.5), ]

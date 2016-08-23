@@ -8,9 +8,11 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
 <meta name="author" content="Jean V. Adams" />
 
-<meta name="date" content="2016-01-29" />
+<meta name="date" content="2016-08-23" />
 
 <title>Adult Index Estimation</title>
 
@@ -54,14 +56,10 @@ code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Ann
 code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
 code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 </style>
-<style type="text/css">
-  pre:not([class]) {
-    background-color: white;
-  }
-</style>
 
 
-<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0A%7D%0Apre%20%7B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
 
 </head>
 
@@ -69,35 +67,27 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 
 
-<div id="header">
-<h1 class="title">Adult Index Estimation</h1>
+
+<h1 class="title toc-ignore">Adult Index Estimation</h1>
 <h4 class="author"><em>Jean V. Adams</em></h4>
-<h4 class="date"><em>2016-01-29</em></h4>
-</div>
+<h4 class="date"><em>2016-08-23</em></h4>
+
 
 
 <p>The R package <strong>GLFC</strong> includes functions to estimate indices of adult sea lamprey abundance in the Great Lakes. The <a href="http://www.glfc.org">Great Lakes Fishery Commission</a> made the decision to switch to a lake-wide index of adult abundance in December 2014 (GLFC-TTF 2014). Prior to that decision, lake-wide population estimates (PE) were generated following Mullett et al. (2003). This vignette walks you through the process of generating Adult Index estimates.</p>
-<p>The five main functions of the <strong>GLFC</strong> package are:</p>
-<ul>
-<li><code>AIprep()</code> - to prepare the Adult Index data</li>
-<li><code>AIcheck()</code> - to error check the Adult Index data</li>
-<li><code>AIestimate()</code> - to estimate the Adult Index</li>
-<li><code>AItarget()</code> - to calculate targets for the Adult Index</li>
-<li><code>AIreport()</code> - to generate a draft Adult Index report</li>
-</ul>
-<div id="install" class="section level1">
-<h1>Install</h1>
+<p>One overarching function, <code>AIpresto</code> can be used to carry out all the steps of the Adult Index estimation process in one fell swoop. This function prepares and error checks the data, estimates the Adult Index, calculates the targets, and generates a draft report.</p>
+<div id="install" class="section level2">
+<h2>Install</h2>
 <p>Install the latest version of <strong><a href="https://www.r-project.org/">R</a></strong> from <a href="https://cran.r-project.org/bin/windows/base/">CRAN</a>.</p>
 <p>Install the latest version of the <strong>GLFC</strong> package following the instructions at <a href="https://github.com/JVAdams/GLFC/blob/master/README.md">Readme</a>. The easiest way to do this, if you already have the package <strong>devtools</strong> installed, is:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools::<span class="kw">install_github</span>(<span class="st">&quot;JVAdams/GLFC&quot;</span>)</code></pre></div>
 <p>If, instead, you install the <strong>GLFC</strong> package by downloading the <a href="https://github.com/JVAdams/GLFC/raw/master/GLFC.zip">zip file</a> and installing it from the R Menu (<em>Packages</em>, <em>Install package(s) from local zip files…</em>), then you should run the following lines of code, to ensure that all the packages on which <strong>GLFC</strong> depends are installed.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">wantpkgs &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;geosphere&quot;</span>, <span class="st">&quot;lubridate&quot;</span>, <span class="st">&quot;maps&quot;</span>, <span class="st">&quot;plotrix&quot;</span>, <span class="st">&quot;plyr&quot;</span>, <span class="st">&quot;rtf&quot;</span>,
-  <span class="st">&quot;XLConnect&quot;</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">wantpkgs &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;geosphere&quot;</span>, <span class="st">&quot;lubridate&quot;</span>, <span class="st">&quot;maps&quot;</span>, <span class="st">&quot;plotrix&quot;</span>, <span class="st">&quot;plyr&quot;</span>, <span class="st">&quot;rtf&quot;</span>,   <span class="st">&quot;XLConnect&quot;</span>)
 needpkgs &lt;-<span class="st"> </span><span class="kw">setdiff</span>(wantpkgs, <span class="kw">row.names</span>(<span class="kw">installed.packages</span>()))
 if(<span class="kw">length</span>(needpkgs) &gt;<span class="st"> </span><span class="dv">0</span>) <span class="kw">install.packages</span>(needpkgs)</code></pre></div>
 </div>
-<div id="prepare-the-data" class="section level1">
-<h1>Prepare the data</h1>
+<div id="prepare-the-data" class="section level2">
+<h2>Prepare the data</h2>
 <p>Three csv files are needed to generate Adult Index estimates, one each with new stream data, previous stream data, and previous lake data.</p>
 <p><strong>(1)</strong> <code>STREAMDATANEW</code> should contain stream mark-recapture estimates of adult sea lampreys for the year of interest.</p>
 <table>
@@ -185,44 +175,44 @@ if(<span class="kw">length</span>(needpkgs) &gt;<span class="st"> </span><span c
 </thead>
 <tbody>
 <tr class="odd">
-<td align="right">2010</td>
-<td align="right">5</td>
-<td align="right">5.023</td>
-<td align="right">7901</td>
-<td align="right">16.9</td>
-<td align="right">7901</td>
-</tr>
-<tr class="even">
-<td align="right">2010</td>
-<td align="right">5</td>
-<td align="right">5.036</td>
-<td align="right">1242</td>
-<td align="right">17.7</td>
-<td align="right">1242</td>
-</tr>
-<tr class="odd">
-<td align="right">2012</td>
-<td align="right">4</td>
-<td align="right">4.001</td>
-<td align="right">3324</td>
-<td align="right">7.8</td>
-<td align="right">3324</td>
-</tr>
-<tr class="even">
-<td align="right">2012</td>
-<td align="right">4</td>
-<td align="right">4.002</td>
+<td align="right">2000</td>
+<td align="right">1</td>
+<td align="right">1.026</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
-<td align="right">821</td>
+<td align="right">NA</td>
+</tr>
+<tr class="even">
+<td align="right">2001</td>
+<td align="right">1</td>
+<td align="right">1.026</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
 </tr>
 <tr class="odd">
-<td align="right">2012</td>
-<td align="right">4</td>
-<td align="right">4.009</td>
-<td align="right">395</td>
-<td align="right">13.3</td>
-<td align="right">395</td>
+<td align="right">1989</td>
+<td align="right">1</td>
+<td align="right">1.028</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+</tr>
+<tr class="even">
+<td align="right">1990</td>
+<td align="right">1</td>
+<td align="right">1.028</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+</tr>
+<tr class="odd">
+<td align="right">1991</td>
+<td align="right">1</td>
+<td align="right">1.028</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
 </tr>
 </tbody>
 </table>
@@ -242,9 +232,8 @@ if(<span class="kw">length</span>(needpkgs) &gt;<span class="st"> </span><span c
 <th align="right">year</th>
 <th align="right">lake</th>
 <th align="right">index</th>
-<th align="right">jlo</th>
-<th align="right">jhi</th>
-<th align="right">pMeet</th>
+<th align="right">ilo</th>
+<th align="right">ihi</th>
 </tr>
 </thead>
 <tbody>
@@ -252,41 +241,36 @@ if(<span class="kw">length</span>(needpkgs) &gt;<span class="st"> </span><span c
 <td align="right">2010</td>
 <td align="right">5</td>
 <td align="right">14864</td>
-<td align="right">11237</td>
-<td align="right">17310</td>
-<td align="right">0.2</td>
+<td align="right">11176</td>
+<td align="right">18552</td>
 </tr>
 <tr class="even">
 <td align="right">2011</td>
 <td align="right">5</td>
 <td align="right">24808</td>
-<td align="right">11734</td>
-<td align="right">31850</td>
-<td align="right">0.0</td>
+<td align="right">15232</td>
+<td align="right">34384</td>
 </tr>
 <tr class="odd">
 <td align="right">2012</td>
 <td align="right">5</td>
 <td align="right">25848</td>
-<td align="right">18268</td>
-<td align="right">31336</td>
-<td align="right">0.0</td>
+<td align="right">21379</td>
+<td align="right">30318</td>
 </tr>
 <tr class="even">
 <td align="right">2013</td>
 <td align="right">5</td>
 <td align="right">9456</td>
-<td align="right">7591</td>
-<td align="right">11872</td>
-<td align="right">0.8</td>
+<td align="right">7532</td>
+<td align="right">11380</td>
 </tr>
 <tr class="odd">
 <td align="right">2014</td>
 <td align="right">5</td>
 <td align="right">10644</td>
-<td align="right">9986</td>
-<td align="right">10986</td>
-<td align="right">1.0</td>
+<td align="right">8435</td>
+<td align="right">12854</td>
 </tr>
 </tbody>
 </table>
@@ -295,9 +279,8 @@ if(<span class="kw">length</span>(needpkgs) &gt;<span class="st"> </span><span c
 <li><code>year</code> - survey year</li>
 <li><code>lake</code> - lake code</li>
 <li><code>index</code> - estimated lake-wide index of adult sea lamprey abundance</li>
-<li><code>jlo</code> - lower jackknifed range (see <em><a href="#est">Estimate the Adult Index</a></em>)</li>
-<li><code>jhi</code> - upper jackknifed range (see <em><a href="#est">Estimate the Adult Index</a></em>)</li>
-<li><code>pMeet</code> - proportion of jackknife contributions that meet the target (see <em><a href="#meet">Quantify the likelihood of being at target</a></em>)</li>
+<li><code>ilo</code> - lower 95% confidence interval</li>
+<li><code>ihi</code> - upper 95% confidence interval</li>
 </ul>
 <p>For all 3 files,</p>
 <ul>
@@ -308,15 +291,25 @@ if(<span class="kw">length</span>(needpkgs) &gt;<span class="st"> </span><span c
 </ul>
 <p>All 3 files should all be stored in a single directory, <code>DIRECTORY</code>.</p>
 <p>Assign the name of the directory (use double backslashes, \\, in the file path) and the names of the three files. For example,</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">DIRECTORY &lt;-<span class="st"> &quot;C:</span><span class="ch">\\</span><span class="st">temp&quot;</span>
-STREAMDATANEW &lt;-<span class="st"> &quot;AdultStream2015.csv&quot;</span>
-STREAMDATAPREV &lt;-<span class="st"> &quot;AdultStreamThru2014.csv&quot;</span>
-LAKEDATAPREV &lt;-<span class="st"> &quot;AdultLakeThru2014.csv&quot;</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Dir &lt;-<span class="st"> &quot;C:</span><span class="ch">\\</span><span class="st">temp&quot;</span>
+StreamNew &lt;-<span class="st"> &quot;AdultStream2015.csv&quot;</span>
+StreamPrev &lt;-<span class="st"> &quot;AdultStreamThru2014.csv&quot;</span>
+LakePrev &lt;-<span class="st"> &quot;AdultLakeThru2014.csv&quot;</span></code></pre></div>
+</div>
+<div id="run-the-works" class="section level2">
+<h2>Run the works</h2>
 <p>Load the <strong>GLFC</strong> package to have access to the Adult Index functions.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(GLFC)</code></pre></div>
-<p>Use the <code>AIprep()</code> function to read in the adult sea lamprey stream trapping data and prepare them for error checking and estimation. Simply provide the function with the name of the directory where the files are stored and the names of the new and previous stream data.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">streamall &lt;-<span class="st"> </span><span class="kw">AIprep</span>(<span class="dt">csvDir=</span>DIRECTORY, <span class="dt">csvNew=</span>STREAMDATANEW, 
-  <span class="dt">csvOld=</span>STREAMDATAPREV)</code></pre></div>
+<p>Use the <code>AIpresto()</code> function to prepare and error check the data, estimate the Adult Index, calculate the targets, and generate a draft report. Simply provide the function with the name of the directory where the files are stored, the names of the new and previous stream data, and the name of the previous lake data.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">AIpresto</span>(<span class="dt">DIRECTORY=</span>Dir, <span class="dt">NEWDATARAW=</span>StreamNew, <span class="dt">STREAMDATAPREV=</span>StreamPrev, <span class="dt">LAKEDATAPREV=</span>LakePrev)</code></pre></div>
+</div>
+<div id="behind-the-scenes" class="section level2">
+<h2>Behind the scenes</h2>
+<p>Within the <code>AIpresto()</code> function, the following steps are carried out.</p>
+<div id="manipulate-the-data" class="section level3">
+<h3>Manipulate the data</h3>
+<p>The <code>AIprep()</code> function is used to read in the adult sea lamprey stream trapping data and prepare them for error checking and estimation.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">streamall &lt;-<span class="st"> </span><span class="kw">AIprep</span>(<span class="dt">csvDir=</span>Dir, <span class="dt">csvNew=</span>StreamNew, <span class="dt">csvOld=</span>StreamPrev)</code></pre></div>
 <p>The <code>AIprep()</code> function brings in additional information built in to the <strong>GLFC</strong> package by default, including</p>
 <ul>
 <li><code>trappedStreams</code> a data frame with stream information,</li>
@@ -449,14 +442,14 @@ LAKEDATAPREV &lt;-<span class="st"> &quot;AdultLakeThru2014.csv&quot;</span></co
 <tr class="header">
 <th align="right">lscode</th>
 <th align="right">year</th>
-<th align="left">index</th>
-<th align="left">maintain</th>
 <th align="right">trapcatch</th>
 <th align="right">PEmr</th>
 <th align="right">CVmr</th>
-<th align="right">indexContrib</th>
-<th align="left">complete</th>
 <th align="left">comments</th>
+<th align="left">index</th>
+<th align="left">maintain</th>
+<th align="left">complete</th>
+<th align="left">indexContrib</th>
 <th align="right">lake</th>
 <th align="left">country</th>
 <th align="right">strcode</th>
@@ -468,110 +461,107 @@ LAKEDATAPREV &lt;-<span class="st"> &quot;AdultLakeThru2014.csv&quot;</span></co
 </thead>
 <tbody>
 <tr class="odd">
-<td align="right">5.036</td>
+<td align="right">5.041</td>
+<td align="right">2010</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">FALSE</td>
+<td align="left">FALSE</td>
+<td align="left">TRUE</td>
+<td align="left">NA</td>
+<td align="right">5</td>
+<td align="left">US</td>
+<td align="right">41</td>
+<td align="right">384</td>
+<td align="left">First</td>
+<td align="right">43.26</td>
+<td align="right">-76.99</td>
+</tr>
+<tr class="even">
+<td align="right">5.041</td>
 <td align="right">2011</td>
-<td align="left">TRUE</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
 <td align="left">FALSE</td>
-<td align="right">85</td>
-<td align="right">703.0000</td>
-<td align="right">39.00000</td>
-<td align="right">703.0000</td>
+<td align="left">FALSE</td>
 <td align="left">TRUE</td>
 <td align="left">NA</td>
 <td align="right">5</td>
 <td align="left">US</td>
-<td align="right">36</td>
-<td align="right">73</td>
-<td align="left">Sterling</td>
-<td align="right">43.34</td>
-<td align="right">-76.69</td>
+<td align="right">41</td>
+<td align="right">384</td>
+<td align="left">First</td>
+<td align="right">43.26</td>
+<td align="right">-76.99</td>
 </tr>
-<tr class="even">
-<td align="right">5.036</td>
+<tr class="odd">
+<td align="right">5.041</td>
 <td align="right">2012</td>
-<td align="left">TRUE</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
 <td align="left">FALSE</td>
-<td align="right">36</td>
-<td align="right">NA</td>
-<td align="right">NA</td>
-<td align="right">1726.4386</td>
+<td align="left">FALSE</td>
 <td align="left">TRUE</td>
 <td align="left">NA</td>
 <td align="right">5</td>
 <td align="left">US</td>
-<td align="right">36</td>
-<td align="right">73</td>
-<td align="left">Sterling</td>
-<td align="right">43.34</td>
-<td align="right">-76.69</td>
-</tr>
-<tr class="odd">
-<td align="right">5.036</td>
-<td align="right">2013</td>
-<td align="left">TRUE</td>
-<td align="left">FALSE</td>
-<td align="right">280</td>
-<td align="right">938.0000</td>
-<td align="right">18.45000</td>
-<td align="right">938.0000</td>
-<td align="left">TRUE</td>
-<td align="left">NA</td>
-<td align="right">5</td>
-<td align="left">US</td>
-<td align="right">36</td>
-<td align="right">73</td>
-<td align="left">Sterling</td>
-<td align="right">43.34</td>
-<td align="right">-76.69</td>
+<td align="right">41</td>
+<td align="right">384</td>
+<td align="left">First</td>
+<td align="right">43.26</td>
+<td align="right">-76.99</td>
 </tr>
 <tr class="even">
-<td align="right">5.036</td>
-<td align="right">2014</td>
-<td align="left">TRUE</td>
+<td align="right">5.041</td>
+<td align="right">2013</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
 <td align="left">FALSE</td>
-<td align="right">216</td>
-<td align="right">847.3333</td>
-<td align="right">30.99909</td>
-<td align="right">847.3333</td>
+<td align="left">FALSE</td>
 <td align="left">TRUE</td>
 <td align="left">NA</td>
 <td align="right">5</td>
 <td align="left">US</td>
-<td align="right">36</td>
-<td align="right">73</td>
-<td align="left">Sterling</td>
-<td align="right">43.34</td>
-<td align="right">-76.69</td>
+<td align="right">41</td>
+<td align="right">384</td>
+<td align="left">First</td>
+<td align="right">43.26</td>
+<td align="right">-76.99</td>
 </tr>
 <tr class="odd">
-<td align="right">5.036</td>
-<td align="right">2015</td>
-<td align="left">TRUE</td>
-<td align="left">FALSE</td>
-<td align="right">149</td>
-<td align="right">797.0000</td>
-<td align="right">25.00000</td>
+<td align="right">5.041</td>
+<td align="right">2014</td>
 <td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
 <td align="left">FALSE</td>
-<td align="left"></td>
+<td align="left">FALSE</td>
+<td align="left">TRUE</td>
+<td align="left">NA</td>
 <td align="right">5</td>
 <td align="left">US</td>
-<td align="right">36</td>
-<td align="right">73</td>
-<td align="left">Sterling</td>
-<td align="right">43.34</td>
-<td align="right">-76.69</td>
+<td align="right">41</td>
+<td align="right">384</td>
+<td align="left">First</td>
+<td align="right">43.26</td>
+<td align="right">-76.99</td>
 </tr>
 </tbody>
 </table>
-<p>Use the <code>read.csv()</code> function to read in the annual lake-wide adult sea lamprey indices for all of the years prior to the year of interest.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">lakeprev &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="kw">paste</span>(DIRECTORY, LAKEDATAPREV, <span class="dt">sep=</span><span class="st">&quot;</span><span class="ch">\\</span><span class="st">&quot;</span>), <span class="dt">as.is=</span><span class="ot">TRUE</span>, 
-  <span class="dt">header=</span><span class="ot">TRUE</span>)</code></pre></div>
 </div>
-<div id="error-check-the-data" class="section level1">
-<h1>Error check the data</h1>
-<p>Use the <code>AIcheck()</code> function to check the data for errors and generate a report of tables and figures.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">AIcheck</span>(<span class="dt">streamDat=</span>streamall, <span class="dt">csvDir=</span>DIRECTORY)</code></pre></div>
+<div id="error-checking-the-data" class="section level3">
+<h3>Error checking the data</h3>
+<p>The <code>AIcheck()</code> function is used to check the data for errors and generate a report of tables and figures.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">AIcheck</span>(<span class="dt">streamDat=</span>streamall, <span class="dt">csvDir=</span>Dir)</code></pre></div>
 <pre><code>## New RTF document created, C:\temp/2015 Adult Index - error checking.doc</code></pre>
 <p>The generated report is an <em>rtf</em> (rich text format) file but it has a <em>*.doc</em> extension so that it will be automatically opened by Microsoft Word. The report is named <code>YYYY Adult Index - error checking.doc</code>, where <em>YYYY</em> is the latest year represented in <code>streamDat</code>, and placed in the directory <code>csvDir</code>. In this example, the path to the error checking report is <code>C:\temp\2015 Adult Index - error checking.doc</code>.</p>
 <p>The following conditions are highlighted as potential errors in the data:</p>
@@ -594,13 +584,13 @@ LAKEDATAPREV &lt;-<span class="st"> &quot;AdultLakeThru2014.csv&quot;</span></co
 </ul>
 <p><a id="est"></a></p>
 </div>
-<div id="estimate-the-adult-index" class="section level1">
-<h1>Estimate the Adult Index</h1>
-<p>Use the <code>AIestimate()</code> function to estimate the Adult Index of sea lampreys in a single Great Lake. For example, for Lake Ontario,</p>
+<div id="estimating-the-adult-index" class="section level3">
+<h3>Estimating the Adult Index</h3>
+<p>The <code>AIestimate()</code> function is used to estimate the Adult Index of sea lampreys in a single Great Lake. For example, for Lake Ontario,</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ainewOnt &lt;-<span class="st"> </span><span class="kw">AIestimate</span>(<span class="dt">streamDat=</span>streamall[streamall$lake==<span class="dv">5</span>, ])</code></pre></div>
 <p>The annual Adult Index is simply the sum of stream population estimates for each year. Missing stream estimates are estimated by a lake-specific ANOVA model relating the log of the stream estimates to the main effects of each stream and each year, weighted by the inverse of the CV squared.</p>
-<p>The jackknifed range is produced by recalculating the index, leaving out one stream at a time, then scaling up the result to the same scale as the Adult Index based on all streams.</p>
-<p>The returned object from the function (<code>ainewOnt</code> in this example) is a list with 3 components:</p>
+<p>The 95% confidence interval is estimated from the sum of the mark-recapture variances of the streams.</p>
+<p>The returned object from the function (<code>ainewOnt</code> in this example) is a list with 2 components:</p>
 <ul>
 <li><code>streamPE</code> - a data frame of stream mark-recapture and Adult Index contributions for the incomplete rows in <code>streamDat</code>, with the same variables as <code>streamDat</code></li>
 </ul>
@@ -609,14 +599,14 @@ LAKEDATAPREV &lt;-<span class="st"> &quot;AdultLakeThru2014.csv&quot;</span></co
 <tr class="header">
 <th align="right">lscode</th>
 <th align="right">year</th>
-<th align="left">index</th>
-<th align="left">maintain</th>
 <th align="right">trapcatch</th>
 <th align="right">PEmr</th>
 <th align="right">CVmr</th>
-<th align="right">indexContrib</th>
-<th align="left">complete</th>
 <th align="left">comments</th>
+<th align="left">index</th>
+<th align="left">maintain</th>
+<th align="left">complete</th>
+<th align="right">indexContrib</th>
 <th align="right">lake</th>
 <th align="left">country</th>
 <th align="right">strcode</th>
@@ -624,20 +614,21 @@ LAKEDATAPREV &lt;-<span class="st"> &quot;AdultLakeThru2014.csv&quot;</span></co
 <th align="left">strname</th>
 <th align="right">lat</th>
 <th align="right">long</th>
+<th align="right">indexContribCV</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td align="right">5.005</td>
 <td align="right">2015</td>
-<td align="left">TRUE</td>
-<td align="left">FALSE</td>
 <td align="right">233</td>
 <td align="right">441</td>
 <td align="right">45.35</td>
-<td align="right">441</td>
-<td align="left">TRUE</td>
 <td align="left">NA</td>
+<td align="left">TRUE</td>
+<td align="left">FALSE</td>
+<td align="left">TRUE</td>
+<td align="right">441</td>
 <td align="right">5</td>
 <td align="left">Canada</td>
 <td align="right">5</td>
@@ -645,18 +636,19 @@ LAKEDATAPREV &lt;-<span class="st"> &quot;AdultLakeThru2014.csv&quot;</span></co
 <td align="left">Duffins</td>
 <td align="right">43.81</td>
 <td align="right">-79.03</td>
+<td align="right">45.35000</td>
 </tr>
 <tr class="even">
 <td align="right">5.009</td>
 <td align="right">2015</td>
-<td align="left">TRUE</td>
-<td align="left">FALSE</td>
 <td align="right">25</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
-<td align="right">893</td>
-<td align="left">TRUE</td>
 <td align="left">no recaps</td>
+<td align="left">TRUE</td>
+<td align="left">FALSE</td>
+<td align="left">TRUE</td>
+<td align="right">893</td>
 <td align="right">5</td>
 <td align="left">Canada</td>
 <td align="right">9</td>
@@ -664,18 +656,19 @@ LAKEDATAPREV &lt;-<span class="st"> &quot;AdultLakeThru2014.csv&quot;</span></co
 <td align="left">Bowmanville</td>
 <td align="right">43.88</td>
 <td align="right">-78.66</td>
+<td align="right">28.95746</td>
 </tr>
 <tr class="odd">
 <td align="right">5.022</td>
 <td align="right">2015</td>
-<td align="left">TRUE</td>
-<td align="left">FALSE</td>
 <td align="right">1249</td>
 <td align="right">1733</td>
 <td align="right">12.51</td>
-<td align="right">1733</td>
-<td align="left">TRUE</td>
 <td align="left">NA</td>
+<td align="left">TRUE</td>
+<td align="left">FALSE</td>
+<td align="left">TRUE</td>
+<td align="right">1733</td>
 <td align="right">5</td>
 <td align="left">Canada</td>
 <td align="right">22</td>
@@ -683,18 +676,19 @@ LAKEDATAPREV &lt;-<span class="st"> &quot;AdultLakeThru2014.csv&quot;</span></co
 <td align="left">Humber</td>
 <td align="right">43.63</td>
 <td align="right">-79.47</td>
+<td align="right">12.51000</td>
 </tr>
 <tr class="even">
 <td align="right">5.023</td>
 <td align="right">2015</td>
-<td align="left">TRUE</td>
-<td align="left">FALSE</td>
 <td align="right">2316</td>
 <td align="right">6434</td>
 <td align="right">8.00</td>
-<td align="right">6434</td>
-<td align="left">TRUE</td>
 <td align="left">NA</td>
+<td align="left">TRUE</td>
+<td align="left">FALSE</td>
+<td align="left">TRUE</td>
+<td align="right">6434</td>
 <td align="right">5</td>
 <td align="left">US</td>
 <td align="right">23</td>
@@ -702,18 +696,19 @@ LAKEDATAPREV &lt;-<span class="st"> &quot;AdultLakeThru2014.csv&quot;</span></co
 <td align="left">Black</td>
 <td align="right">43.99</td>
 <td align="right">-76.06</td>
+<td align="right">8.00000</td>
 </tr>
 <tr class="odd">
 <td align="right">5.036</td>
 <td align="right">2015</td>
-<td align="left">TRUE</td>
-<td align="left">FALSE</td>
 <td align="right">149</td>
 <td align="right">797</td>
 <td align="right">25.00</td>
-<td align="right">797</td>
-<td align="left">TRUE</td>
 <td align="left">NA</td>
+<td align="left">TRUE</td>
+<td align="left">FALSE</td>
+<td align="left">TRUE</td>
+<td align="right">797</td>
 <td align="right">5</td>
 <td align="left">US</td>
 <td align="right">36</td>
@@ -721,11 +716,12 @@ LAKEDATAPREV &lt;-<span class="st"> &quot;AdultLakeThru2014.csv&quot;</span></co
 <td align="left">Sterling</td>
 <td align="right">43.34</td>
 <td align="right">-76.69</td>
+<td align="right">25.00000</td>
 </tr>
 </tbody>
 </table>
 <ul>
-<li><code>lakeIndex</code> - a data frame of annual lake-wide Adult Indices with 5 columns: <code>lake</code>, <code>year</code>, <code>index</code>, and the jackknifed range <code>jlo</code> and <code>jhi</code></li>
+<li><code>lakeIndex</code> - a data frame of annual lake-wide Adult Indices with 5 columns: <code>lake</code>, <code>year</code>, <code>index</code>, and the 95% confidence intervals <code>ilo</code> and <code>ihi</code></li>
 </ul>
 <table>
 <thead>
@@ -733,8 +729,8 @@ LAKEDATAPREV &lt;-<span class="st"> &quot;AdultLakeThru2014.csv&quot;</span></co
 <th align="right">lake</th>
 <th align="right">year</th>
 <th align="right">index</th>
-<th align="right">jlo</th>
-<th align="right">jhi</th>
+<th align="right">ilo</th>
+<th align="right">ihi</th>
 </tr>
 </thead>
 <tbody>
@@ -742,43 +738,11 @@ LAKEDATAPREV &lt;-<span class="st"> &quot;AdultLakeThru2014.csv&quot;</span></co
 <td align="right">5</td>
 <td align="right">2015</td>
 <td align="right">10297.93</td>
-<td align="right">6287.025</td>
-<td align="right">12997.01</td>
+<td align="right">8557.329</td>
+<td align="right">12038.52</td>
 </tr>
 </tbody>
 </table>
-<ul>
-<li><code>lakeJackRaw</code> - a data frame of the raw contributions to the jackknifed range with columns for <code>lake</code>, <code>year</code>, and each of the index streams.</li>
-</ul>
-<table>
-<thead>
-<tr class="header">
-<th align="right">lake</th>
-<th align="right">year</th>
-<th align="right">5.005</th>
-<th align="right">5.009</th>
-<th align="right">5.022</th>
-<th align="right">5.023</th>
-<th align="right">5.036</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="right">5</td>
-<td align="right">2015</td>
-<td align="right">11244.17</td>
-<td align="right">10250.14</td>
-<td align="right">12997.01</td>
-<td align="right">6287.025</td>
-<td align="right">10191.44</td>
-</tr>
-</tbody>
-</table>
-<p>Use the <code>lapply()</code> function to generate estimates for all 5 Great Lakes at once.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ainew &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="dv">1</span>:<span class="dv">5</span>, function(L) <span class="kw">AIestimate</span>(streamall[streamall$lake==L, ]))</code></pre></div>
-<p>Then use the <code>do.call()</code> function to combine the estimates from the resulting list into two data frames (stream and lake estimates).</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">streamainew &lt;-<span class="st"> </span><span class="kw">do.call</span>(rbind, <span class="kw">lapply</span>(ainew, <span class="st">&quot;[[&quot;</span>, <span class="dv">1</span>))
-lakeainew &lt;-<span class="st"> </span><span class="kw">do.call</span>(rbind, <span class="kw">lapply</span>(ainew, <span class="st">&quot;[[&quot;</span>, <span class="dv">2</span>))</code></pre></div>
 <p>The index estimates for the lakes, <code>lakeainew</code>, looks like this:</p>
 <table>
 <thead>
@@ -786,8 +750,8 @@ lakeainew &lt;-<span class="st"> </span><span class="kw">do.call</span>(rbind, <
 <th align="right">lake</th>
 <th align="right">year</th>
 <th align="right">index</th>
-<th align="right">jlo</th>
-<th align="right">jhi</th>
+<th align="right">ilo</th>
+<th align="right">ihi</th>
 </tr>
 </thead>
 <tbody>
@@ -795,43 +759,43 @@ lakeainew &lt;-<span class="st"> </span><span class="kw">do.call</span>(rbind, <
 <td align="right">1</td>
 <td align="right">2015</td>
 <td align="right">20224.32</td>
-<td align="right">16714.887</td>
-<td align="right">23675.281</td>
+<td align="right">10152.318</td>
+<td align="right">30296.32</td>
 </tr>
 <tr class="even">
 <td align="right">2</td>
 <td align="right">2015</td>
 <td align="right">14695.00</td>
-<td align="right">13985.101</td>
-<td align="right">16491.584</td>
+<td align="right">12772.938</td>
+<td align="right">16617.06</td>
 </tr>
 <tr class="odd">
 <td align="right">3</td>
 <td align="right">2015</td>
 <td align="right">23968.00</td>
-<td align="right">21842.422</td>
-<td align="right">25482.316</td>
+<td align="right">20539.559</td>
+<td align="right">27396.44</td>
 </tr>
 <tr class="even">
 <td align="right">4</td>
 <td align="right">2015</td>
 <td align="right">7112.00</td>
-<td align="right">4520.701</td>
-<td align="right">9340.717</td>
+<td align="right">2755.585</td>
+<td align="right">11468.41</td>
 </tr>
 <tr class="odd">
 <td align="right">5</td>
 <td align="right">2015</td>
 <td align="right">10297.93</td>
-<td align="right">6287.025</td>
-<td align="right">12997.008</td>
+<td align="right">8557.329</td>
+<td align="right">12038.52</td>
 </tr>
 </tbody>
 </table>
 </div>
-<div id="determine-the-targets" class="section level1">
-<h1>Determine the targets</h1>
-<p>Use the <code>AItarget()</code> function to calculate lake-wide targets for the Adult Index of sea lamprey populations in the Great Lakes from the mean of specified years. The <code>AItarget()</code> function takes three arguments, but only the first one needs to be provided.</p>
+<div id="determining-the-targets" class="section level3">
+<h3>Determining the targets</h3>
+<p>The <code>AItarget()</code> function is used to calculate lake-wide targets for the Adult Index of sea lamprey populations in the Great Lakes from the mean of specified years. The <code>AItarget()</code> function takes three arguments, but only the first one needs to be provided.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">targ &lt;-<span class="st"> </span><span class="kw">AItarget</span>(<span class="dt">lakeIndex=</span>lakeprev)</code></pre></div>
 <ul>
 <li><code>lakeIndex</code> - a data frame of annual lake-wide Adult Indices with (at least these) 3 columns: <code>lake</code>, <code>year</code>, and <code>index</code></li>
@@ -908,74 +872,9 @@ lakeainew &lt;-<span class="st"> </span><span class="kw">do.call</span>(rbind, <
 </table>
 <p><a id="meet"></a></p>
 </div>
-<div id="quantify-the-likelihood-of-being-at-target" class="section level1">
-<h1>Quantify the likelihood of being at target</h1>
-<p>Use the contributions to the jackknifed range to indicate the proportion of times (out of the total number of index streams) that the jackknifed index met the target. This approach was suggested by the <a href="http://www.glfc.org/sealamp/taskforces/index.php?taskforce=slcb">Sea Lamprey Control Board</a> in October 2015 (GLFC-SLCB 2016).</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># create an empty list for the results</span>
-jproplist &lt;-<span class="st"> </span><span class="kw">vector</span>(<span class="st">&quot;list&quot;</span>, <span class="dv">5</span>)
-<span class="co"># cycle through the five lakes</span>
-for(i in <span class="dv">1</span>:<span class="dv">5</span>) {
-  <span class="co"># get the raw contribution to the jackknifed range from lake i</span>
-  jri &lt;-<span class="st"> </span>ainew[[i]][[<span class="dv">3</span>]]
-  <span class="co"># get the target from lake i</span>
-  ti &lt;-<span class="st"> </span>targ$targInd[targ$lake==i]
-  <span class="co"># calculate the proportion of contributions that meet the target</span>
-  jproplist[[i]] &lt;-<span class="st"> </span><span class="kw">jackProp</span>(<span class="dt">jackRaw=</span>jri, <span class="dt">target=</span>ti)
-}
-<span class="co"># combine the results into a single data frame</span>
-jpropdf &lt;-<span class="st"> </span><span class="kw">do.call</span>(rbind, jproplist)
-<span class="co"># merge the results with the lake index data frame</span>
-lakeainewp &lt;-<span class="st"> </span><span class="kw">merge</span>(lakeainew, jpropdf, <span class="dt">all=</span><span class="ot">TRUE</span>)</code></pre></div>
-<table>
-<thead>
-<tr class="header">
-<th align="right">lake</th>
-<th align="right">year</th>
-<th align="right">index</th>
-<th align="right">jlo</th>
-<th align="right">jhi</th>
-<th align="right">pMeet</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="right">1</td>
-<td align="right">2015</td>
-<td align="right">20224.32</td>
-<td align="right">16714.887</td>
-<td align="right">23675.281</td>
-<td align="right">0.0</td>
-</tr>
-<tr class="even">
-<td align="right">3</td>
-<td align="right">2015</td>
-<td align="right">23968.00</td>
-<td align="right">21842.422</td>
-<td align="right">25482.316</td>
-<td align="right">0.5</td>
-</tr>
-<tr class="odd">
-<td align="right">4</td>
-<td align="right">2015</td>
-<td align="right">7112.00</td>
-<td align="right">4520.701</td>
-<td align="right">9340.717</td>
-<td align="right">0.0</td>
-</tr>
-<tr class="even">
-<td align="right">5</td>
-<td align="right">2015</td>
-<td align="right">10297.93</td>
-<td align="right">6287.025</td>
-<td align="right">12997.008</td>
-<td align="right">0.8</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div id="scale-up-indices-to-pes" class="section level1">
-<h1>Scale up indices to PEs</h1>
-<p>Use <code>index2pe</code>, lake-specific conversion factors built in to the <strong>GLFC</strong> package, to scale up indices of adult sea lamprey abundance in the Great Lakes to lake-wide population estimates.</p>
+<div id="scaling-up-indices-to-pes" class="section level3">
+<h3>Scaling up indices to PEs</h3>
+<p>Lake-specific conversion factors built in to the <strong>GLFC</strong> package, <code>index2pe</code>, are used to scale up indices of adult sea lamprey abundance in the Great Lakes to lake-wide population estimates.</p>
 <table>
 <thead>
 <tr class="header">
@@ -1007,22 +906,21 @@ lakeainewp &lt;-<span class="st"> </span><span class="kw">merge</span>(lakeainew
 </tbody>
 </table>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(plyr)
-lakeall &lt;-<span class="st"> </span><span class="kw">rbind.fill</span>(lakeprev, lakeainewp)
+lakeall &lt;-<span class="st"> </span><span class="kw">rbind.fill</span>(lakeprev, lakeainew)
 lakeallpe &lt;-<span class="st"> </span><span class="kw">merge</span>(
-  lakeall[, <span class="kw">c</span>(<span class="st">&quot;lake&quot;</span>, <span class="st">&quot;year&quot;</span>, <span class="st">&quot;index&quot;</span>, <span class="st">&quot;jlo&quot;</span>, <span class="st">&quot;jhi&quot;</span>, <span class="st">&quot;pMeet&quot;</span>)],
+  lakeall[, <span class="kw">c</span>(<span class="st">&quot;lake&quot;</span>, <span class="st">&quot;year&quot;</span>, <span class="st">&quot;index&quot;</span>, <span class="st">&quot;ilo&quot;</span>, <span class="st">&quot;ihi&quot;</span>)],
   <span class="kw">cbind</span>(<span class="dt">lake=</span><span class="dv">1</span>:<span class="dv">5</span>, <span class="dt">i2pe=</span>index2pe))
 lakeallpe$pe &lt;-<span class="st"> </span><span class="kw">with</span>(lakeallpe, index*i2pe)
-lakeallpe$pelo &lt;-<span class="st"> </span><span class="kw">with</span>(lakeallpe, jlo*i2pe)
-lakeallpe$pehi &lt;-<span class="st"> </span><span class="kw">with</span>(lakeallpe, jhi*i2pe)</code></pre></div>
+lakeallpe$pelo &lt;-<span class="st"> </span><span class="kw">with</span>(lakeallpe, ilo*i2pe)
+lakeallpe$pehi &lt;-<span class="st"> </span><span class="kw">with</span>(lakeallpe, ihi*i2pe)</code></pre></div>
 <table>
 <thead>
 <tr class="header">
 <th align="right">lake</th>
 <th align="right">year</th>
 <th align="right">index</th>
-<th align="right">jlo</th>
-<th align="right">jhi</th>
-<th align="right">pMeet</th>
+<th align="right">ilo</th>
+<th align="right">ihi</th>
 <th align="right">i2pe</th>
 <th align="right">pe</th>
 <th align="right">pelo</th>
@@ -1034,71 +932,65 @@ lakeallpe$pehi &lt;-<span class="st"> </span><span class="kw">with</span>(lakeal
 <td align="right">5</td>
 <td align="right">2002</td>
 <td align="right">15675.00</td>
-<td align="right">14272.017</td>
-<td align="right">18383.56</td>
-<td align="right">0.0</td>
+<td align="right">11527.165</td>
+<td align="right">19822.83</td>
 <td align="right">2.37</td>
 <td align="right">37149.75</td>
-<td align="right">33824.68</td>
-<td align="right">43569.04</td>
+<td align="right">27319.38</td>
+<td align="right">46980.12</td>
 </tr>
 <tr class="even">
 <td align="right">5</td>
 <td align="right">2003</td>
 <td align="right">11378.00</td>
-<td align="right">10860.486</td>
-<td align="right">12078.94</td>
-<td align="right">0.6</td>
+<td align="right">8827.062</td>
+<td align="right">13928.94</td>
 <td align="right">2.37</td>
 <td align="right">26965.86</td>
-<td align="right">25739.35</td>
-<td align="right">28627.10</td>
+<td align="right">20920.14</td>
+<td align="right">33011.58</td>
 </tr>
 <tr class="odd">
 <td align="right">5</td>
 <td align="right">2004</td>
 <td align="right">32586.00</td>
-<td align="right">20520.324</td>
-<td align="right">40285.10</td>
-<td align="right">0.0</td>
+<td align="right">22271.373</td>
+<td align="right">42900.63</td>
 <td align="right">2.37</td>
 <td align="right">77228.82</td>
-<td align="right">48633.17</td>
-<td align="right">95475.69</td>
+<td align="right">52783.15</td>
+<td align="right">101674.49</td>
 </tr>
 <tr class="even">
 <td align="right">5</td>
 <td align="right">2005</td>
 <td align="right">26260.00</td>
-<td align="right">24930.041</td>
-<td align="right">27612.18</td>
-<td align="right">0.0</td>
+<td align="right">20577.328</td>
+<td align="right">31942.67</td>
 <td align="right">2.37</td>
 <td align="right">62236.20</td>
-<td align="right">59084.20</td>
-<td align="right">65440.87</td>
+<td align="right">48768.27</td>
+<td align="right">75704.13</td>
 </tr>
 <tr class="odd">
 <td align="right">5</td>
 <td align="right">2015</td>
 <td align="right">10297.93</td>
-<td align="right">6287.025</td>
-<td align="right">12997.01</td>
-<td align="right">0.8</td>
+<td align="right">8557.329</td>
+<td align="right">12038.52</td>
 <td align="right">2.37</td>
 <td align="right">24406.09</td>
-<td align="right">14900.25</td>
-<td align="right">30802.91</td>
+<td align="right">20280.87</td>
+<td align="right">28531.30</td>
 </tr>
 </tbody>
 </table>
 </div>
-<div id="generate-a-draft-report" class="section level1">
-<h1>Generate a draft report</h1>
-<p>Use the <code>AIreport()</code> function to create a draft template-style report of the Adult Index estimates of sea lamprey in the Great Lakes.</p>
+<div id="generating-a-draft-report" class="section level3">
+<h3>Generating a draft report</h3>
+<p>The <code>AIreport()</code> function is used to create a draft template-style report of the Adult Index estimates of sea lamprey in the Great Lakes.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">streamaiall &lt;-<span class="st"> </span><span class="kw">rbind</span>(streamall[streamall$complete==<span class="ot">TRUE</span>, ], streamainew)
-<span class="kw">AIreport</span>(<span class="dt">streamPEs=</span>streamaiall, <span class="dt">lakeIPEs=</span>lakeallpe, <span class="dt">targets=</span>targ,
-  <span class="dt">csvDir=</span>DIRECTORY)</code></pre></div>
+<span class="kw">AIreport</span>(<span class="dt">streamPEs=</span>streamaiall, <span class="dt">lakeIPEs=</span>lakeallpe, <span class="dt">targets=</span>targ, <span class="dt">csvDir=</span>Dir)</code></pre></div>
 <pre><code>## New RTF document created, C:\temp/2015 Adult Index - draft report.doc</code></pre>
 <p>As with the error checking report, the document generated by <code>AIreport()</code> is an <em>rtf</em> file with a <em>*.doc</em> extension, named <code>YYYY Adult Index - draft report.doc</code>.</p>
 <p>The report has few paragraphs summarizing the latest estimates, along with 3 tables,</p>
@@ -1117,8 +1009,9 @@ lakeallpe$pehi &lt;-<span class="st"> </span><span class="kw">with</span>(lakeal
 <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/4RD4RXhpZgAATU0AKgAAAAgABAE7AAIAAAAPAAAISodpAAQAAAABAAAIWpydAAEAAAAeAAAQ0uocAAcAAAgMAAAAPgAAAAAc6gAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEFkYW1zLCBKZWFuIFYuAAAABZADAAIAAAAUAAAQqJAEAAIAAAAUAAAQvJKRAAIAAAADNjgAAJKSAAIAAAADNjgAAOocAAcAAAgMAAAInAAAAAAc6gAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADIwMTU6MTI6MzEgMTE6Mjc6NTEAMjAxNToxMjozMSAxMToyNzo1MQAAAEEAZABhAG0AcwAsACAASgBlAGEAbgAgAFYALgAAAP/hCyFodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvADw/eHBhY2tldCBiZWdpbj0n77u/JyBpZD0nVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkJz8+DQo8eDp4bXBtZXRhIHhtbG5zOng9ImFkb2JlOm5zOm1ldGEvIj48cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPjxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PSJ1dWlkOmZhZjViZGQ1LWJhM2QtMTFkYS1hZDMxLWQzM2Q3NTE4MmYxYiIgeG1sbnM6ZGM9Imh0dHA6Ly9wdXJsLm9yZy9kYy9lbGVtZW50cy8xLjEvIi8+PHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9InV1aWQ6ZmFmNWJkZDUtYmEzZC0xMWRhLWFkMzEtZDMzZDc1MTgyZjFiIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iPjx4bXA6Q3JlYXRlRGF0ZT4yMDE1LTEyLTMxVDExOjI3OjUxLjY3NzwveG1wOkNyZWF0ZURhdGU+PC9yZGY6RGVzY3JpcHRpb24+PHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9InV1aWQ6ZmFmNWJkZDUtYmEzZC0xMWRhLWFkMzEtZDMzZDc1MTgyZjFiIiB4bWxuczpkYz0iaHR0cDovL3B1cmwub3JnL2RjL2VsZW1lbnRzLzEuMS8iPjxkYzpjcmVhdG9yPjxyZGY6U2VxIHhtbG5zOnJkZj0iaHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyI+PHJkZjpsaT5BZGFtcywgSmVhbiBWLjwvcmRmOmxpPjwvcmRmOlNlcT4NCgkJCTwvZGM6Y3JlYXRvcj48L3JkZjpEZXNjcmlwdGlvbj48L3JkZjpSREY+PC94OnhtcG1ldGE+DQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgIDw/eHBhY2tldCBlbmQ9J3cnPz7/2wBDAAcFBQYFBAcGBQYIBwcIChELCgkJChUPEAwRGBUaGRgVGBcbHichGx0lHRcYIi4iJSgpKywrGiAvMy8qMicqKyr/2wBDAQcICAoJChQLCxQqHBgcKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKir/wAARCAHeAL4DASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD6RooooAKKKKACiiigAooooAKKha7gWYRNKocnGPepqACiiigAooooAKKKKACiiigAoqKe6gtU33M0cS+rsBVI+IdJD7ft0WfUE4/PpWNTEUabtOaXq0i405yV4ps0qKht7y2u1za3Ecw77GBxU1aRlGSvF3RLTTswoooqhBRRRQAUUUUAFFFV5ROs7OhQJsHLnheeeP8APSgCxUEl0Nxitx5suOg6L9T2/nVOWe5uYUiiCsXyGYHaGx1x6D3q/BAtvCqIOg5PqaAKtzEkGmkShHfoXI/iY4J/M5qzD5cUawK6kxoBjPOMUs8Kzx7HyBkEEHBBHINRLp9sqkNGJGY5LyfMx/GgCwrK65Rgw9Qc0tV7AAWa4+8Sd/u2ef1p73MMbFXkUEEA89M9M+lAEtFVzewoxEm6PAzll6ioZL1pd6QqUCgb5JPl2g9wOpoAvUVXhu4XhJVmVU4+fr7fXNQPeSv88a7I145XJPH5D6cmgC/XJax4sle4+xaEBJJyGlxn8v8AGk8R311bWdtYwTSG5ulwyEfMAT356k8fnUum6E+k2aqfLmnnYZKkZHfOcZwPb0rxcRVrYqu8LQlyqPxSW+vRefn0O6nCFKn7Wort7L9WZcXh65vJDLqUk88vVlDAY9ck9h9Knbw3psbBSs2Cv32ByCRnoOnYdO9btpDc3IAaV/Lz8wYYVh/X/Oa0Lexjt2zkuQfl3D7n0FbU8pwMF/DT83q/xIljK8n8VvTQ5qTwR5caS6deyQzqAcP647EdOfrRZeIr7Sr0WPiKMheizgc/XjqP1rrqo6tpVvq9k1vcAA9UfHKGuerlnsP3uBfJLt9l+TRpHFe09zEarv1RdVldFdCGVhkEdxS1ynhO+ntbufRL9v3kJPlZPp1A/mPxrq69DB4pYqiqiVns12a3RzV6TpT5f6sFFVb/AFO00yHzLyZYweg6k/QVn2nizSrycRLMY2JwvmDAP41VTGYenU9nOaUu1xRo1JR5oxbRrT3EVrC0txIsca9WY4FZH/CX6L5/l/a/bd5bYz+VYGyXxl4ilR5WTT7boFPUdvxP+eldB/wiOi+R5X2PjrnzGzn65r2HSo0rKq3fy6HlKtXrNuily93fU1oLiK6hWW3kWSNujKcim3EH2gBWI2c7lIzmuL2y+DvEUSLKz6fc9Qx6DoT9R/nrXbeeD/q1aT/dHH59KwrUlTacXdPY3w9Z1U1JWkt0JBaxWygRLjAxknJ/Opai3zHpCB9XoHn558sDHXk1gdJLUUtzDArGRwNoyR1P5UghkZiZZSR2VBtA/rUMWmRLI7ykyF92Q3QZ/wDrAUAMtIpJbdP3kkcWMgZG45Oeo/nTrjT0ZEEKLkOCxY8kD3wc84ohRLCYRl22MMIAc459PX3qWe78mFpVhkdV64GP50ALHAkSiWYL5iqdz5P9azvMH9oF543dHbciquQx24APv/jWnE32m2zJHtVwQVbuKr3xLPHCkjxjG5hGuSR+FADUR7mYrLjYow6Y+7kdPb/P0qaOzKSIXmeRU+6hxgH1pIbhCoW1hZgB6bR7/jVrPGTQBxVug1bx/cef923DbR1Hy/KP15rfvoorOCEsRLsY7Vk7rjoCPwrB8MuI/GOoxjJ3ByCRj+IdjXYmaMOUMihlGSM9B614mTa0Zze7nK/3ndjtJxitkkVV1BREhCZUKd5Hy4wOwParFvN9ot1lxjcOmentVIaf8oeFogoYtGoHBB6c9ewpLVQ93HJJL5W5CI7dWxkAjJ4P517TaW5wmnRRRTA43xN/xL/FNhfw8M+Nw9cHB/TiuyrjfHf7640+AcE7ufrj/CuxUbVA9BivEwHu43EwW14v5tandiNaFKT3s/wZwsKLrviy6k1HdJDbkhIl6kBsAY698n8a1Na0Cxn0maS0sxbPEhcSEbc47Y9/U1zekHUrd21awUzsjbZ0IyTnue/Pr6irs2sa1rkktpa27RpcYRlzkJj72D2B7ivn8PisL9Xkq1NyqTba0u3faz8np5M9KpSq+0ThK0Y267dxPAc6peXNq0xikcAqAB82M5HI9/511lxb3CapbPvkuLeQNHKh6IeqtgD2x+NYc3gZRYQtZ3Biv41+Z8nax/p9aga28ZjMAmJQDPmB057Yz1r9Ipv6zCNabUZNLmT6O2tj4x82FvRUXKKejXVXvqN8Y+XdatY6dZqpmB+bA5BbGBn8P1rt1XagUEnAxk1zPhTQ4IYU1WWZri5lU/M38B6Ec856g/jXT1OIlFKNKO0fzNsLCTcq09HK33dAooorkO0KKKKADHOe9BGRg8iiigCstvJA2bcpsyP3eMcfWpBDu5nPmN+Q/KpaKAADAwOBRRRQBx2uK2i+LLbVVB8mY4fHrjB/Tn611ItraaJmRQyTjcSp++DzUeqabDq1g9rPwDyrDqp9a5fS9WufDVx/ZutI3kZzHL12j29R/n2rwOdZbiZc/wDCqO9+0ut/Jnocv1qkuX446W7r/gHReRM94iSFsqvzEHC7T/d9PT6fWpnsidUtbiPascMciFe+W2/4Go7i6WZbaaznV0d9hZGHII9++RS3Ms0etWCKWMMqyK4HTIAIJ/I/nXr1ZQcE3qrx29Vb8TjgpKTXk/yL9FNklSGMvK6oi9WY4ArkdZ8QS6tKdL0FWkMnEkoGMjuB7e9Y4zG0sJC8tW9kt2/IujQnWlZbdX0QyIjxD4285PmtbPGG7Hb0/NufpXZ1m6Fo8ejaeIl+aV8NK/qf8K0qzy7Dzo0nOr8c3zP59PkXiakZyUYfCtEcf4CjcLfS5/dsyqB7jOf5109/d/YbJ7kxtIseCwU8gZ5P4DmotH0xNJ0yO2TBYDLsP4m7mrcsSTwvFKNyOpVh6g0sBhqmHwMaN7Ss/k3r+AYirGpXc+lx4IIBHIPSiobXyUgENu+9YMRH5skEDofepq9GLurnM9GVoXtYLprOHCSkGYoBjIJ5P51ZqtcWYmvLe5VykkBPT+JSOVP6VZrSVtGjON1dNBRRRUlhRRRQAUUUUAFFFFABRVDV9YttGtRLcklmOERerGub/wCEn164/f2ml5gHI/dM27Pv3/CvNxOZYfDT9nJty7JXa9TppYWpVjzLReeh2dVr3T7XUYPKvIVlXtnqPoe1Y2meLYr1vs9xA0F3nAQnCk/U9K21gc/M877/APZOFH4V0Ua1DG0uaFpRf9WaM5wqUJ2lozkdQ8IPaTIdLvmQyPhUfgjAJ6imSW/imC4hs2veZywRvMz0GTz1rsktlWbzWZ3fGAXOdv0HamzxW73ts8zATIW8kbsZyOeO/FeZVyaglejKUNVopNLfX8PxOuONqP40peqOXj8IX99IH1nUWcA/dVix/M9P1rpNP0qz0uLZZwhMjlurN9TVyiu3DZdhsNLnhG8u71f3swq4mrVVpPTstgooor0DmCiq0U89wgeONYk/6acn8hSW265tYpZZGO9QSqnAz/OgCKKH7JqtzL5i+VcKrFM8hxwcD3GKsrOZM+VEzAHGW+UfrVPVN1hYrcWYKCGVZJVRcl0zhh+Rz+FaQORkdKwpcsZSpx6a/e3+tzSV2lJ+n3Fa4imubeSF1jCSIVbDHPI9cVX07+0EsEjnVDJFmM7yQXxwGzz1GK0apS3kkGsQ28ir5FxGfLYA58wckH8P5V1Ru04r1OeVoyUn6feTK9y0jKY0QKB82chvpTs3AP3IyPXcR/SpaKg0IhO2PnhkX6AH+VOimSZSYznBwR3U+hFPqrcQpCj3EWYnUFjsA+b6jvQBaoqqLmVpzbhFSUJvyTkYzjp1qUxOwGZ3BHXaAAf0oAloqE25Y8zy4wcgHGfyqOeC4WBhaTsH6r5gDfhQByt0o1X4grb3PMMHRGOM4XPT6/pXUSXaGVbW2yXbjKj5UHc59q5TWrG8tryDXI4WaRG/0hCO4OM/7pGB/wDrq0/jOyZrORBJDtciaLaPulT0PscHtXzWGxVHA1q0MS7Scr37xdrWfl2PUq0p14QdLVJW9H/wSLxpax2ktnfW2I5t20kHk45B9+/P0rrreTzraKXBG9A2CMYyK4uaWfxlrEKQxPFYQH5mI/En6nA4rtwAqgKMADAFdGWtVcTXxFL+HJq3m0tWv61MsUnClTpy+JX+XYWqd1aSTanY3CldluXLA9TuXAxVyqF5NMmr6dHGzCOQyeYAODhcjP4161fl5Fzd4/mrficlO99Oz/Iv0UUVuZhRRRQBQt7rZYPOy8M7FAT9739h1PtUtgwFjACy7mXovr1xTbe2aS2QzysSQThcADOfb3qk8NrDNcCWP96WVYlLFcKcDIP1POKANmq1leLexyEKUaKVonUnOCD/AIYP41HbW1ykyPdTLJsTaNuRz6nnrUscNvbXkrK+2W6O4oW+8VGMgfTGaylzKUWnp1/T8fzKVrO+5YqG68lITPcIHWDMo+XJXA6j3qagjIweRWydmQ1dDIpUnhSWJtySKGU+oPSn1W0+z+wWv2dXLorMUyPuqTkD8Ks0SsnpsKN3Fc24UjKHUqwyD1BpaKRQwxIZhKV+cKVDex//AFU+iigAooooAOvWsbUNN0mG4tnk06NmnnEQK/KASCckDg9K2ar3cNvKYGuW2+VMrx5bGX5AHv16VzYmjGrDVJ+qT/M1pTcJaN/Ilhhit4xHBGsaDoqLgCn0UV0JJKyMm29WFVp7wQXtrblCftBYBs8LgZqzUFxFBJNbtOwDpJuiG7GW2kfjxmoqc3L7r1uvz1/AqNr6k9FFFaEhRRRQBxn/AAnbjBTTP3QwP9Z2/KrUfi7TtSQW88JhkcYUykbFPrn/AOtXUbFK7So2+mOKy9V0TTL6FjcxJG5HEqDDZ/r9K8T6vmdL3o1lPycUl96O72mFno4Nead/zJ7K8iaNIlaR3yUJIJ5HU56Y79e9LqNpJcSWs1vtE1vMHG7up4YfiD+lcrpl3d+GNVSw1AlrOY5RyMbc/wAX+I/ye3PKnBx7104bEQxtOUZLllF2a6p7/wDDMyq03QkmndPZ90FFUdHuZbiw23J3XEDtDKcdWU9fxGD+NXq7qdRVIKa6mEouMnFlC4gnTWLa7twXRlMM67ui9VbHTg59+av0ycSm3kFuVEu07CwyA2OM1Bpl4b7T4p2XbIRiRcY2uOGH51u7yjftoYq0ZNd9S1RRRUGgUUUUAFFFFABVPU7SS7it1i25juY5TuPZWBNXKo6vPLbWcc0LFds8e/A5KlwCP1rDEcvspOe1jSnfnVty9RRRW5mFVL21kuLmykTGIJi75Pbaw/mRVuqV/PLFdWCxMQsk5VxjqNjH+YFYV+Xk97a6/NW/E0p35tPP8i7RRRW5mFFFFAEcsyxRhjk54UAcsfSmRWy/JJKN0wGSxOcHvj0qslvPKbeSK7QRRD5Qg3hx05Y/zHvWhUxbaG1YwvF9kt1oMkmB5kBDqfxwf8+1WPDN4174ftpHJLqNhJOc46fpin+IZBF4dvS3AaIpyfXj+tUPBMRj8Ohj0klZhx7Af0rxn7mbLl+1DX5PR/odu+D16S0+42GvFj1KO0ZCDLGXV88Eg8j64Oas1XubeGR4riY7DbMXV84xxg59sVYBz0r1oc/NJS76elv87nHK1lYKrJPbxX5s0TZKyGbhcBucE59elWarXNktxc21xuKSW7lgwHUEYK/Q/wBK3jbZmUr7xLNFFFSWFFFFABRRRQAVWv7xbCzM8illDKpAPqwGf1qzVe/ggubCWG7bZC4w7btuB9azq83s5cm9nb1KhbmXNsWKKKK0JCq9xdLbzW0bKSZ5NgI7HaT/AEqxUFxDDLNbtM2Gjk3RjOMttI/Hgms6nNy+7vp+ev4FRtfUnooorQkKKKKAMu00tx4dGnXJCnayAqc7RuO0/gMVb097h9PhN7H5c+3Ei+44z+PWuTt/HUiLN9os2kZpCYwHwFHGFzj9aZJrmua3MtpZwrZpcAhWPBIA5+Y9fw5r5uGbYGCj7FuTty2Sd32v/XU9OWDru/PZK97/AJ/15FnxTqB1K7h0Sw+d2ceYR0z6fh3/APrV1FjaJY2MNtGcrEoXJ7+9Zug+HYNGQyM3m3LjDSeg9BWzXfgcPV55YrEaTl0/lXRf5nPiKkOVUqfwr8X3GTQpcW8kMoykilWHqCKg0yKe302GG62mSNdhKnIIHAP5Yq1VH7RLFr32eVswzQ7os44ZT8w/Ig121OSE41H6ff3+ei9TCN5RcV6l6mTRJPBJDIMpIpVh7EYp9FdBnuUtJW4i05IbsHzISY9x/jUcBvxGKu1RnvJLbV7eGTb9nuEKq2OVkHOCfcfyq9VzvfmfUzp2S5V00CiiioNAooooAKpaxayX2j3FtBtMki4XccDrV2quqTSW+k3c0LbZI4WZTjoQKxr8royU9rO/3F0786tvctUUyFi0KM3UqCfyp9ap3VyAqlqFtLcSWbwYzDcB2yf4cEH+dXaoapcS2/2LyW2+ZdJG/Gcqc5FY4jl9m+fbT8zSnfm0L9FFFbmYUUUUAVDNAdWFq0I80xeashUcgHBGfUcfnUl5NHa2zXMsZcQgt8oBIHcj8KSW3hN9Bcu22VFaNfmxuzg49+manZQ6lWAKkYIPesFGdpLS/T/g/M0bjdMEdZEV0IKsMgjuKWq9jarZWcdqkjSLEMAseQM8D8uKsVrBycU5KzIlZPQKr390tjZvdSRs6x4JCjkDOCfw61Ypk0STwPDKNySKVYeoIwaVRScGo79BxtdX2HggjI5BoqK1jjht0gicuIQI8lskYHf3qWnFtq7E9GR3DIkDSvH5giBcKBk5A7e9FtcR3VrFPCcxyqGXPoakqtY2cdhC0ETEpvZ1U4+QE5wPbOa005fMz15vIs0UUVJYUUUUAFQ3dwtrZTXEilliQuVHcAVNUdxGkttLHKcI6FWOcYBHNRPm5Xy7jja6uOjcSRq69GAIp1R20aQ2sUUJ3RogVTnOQBxUlON+VXB76BVe8u0tPI8xC3nTLEuOxOef0qxVe7t4bjyPPbb5cyyJ82MsM4FTV5uR8m442vqWKKKK0JCiiigClqdrJcpbmD78Nwko5xkA8/oTV2q+oPLHptw9ucSrEzIQM8gcU60n+02UE/8Az1jV+PcZrCPJGs0t2k/0/r5Gju4Lsis9vNFriXMC7opoyk/IG0jlW9+4q/UN554spTaY88KSmRkE+lJY3aX1jDcxfdkUHHoe4/OlDkp1HBddf87fPV+oSvKKk+mn9f10J6KKK6DMowWstvrF1KoH2e4RWPP3ZBwePcY/Kr1UdXuJrOxFzAcCGRWlXbncmcMPyOfwq8CCAQcg9CKwpckJSpx9fvb/AFuaSu0pP0+4Kz7q1lXVrW9tl3EAwzDjlDyD+BH6mtCmTCQwOIWCyFTsYjIBxwa6YyaZhOKkh9FVNLvGvtOjlkG2YZSVcfdccMPzq3SknF2Y4yUkpLqFFFFIoKjuIhPbSxN0kQqfxGKkpshKxsR1AJFKSTTTGt9CDTopLfTLaGfHmRxKrY9QMVZqppc8lzpNrPMcySRKzHGMkirdZ0HF0ouO1kVUvzu4VR1O1kuvsflAHybpJWycYUZz/Or1UtUuJLa2ieE4LTxoeM8FwD+lTiOX2UnPYdO/Orbl2iiitzMKKKKACq9jdR3lt5kSlArtGUYYKlSRj9KsVXtLaK0M6wuT5kplZSc7S38h3rOXNzq22t/0KVuV9yxVeK4gW8eyjXy3RRJt24DAnqPx61YqtNaxNeQ3juY3hDLkHAZT2PtnBpVOZWce/wCHX/P5BG2zLNFFFakgQCCCMg9Qar2d5HeJIYwVMUrROrdQQf8A9R/GrFV4raK3vJ5UchrkglCeMgYyB9MZ+lZy51KLW3X+vX8ylazuWKKKK0JKwuIIdQFoE2SSoZQQuFfnB59elWar3VpFPJBPIxje2berggYGOQfYjrVgHIyORVStZNERvdphRRRUlhRRRQBXsLuO+sYriFCiODhSOmDj+lWKr2FtFZ2McFu5eNAdrE5zzmrFZ0ub2cefeyv6lTtzPl2Cq95cx2sKPKpYNIiAAd2YAH9asVBeW8VzEiTMVVZEcEHHIYED86KvNyPk3CFuZc2xPRRRWhIUUUUAFUre1eHWLy4x+7nSPnP8S5H8sVdqjcXUkOs2cGf3NwkgIx0ZcEc/TNYVuRcspdGvvfu/qaQu7pdV+Wv6F6orq3S7tZbeX7kilT+NS0VtKKknF7MhNp3RW04XK6fCl8AJ1XaxBznHAP4jmrNUWu5INbS2mI8m4jJh9nX7w/Lmr1ZUZR5eRfZ0130/zWpU073fXUKo6layzNbT2wBmt5gwB7qeGH5H9KvUVVSmqkXFijJxd0FFUdIupLqyIuWVriGRopdox8wPX8Rg1eop1FUgpx2YSi4ycWNkRZY2jkAZHBVge4NVNJgntNPW2uefJYxxtkfMg+6fy4/CrtULq6ltdWtVdh9luAYug+WTqOfcAiuiN2nFf1Yxnyxam/T7y/RRRWZoFFFFAFLR7WSy0xLeUYMbOF5z8u4kfpV2qWlXUl1bSmY5kinkiYgY6McfpirtYYfl9jHk2srGlS/O+bcKp6nbSXVvEkIyVnjc844DAn9KuVT1S5ktbeJ4TgtPGh4zwWAP6UYjl9jLn2sFO/OuXcuUUUVuZhRRRQAVXvLmK0SOSZCwMioCBnaWOM+w5qxVe+tEvbNoZXZFJDb1OCpBBB/Ss6vPyPk36FQtzLm2LFFAORkciitCSG7mS2tXuJELiFS+FAyPXH4VJHIssayRnKuAykdwacQCCCMg9Qar2NsllaraxSM6x5xuOSATkCsvfVT+7b8f+D+hWnL5liiiitSSu11FFqCWpUrJMjOrYGGxgEfXBFWKr3NpHPLBM7FGt33qwx6YIPsRVis4c/NJS2vp6W/zuVK1lYKZMQsLO0fmbBuCgZJI9Pen0VoSRWtzHeWkVxCcxyqGXNS1WsrSOxR4YXJVpGkCHHybjnA9s5qzVStfTYmN+Vc24UUUVJRXs7mK6WYwoVEczxtkYywOCasVXs7WO0WYROW8yZpWyehY5IqxWdLm5Fz7lStzabBVe+uYrOzaedS6Ky8AZOSwA/U1Yqvf2sd7ZvBM5RGKkkHHRgR/Kirzezlyb2dvUIW5lzbFiiiitCQooooAKZPEJ7eSJuVkQqc+4xT6KTSaswTtqVdLjmh0q2iuV2yxxhGG7PIGOtWqKKmEFCCiug5PmbYVQktpY9biuoFzHLGY7gZxjHKt79x+NX6KVSmqlr9Hf+vy9Bxk47BRRRWhIyaJLi3khlGUkUqw9QRg1X0qO4h0uGG8A82JdhIOdwHAP4jFW6KzdNc6qdbWK5ny8oUUUVoSULy1l/tS0vbVdzKTFMMgZjPf8CAfzq/RRVOTaSfQlRSba6hRRRUlFHTbaW3mv2lXAmuTInOcrtUf0NXqKKinBU48qKlJyd2FUdZtpbzSpIYF3SMyEAnHRwT+gq9RSqQVSDg9mrfeEZOMlJdAooorQkKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKp6hfNZhdqodysfnbGSBwB7kkU6wnknhfzmjZ0faWiztJwM/l0rFV4Oo6S3Rfs5cvN0LVFFFbEBRRRQAVT1Pzfso8rzsbvn8n72MHp3646c1crI1W2Es/mGFJNoA5tGlPfuGFaU0ubUyqtqDsTaQ9xJCWuBMBsTHnDB3bfm4POM+vvWjWbo8QjSbEIiyR0tmiz+bHNaVFS3O7BRvyK4UUUVmahRRRQAUUUUAFFFFABRRRQAUUVlWeoTtIsMr2smG2NIsjZPXGPlwTwe9Y1K0KclGXUuMHJNroatFFFbEFLUsbY8m6HJI+zJuP48Gl0zzfs7+b52PMOzzgA233H51X1kQZge6Ebopb928oTd06ZIBxUekQATma1CJA27cEmEg7YHB6jBP415vPJYu1vz7LXa34nVyr2JsUUUV6RyhRUbTwoyq8qKzHaoLAEn0qSkmnsOzCs/WWiWxBmSNhvGDJKUCnscjnP05rQqhq5K20bo8iyJIGXy4w5PB7H2rWn8aMqvwMj0Vy0Mm69+1YIwMH937ZPJ/GtOs7SLuW6WTznkYgKw8yIJwRkdCc1o0Vb87uKjb2at/X5hRRRWZqFFFFABRRRQAUUUUAFFFFAAenNYVtHMLuMu032RmURsYgC23O0HnIHPXAramiE0RQs6Z7o20/nWNZWxaSFo4LjyFbK+Zd5Ax32152KTlVgrfn5dlsdNFpRkblFFFeicxR1O6NrGhV1UnPBgaUkD2UjFGlMGglbcWYykv+6MeDxxtJzTdTIEsG+Kd0YOrmFS2AR0IA/wA4qbTwPs5O6dizctOmxj26YFcEeZ4p9l69l5/odDsqRaooqK5nW2t3mfGFHO44H513Skoq7MEm3ZGG0CyXEihpXQtsDJbMR9/cxz0LZwM+1dDWJHBdrOxt/P8AJaQsNtym3rzgbentW3XBgo8sXpb7/wBTeu721CqepOEiiIjaR/NGwK+zn3J7VcrP1mPzLRMhCqyBmWRCyke4APFenT+JHHVvyOwulwvCsvmRNHkgKGm8zAHQDjgCr9UNKiEcTssVmisRg2owD9av0VPiYUlaCCsmfUL1RdSQraiO3YjErMGbH+ePWtasKdll1GVrl2heOTbHts9+V4wdxU/zrzsZOUYrldr+nbz/AKZ10Ypt3Rq2VybqFmdQro5RgOmR6VYpsaKkYWMAL6AY/SnV2QTUUpO7MZWb0CimSzJCoaVgoLBQT6mkW4ied4UcNIgywH8P1o5op2vqFna5JRRRVCCiiigArnbHyYryFGhtGffjzTDIHJ9clcZ/Gt+V2jjLJG0pH8KkZP5kCsi2ee9ul8z7Y8cM2GDLCqqw9cHJAz2rzsVrUhZa+l+39dTpo6RlfY2qKKK9E5jP1W2N35cQ+YFX+XzCuDjg8dcH+dO0uIQwSAR+UDIT5ZcMV4HGRVLWI447pZ54LFkIwGmVix49AD0q5o7RtZt5QhUByCsKFVB/EA5ry6bi8ZLTX9LLyv8AidUk1RXYv1DdxPPZyRRMquy4Bddw/EVNTJpkt4HllOEQZJr0Z8rg+bY5o3urHORrDBMkclpYBw+MiCTrnsduK6asWb7RMf8ATzcxWjsOD5fHPAOORzitquHBR5VKPTTpZ/15nRXd7P8A4IVT1RxHYszNKgyPmicIR+J7VcrO1W6hhEe6RUkiYSAvGzKO3OOnXg16tNNzRxVWlB3E0RQLVmU2zBj96Dkn/ePc1pVnaW5mluJZcLO20PFsK7QBx15Oa0aKvxsVH+GrDZVLxOq9SpA5I/Uc1hASSzyBpYFeN9rqbuZcEe2a365+8dRfyiVI1lYsI08hWLYA2nOCTk5/yK8rHWilJndh7ttI31+6Pp60tImfLXcApxyB2pa9E5ijqauYlxO6q5EflqineSePvDio9MgFhNJZCV2CqHUMigEE9cgdc+tTam+2yKlVbzHVMvnauT1OMVT0V386RJAmWQMSpZmByQQSzE9ulebKyxi7+r89PyOqN3RZsUUUV6RyhRRRQAyYSmI+QUWTsXBI/SqNnaX1rI++a3ZJZTI4EbA89h81XZ5xbxF2Vm5ACr1YnsKrpezCRVuLKSJXbaH3qwB98HiuWp7P2icm7r1t8+n3mseblaRcooorqMijOq3t08SGRfJQq7ADB3D7vPfoc07TCTBIXdml8wiTcgUhhgYwPw5okguoriSSzaJhKQWSUkYIGMgj+VS2lu0CP5snmSSOXYgYAPoB6VxQhL2vM13v28vw/U3k1yWv/XUnqvqFqb2wlt1cIZBgMRnHNWKhu7lLO1kuJQxSMZIUc101OVwkp7W19DKN+Zcu5TurTUby3aCae1CMRkrE2eDn+97VpVDDdQzkiNxvHDIeGX6jrU1TThBe9F3v53HKUtmFZl9ptzcSzm3miRZ0RWDoSRtJPGCPWtOqtxqNraSiKeXa5GQAhPH4CumDkn7phUUHH39hLO2uIriea6kjdpdoAjUqBjPqT61bqC2vILsMbdywXrlSP5ip6Ur31HDlUfdGSuI4XdiQFUkkdRWCfOjRh9ou5FZDcSjzEGxCf93rjPHFdA6LJGyOMqwII9RVJdKjWGSMTTESYDkkElQMBenArzsVRq1GuTt3/ry+V/I66U4xWpcTBjXYcrgYPtTqAAAAOAOlFd5zmXqs+yTaHuMJEZJFi2YCDqTuBz9KXS3YTyJMZBI6LKAxQ5U9yVUc/nU15piXkrSGeaItEYW8sr8yntyDTrXT1tpzKZ5pn8sRjzCvCg5xwBXnqnV+sc729dOvz7fidPND2dupbooor0DmCiiigCrqJUWbBkDbmAGXKgHPByOlUFtbi2uYXvJRcI0gCqZW+U9iAetad55n2OTyoUnbH+rc4De3Q1QsbOSOSOZdPs4Q3JKs29QfYr1rzq8Oasvl0ff0s/m9DppytA1aKhubyC0VTcPt3ZxwT06njsPWm299DcuVj3g4yu9Cu4eoz1FdvtYKXJdX7GHJK17aEVzqaW8vl+TNI24IpVRtLnouSf16VYt5/PRiY2jdW2sjdj/WqjSPHezyRW/mRqQJMSfNnHULj+vNSadJFJHL5BLKJD85bcW4Bz+vSuWnVk6vK5d9Ldvz/I1lBKF0i5Ve+iSaxljljeRCvKR/ePfioG1vT0BJuOAccI3+FW2kZ7YyWwV2K5QMcA/4Vs6lKrGUYyT06a/gRyzg02rFAXMV+scjaXNKp+7IyxnH/j1adULebUZI0Y21tGp6qZGBHrxtq/Sw+q5t7+Vh1NHb9bhWfezyC6/cWqzvbruyWIYbsj5eOfetCqN290l9F9mtIZNylfNdiCvfBwDgV209zlq/CS2k8zySw3Ij8yLBLR/dOfY81ZqtZxzIJPPhgiLNu/csTuJ6k5AqzUytfQqF+XUZLIIoXkIyEUsQPas83t/5TS/Z4UjRPMJLk7wRnAOOtXrp2js5nT7yxsRn1xVGF5FsolubESxEK4MCjAPX7h6fhmuCvKXPyqTWn9X0f9ep1U0rXaNJW3oGGQCM80tAOQD/ADortMCndXMwn+z2gjEvlmTdLnbjOMcUzTr+S52pcIokaISgpnGCcdD0PFJqcckrQoLKC5QtgmUn5D+APFT2qTq7meG3j3AcxMSTj1yBXCnUdfd2Xk7ben6/5G/u+z2LNFU7jVbK2Z1mmwyDLAKTj8hU1rdQ3tus1u25G6HBH866Y1qcpcsZJv1MnCSV2tCaiiitSRsW8Qp5pBfaNxHr3polzcmLaeEDbvx6Ux5BZ2aly0hUKox1c9BUQu7iKWMXluiJI21WjkLYPoeB+dYSqxi1Fv8ArzfQ0UW7sbqEgikify5ZGAYlYwCCuPmzn/8AXTLSQy3aPJE0SGL9wuQRt49OhxjipL1yt3bbIPNb5mGH2kYxnHr9DTrea3mu2ZRIs+zBWRWBA9gePyrm3rv3uu3yX3+i9TTant0JnWGEyXLIAwT5nA5IHNLAsQj3QIqrJ85wMZz3pjXELb0fkbxGQRkEkdKfFIj71QY8ttpGK6oyg5aNf8HqZO9jJlkN3KGtbWdWf5/vqqyKD1I9cgds81rQTLcW6Sx52uMjNYTQ+ZJDJbm3hEzN8gZw64ycZDcD144zWvHdRR6WtyV8uJY92309q4cJUfNKUn5/rfZd/wAfU6K0dEkTmTFwI9p5XduqK+W6a3P2GRUlBz8wB3D09qha9uYAsl3bJHASAWWXLJngEjA/QmnanHZy2oW/lSJN3yszhcN+PX6V0zmpU5Wf/tv4mUY2kr/5i28Vyk3769EwA5Tygv8AKrdYOjx2K6rOY5bR5dq7PIb65OPpj1rUnuZRceRaRLJIF3MXfaqg9OQDzxVYOTq07ru+t9vNk17Qlr+VieGTzYVcrt3dj2rJmjDXbfbLySJd7FoWl2iRf4duCMf171o2t005kjmj8qaIgOobcOehB7isi5a3+1vFKLV9s3mM2Sznn7u0Aknt6Y7V6NOLUmjhqyXInua9iJFtFEu8HJwJDlgM8A/hT5J/LuIYthPmbvm7LgZqCwZItMVyyCMBm+QkqoyeB9KZ9uuRD9pe1UW2N3+sy4X1xjH4ZrjxFSMJNN2+XS/4HVRi5QTJb9ZWji8qRogJAXdTjC4PXPGKba3E8km3fb3EY6yRPgj6rz/Ok1EqbeJy0RAkBCythX9s1Fa2DxzrN5MMLF2dvLPIBGNvTn1rkk5qv7t+l/w+X6nQkvZ6mlUcEvnQiQqUzng9uaiuLp0mWC2jWWZl3EM+0KvTJPJ/Si3uXkmeC4jEUyANhW3BlPcHj09K6faxdTlv5bdfUy5Xy3KWoSJNIyRwTF8+SJo2Cgsf4T7Y9RV2wYfY0j2sphAiYNzyB696o3l1cWNxO0dtCquuVkkmYK5A6YAwD/OrelB/7NieSNEaRQ52OWzkZySec1x0JXxEtddb6W66dP689zaa/douUUUV6RzENxbCe38pT5eMFGUfdI6VALe7mlQ3kkXlxsGURKQWI6Zyf0q7UYjYXRl3naUC7OwOetYTpRlJO39IuM2lYbPcW1uUe6liiPIUyMB9cZpkd5DczAWl3BIFGWVSGJ/I8VLNbx3CqJVztYMp7gjuKeFA6AD8KfLNy6W/ELxt5lCexunnZoLiJEaQSbXhLHIHruFWLSCSFZDPIsjyPuJRNo/LJ9KlmQy28kasULKVDD+HI60salIlUtuKgAk96iFCEKnMl+L/ACG5txszON7YGZzDatNK4O4xwcuvc5PUcVZEQvdNMczrIkq8MibRjtwSacloIrdoo5HXqFfgsgPYHH86liiWCFY4xhVGBU06c3dVErNdP6/r7ypSj9kpta3dwohvJYWgBBbYhDPg9+cD8KtzQR3EZSZAy+/b3HpQYybgSbztCldvY+9SVrClFJprfvrchybtYqWli1tczyvOZfNCgblAIAz1PfrRPbTi5NxZvGsjKFdZFJVsdDxyCMmrdFaUoqkrR2/z1In+8+Ir2tu8TSSzuHmlxvKjCjHQAVXk0yU3ImhutpRy8avGCFLdc4wTVyCMxQKjOXKjBY96krXnabaMvZxcUmiCK2C2rQysZN4O9sYznr9KrGzvGh+yvPF9n27dwQ7yvp1x7ZrQqGSFnuYZFkKrGW3IOj5GK5q1NVNWv00Oim+RWQk9qs6xKcBY3DbSMgjBGP1psVjHBKHheRFH/LMOSh/A9PwqzRVeyhzc1tRc8rWuVbm2la4W5tWRZlXYfMXKsuc446UttbSLO9xcurzOoT5FwqqOw796s1HbxNDCEdzIQT8x781HsoqpzW899L+hXO+WxBPewASRtG82GEZRU3bjjOB26dafZy+ajFSAinaI/L2lMdjzUVxpvmzCWG5lgbdvITBBOMZ5BqxBAtvGVUsxYlmZjyxPes6arOo3Naf1b+mVLk5fdJaKKK6zEhujOLZjaBWl/hD9KybVg+pKNTe4EgAMSzjYpfJ+6F+U9vU1pakzLYsVLKuV3svULnn9Kgnlgaa0FpKHcOF2xvuynfI9PevNxCTqp32to9ndtbdzppO0LW3vqaNFFFekcxkXQle9lh2TEyui7hkKsWMtgjpyD781a0z/AFEmwOIfMPlb/wC7x09utMuhpv2hvtV2I5O6/a2TH4BhT9Lk328m2V5YllYRu5zlfr3HvXm0o8uI3T32/X+tzpk709uxdqOcyiBzbhTLj5Q/TNSVW1Fpl06drb/WhDtruqvlpyfl0MIq8kjJRjJfIusvcKuPuyDZFvyMAFTg/ia36yrqW3NnCLKZXlUgRKJM7uRkEZ549a1a5cJHkco3vs77/e+ptWd0nawVm6m9+sg8gSC3x87QKGk/In+QJrSqg8qx6x/pUgjQRAwhmwCed31PSvSp73scVX4bXsM0X7ObYtE7PcEDzzIxLhvcHpWlVHT2DXN15Lb4Ay7GzuGcfMAavUVfjbCjpBIjn3/Z5PJ/1mw7PrjisQqZbdmZbhTDEqQhgwJmPJPqeePzrdk2+W3mHauDuOcYH17Vjztp8dvI9lfFrgL+7VbtnLN2G3cc/lXk42KfvNrZ/wBL+t0juoPpY2U3bF3/AHsc49aWkQsY1LjDY5HvS16RzGXqbTx3QZFkK+Syw+WpbEpOASB7evvTtOiMN5LHEWMSxqJCc8y9yM+2OlTX32Hev2258lscD7SY8j6AjNRWEim+ljtJjNaiNTuMpk2vk8AkntivN5VHEptrV/PZ/wBfJHVe9K1jRooor0jlCiiigApkcEULMYokQt94qoGafRSsm7juwooopiGmNGOWRSfUindOlFFKyAKKKKYEawQpIZEiRXbqwUAn8akoopJJbDu2FMkijmTbNGsi+jLkU+imIRVVFCooVQMAAYApaKKADr1pojRTlUUH1Ap1FKyAKKKKYCMit95QfqKAAowoAHoKWilZAFFFFMAooooA/9k=" alt="Index map" /></p></li>
 </ul>
 </div>
-<div id="references" class="section level1">
-<h1>References</h1>
+</div>
+<div id="references" class="section level2">
+<h2>References</h2>
 <ul>
 <li><p>GLFC Sea Lamprey Control Board. 2016. 15-02 Meeting Action Item and Recommendation Summary. in Sea Lamprey Control Board Meeting 16-01, 12-14 Apr 2016, Briefing Item 1 - Attachment 2.</p></li>
 <li><p>GLFC Trapping Task Force. 2014. Transitioning to the New Adult Index in 2015. in Sea Lamprey Control Board Meeting 14-02, 15-17 Oct 2014, Briefing Item 5 - Attachment 2.</p></li>

@@ -22,17 +22,15 @@
 #'   needed in a year to generate an index, default 2.
 #'
 #' @return
-#'   A list with 3 components:
+#'   A list with 2 data frames:
 #'   \itemize{
-#'     \item \code{streamPE} - a data frame of stream mark-recapture and Adult Index
-#'   contributions for the incomplete rows in \code{streamDat}, with
-#'   the same variables as \code{streamDat};
-#'     \item \code{lakeIndex} - a data frame of annual lake-wide Adult Indices
+#'     \item \code{streamPE} - stream mark-recapture and Adult
+#'   Index contributions for the incomplete rows in \code{streamDat}, with
+#'   the same variables as \code{streamDat}; and
+#'     \item \code{lakeIndex} - annual lake-wide Adult Indices
 #'   with 5 columns: \code{lake}, \code{year}, the Adult Index \code{index},
-#'   and the lower and upper jackknifed range \code{jlo} and \code{jhi}; and
-#'     \item \code{lakeJackRaw} - a data frame of the raw contributions to the jackknifed
-#'   range with columns for \code{lake}, \code{year}, and each of the index
-#'   streams (see \code{\link{jackIndex}}).
+#'   and the lower and upper 95\% confidence interval \code{ilo} and
+#'   \code{ihi}.
 #'   }
 #' @export
 #' @details
@@ -40,15 +38,13 @@
 #'   each year.  Missing stream estimates are estimated by a lake-specific
 #'   ANOVA model relating the log of the stream estimates to the main effects
 #'   of each stream and each year, weighted by the inverse of the CV squared.
-#'   The jackknifed range is produced by recalculating the index,
-#'   leaving out one stream at a time, then scaling up the result to the same
-#'   scale as the Adult Index based on all streams.
 
 AIestimate <- function(streamDat, minNMR=2) {
 
 #   library(GLFC)
 #   library(plyr)
 #   streamDat=streamIncomp[streamIncomp$lake==1, ]
+#   streamDat=streamall[streamall$lake==1, ]
 #   minNMR=2
 
   # keep track of who started off as incomplete
@@ -57,6 +53,8 @@ AIestimate <- function(streamDat, minNMR=2) {
   # set index contributions for new data to PEmr
   incompindex <- with(streamDat, !complete & index)
   streamDat$indexContrib[incompindex] <- streamDat$PEmr[incompindex]
+  streamDat$indexContribCV[incompindex] <- streamDat$CVmr[incompindex]
+  uy <- unique(streamDat$year[incompindex])
 
   # fill in missing contributions in new data
   incompiMiss <- with(streamDat, !complete & index & is.na(PEmr))
@@ -65,14 +63,19 @@ AIestimate <- function(streamDat, minNMR=2) {
     indfit <- with(sub,
       aov(log(PEmr) ~ as.factor(lscode) + as.factor(year), weights=1/CVmr^2)
       )
+    cvfit <- aov(CVmr ~ as.factor(lscode) + as.factor(year), data=sub)
     # figure out estimable years (those with at least minNMR m-r estimate)
     n.mr <- tapply(!is.na(sub$PEmr), sub$year, sum)
     eyrs <- as.numeric(names(n.mr)[n.mr > (minNMR - 0.5)])
     estimable <- streamDat$year %in% eyrs
     Pmr <- rep(NA, length(estimable))
+    CVmr <- Pmr
     Pmr[estimable & streamDat$index] <- predAntilog(aovfit=indfit,
       xdata=streamDat[estimable & streamDat$index, ])
+    CVmr[estimable & streamDat$index] <- predict(object=cvfit,
+      newdata=streamDat[estimable & streamDat$index, ])
     streamDat$indexContrib[incompiMiss] <- Pmr[incompiMiss]
+    streamDat$indexContribCV[incompiMiss] <- CVmr[incompiMiss]
   }
 
   # mark as complete
@@ -81,23 +84,29 @@ AIestimate <- function(streamDat, minNMR=2) {
   # arrange estimates in a matrix
   streamests <- with(streamDat[streamDat$index, ],
     tapply(indexContrib, list(year, lscode), mean))
+  streamCVs <- with(streamDat[streamDat$index, ],
+    tapply(indexContribCV, list(year, lscode), mean))
   # get rid of years with missing estimates
-  se2 <- streamests[!apply(is.na(streamests), 1, any), ]
+  missyears <- apply(is.na(streamests), 1, any)
+  pe2 <- streamests[!missyears, , drop=FALSE]
+  cv2 <- streamCVs[!missyears, , drop=FALSE]
   # THEN, get rid of streams with missing estimates
-  se3 <- se2[, !apply(is.na(se2), 2, any)]
-  jacklist <- jackIndex(se3, simple=FALSE)
-  jack <- cbind(lake=streamDat$lake[1],
-    year=as.numeric(row.names(jacklist$jack.range)), jacklist$jack.range,
-    jacklist$jack.raw)
-  row.names(jack) <- 1:dim(jack)[1]
-  jack <- as.data.frame(jack)
+  missstrs <- apply(is.na(pe2), 2, any)
+  pe3 <- pe2[, !missstrs, drop=FALSE]
+  cv3 <- cv2[, !missstrs, drop=FALSE]
+  vr <- (cv3 * pe3 / 100)^2
 
-  # subset the output to only include the year-lakes in streamDatCurr
-  uyl <- with(streamDat[incompindex, ], unique(paste0(year, lake)))
-  streamDatOut <- streamDat[with(streamDat, paste0(year, lake)) %in% uyl, ]
-  jsel <- with(jack, paste0(year, lake)) %in% uyl
-  lakeIndexOut <- jack[jsel, c("lake", "year", "index", "jlo", "jhi")]
-  lakeIndexRaw <- jack[jsel,
-    c("lake", "year", dimnames(jacklist$jack.raw)[[2]])]
-  list(streamPE=streamDatOut, lakeIndex=lakeIndexOut, lakeJackRaw=lakeIndexRaw)
+  # calculate index with 95% confidence interval
+  sumpe <- apply(pe3, 1, sum)
+  sumvar <- apply(vr, 1, sum)
+  int <- qt((1-0.05/2), dim(pe3)[2])*sqrt(sumvar)
+  ilo <- sumpe - int
+  ihi <- sumpe + int
+  lakesum <- data.frame(lake=streamDat$lake[1], year=as.numeric(row.names(pe3)),
+    index=sumpe, ilo=ilo, ihi=ihi)
+
+  # subset the output to only include the years in streamDatCurr
+  streamDatOut <- streamDat[streamDat$year %in% uy, ]
+  lakeIndexOut <- lakesum[lakesum$year %in% uy, ]
+  list(streamPE=streamDatOut, lakeIndex=lakeIndexOut)
 }

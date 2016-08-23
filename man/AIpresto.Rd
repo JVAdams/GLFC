@@ -8,7 +8,7 @@ AIpresto(DIRECTORY, NEWDATARAW, STREAMDATAPREV, LAKEDATAPREV)
 }
 \arguments{
 \item{DIRECTORY}{A character scalar identifying the path where the csv files are
-stored, e.g., \code{csvDir = "C:\\temp\\mydir"}.}
+stored, e.g., \code{DIRECTORY = "C:\\\\temp\\\\mydir"}.}
 
 \item{NEWDATARAW}{A character scalar identifying the name of the csv file
 with stream mark-recapture estimates for which Adult Indices
@@ -22,34 +22,37 @@ coefficient of variation \code{CVmr}
 with stream mark-recapture estimates for which Adult Indices
 have already been estimated (typically from previous years),
 with the same variables as in \code{NEWDATARAW} plus the
-previously estimated contribution \code{indexContrib}, default NULL.}
+previously estimated contribution \code{indexContrib}.}
 
 \item{LAKEDATAPREV}{A character scalar identifying the name of the csv file
 with annual lake-wide Adult Index estimates (typically from previous
 years), with 5 columns: \code{lake}, \code{year}, \code{index}, and the
-lower and upper jackknifed range \code{jlo} and \code{jhi}, and the
-proportion of jackknifed contributions that met the target}
+lower and upper 95\% confidence intervals \code{ilo} and \code{ihi}.}
 }
 \value{
-Four data summaries are saved as csv files to \code{DIRECTORY}, where YYYY
-  represents the most recent year of data in \code{NEWDATARAW}:
+Four data summaries are saved as csv files to \code{DIRECTORY}, where
+  \code{YYYY} represents the most recent year of data in \code{NEWDATARAW}:
   \itemize{
-    \item \code{AdultStreamYYYY.csv} - an updated version of \code{NEWDATARAW}
+    \item \code{AdultStreamYYYY.csv} - an updated version of
+      \code{NEWDATARAW}
       with the additional column of the lake-stream IDs, \code{lscode},
       which are combination of lake ID and stream ID, e.g.,
       1.064 = lake ID 1 + (stream ID 64)/1000
     \item \code{AdultStreamThruYYYY.csv} - an updated version of
-      \code{STREAMDATAPREV} with the latest year of data added, YYYY
-    \item \code{AdultLakeThruYYYY.csv} - an updated version of \code{LAKEDATAPREV}
-      with the latest year of data added, YYYY
-    \item \code{AdultTargetYYYY.csv} - the calculated targets for the Adult Index
+      \code{STREAMDATAPREV} with the latest year of data added
+    \item \code{AdultLakeThruYYYY.csv} - an updated version of
+      \code{LAKEDATAPREV}
+      with the latest year of data added
+    \item \code{AdultTargetYYYY.csv} - the calculated targets for the Adult
+      Index
       of each Great Lake, with 2 columns: \code{lake} and \code{targInd}
   }
 
   Two rich text documents are saved as doc files (so that MS Word will open
   them automatically) to \code{DIRECTORY}:
   \itemize{
-    \item \code{YYYY Adult Index - error checking.doc} - error checking document
+    \item \code{YYYY Adult Index - error checking.doc} - error checking
+      document
     \item \code{YYYY Adult Index - draft report.doc} - draft report document
   }
 }
@@ -67,10 +70,10 @@ For more details on the entire process and the steps involved,
 \dontrun{
  library(GLFC)
  AIpresto(
-  DIRECTORY="C:\\\\TrappingData\\\\2015",
-  NEWDATARAW="TrapCatchSchaeferEstimate2015.csv",
-  STREAMDATAPREV="AdultStreamThru2014.csv",
-  LAKEDATAPREV="AdultLakeThru2014.csv")
+   DIRECTORY = "C:\\\\TrappingData\\\\2015",
+   NEWDATARAW = "TrapCatchSchaeferEstimate2015.csv",
+   STREAMDATAPREV = "AdultStreamThru2014.csv",
+   LAKEDATAPREV = "AdultLakeThru2014.csv")
 }
 }
 \seealso{

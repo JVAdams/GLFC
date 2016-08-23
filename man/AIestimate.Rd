@@ -27,17 +27,15 @@ the minimum number of mark-recapture estimates
 needed in a year to generate an index, default 2.}
 }
 \value{
-A list with 3 components:
+A list with 2 data frames:
   \itemize{
-    \item \code{streamPE} - a data frame of stream mark-recapture and Adult Index
-  contributions for the incomplete rows in \code{streamDat}, with
-  the same variables as \code{streamDat};
-    \item \code{lakeIndex} - a data frame of annual lake-wide Adult Indices
+    \item \code{streamPE} - stream mark-recapture and Adult
+  Index contributions for the incomplete rows in \code{streamDat}, with
+  the same variables as \code{streamDat}; and
+    \item \code{lakeIndex} - annual lake-wide Adult Indices
   with 5 columns: \code{lake}, \code{year}, the Adult Index \code{index},
-  and the lower and upper jackknifed range \code{jlo} and \code{jhi}; and
-    \item \code{lakeJackRaw} - a data frame of the raw contributions to the jackknifed
-  range with columns for \code{lake}, \code{year}, and each of the index
-  streams (see \code{\link{jackIndex}}).
+  and the lower and upper 95\% confidence interval \code{ilo} and
+  \code{ihi}.
   }
 }
 \description{
@@ -48,8 +46,5 @@ The annual Adult Index is simply the sum of stream population estimates for
   each year.  Missing stream estimates are estimated by a lake-specific
   ANOVA model relating the log of the stream estimates to the main effects
   of each stream and each year, weighted by the inverse of the CV squared.
-  The jackknifed range is produced by recalculating the index,
-  leaving out one stream at a time, then scaling up the result to the same
-  scale as the Adult Index based on all streams.
 }
 

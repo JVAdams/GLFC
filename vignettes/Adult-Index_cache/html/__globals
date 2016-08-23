@@ -1,0 +1,27 @@
+install_glfc	::
+install_packages	>	c	if	install.packages	installed.packages	length	row.names	setdiff
+unnamed-chunk-2	
+unnamed-chunk-3	::	[<-	c	Dir	paste	read.csv	StreamNew
+unnamed-chunk-4	$	$<-	::	c	Dir	paste	read.csv	round	StreamPrev
+unnamed-chunk-5	$	$<-	::	c	Dir	LakePrev	paste	read.csv	round
+unnamed-chunk-6	
+unnamed-chunk-7	library
+unnamed-chunk-8	AIpresto	Dir	LakePrev	StreamNew	StreamPrev
+unnamed-chunk-9	AIprep	Dir	StreamNew	StreamPrev
+unnamed-chunk-10	::	head	trappedStreams
+unnamed-chunk-11	::	cbind	Lakenames	lsIndex	paste	sapply
+unnamed-chunk-12	!=	::	data.frame	lsKeep	paste	sapply
+unnamed-chunk-13	::	streamall	tail
+unnamed-chunk-14	AIcheck	Dir	streamall
+unnamed-chunk-15	message
+unnamed-chunk-16	$	==	AIestimate	streamall
+unnamed-chunk-17	$	$<-	::	ainewOnt	gsub	round	sapply	strsplit
+unnamed-chunk-18	$	::	ainewOnt
+unnamed-chunk-19	$	::	==	AIestimate	do.call	lapply	rbind	streamall	tail
+unnamed-chunk-20	AItarget	lakeprev
+unnamed-chunk-21	$	::	AItarget	as.character	data.frame	eval	formals	gsub	Lakenames
+unnamed-chunk-22	$	$<-	::	round	targ
+unnamed-chunk-23	::	as.matrix	colnames<-	index2pe	Lakenames	row.names<-
+unnamed-chunk-24	$<-	::	c	cbind	i2pe	ihi	ilo	index	index2pe	lakeainew	lakeprev	library	merge	rbind.fill	tail	with
+unnamed-chunk-25	$	==	AIreport	Dir	lakeallpe	rbind	streamainew	streamall	targ
+unnamed-chunk-26	message

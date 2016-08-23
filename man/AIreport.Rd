@@ -25,7 +25,7 @@ Adult Index has already been estimated (should be all TRUE).}
 
 \item{lakeIPEs}{A data frame of annual lake-wide Adult Indices with 8 columns:
 \code{lake}, \code{year}, the Adult Index \code{index}, its associated
-lower and upper jackknifed range \code{jlo} and \code{jhi},
+lower and upper 95\% confidence interval \code{ilo} and \code{ihi},
 and the corresponding expansion to a supposed population estimate,
 \code{pe}, \code{pelo} and \code{pehi}.
 The data frame may contain variables other than those required.}

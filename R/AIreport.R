@@ -20,7 +20,7 @@
 #' @param lakeIPEs
 #'   A data frame of annual lake-wide Adult Indices with 8 columns:
 #'   \code{lake}, \code{year}, the Adult Index \code{index}, its associated
-#'   lower and upper jackknifed range \code{jlo} and \code{jhi},
+#'   lower and upper 95\% confidence interval \code{ilo} and \code{ihi},
 #'   and the corresponding expansion to a supposed population estimate,
 #'   \code{pe}, \code{pelo} and \code{pehi}.
 #'   The data frame may contain variables other than those required.
@@ -77,7 +77,7 @@ AIreport <- function(streamPEs, lakeIPEs, targets, csvDir, outFile=NULL,
   targ2$above <- with(targ2,
     ifelse(!is.na(index) & !is.na(targInd) & index > targInd, "***", ""))
   targ2$above[with(targ2, is.na(index) | is.na(targInd))] <- " ? "
-  targ2 <- targ2[, c("above", "targInd", "index", "jlo", "jhi",
+  targ2 <- targ2[, c("above", "targInd", "index", "ilo", "ihi",
     "pe", "pelo", "pehi")]
   TAB.targs <- prettytable(targ2, c(0, 0, 0, 0, 0, -3, -3, -3, -3))
 
@@ -90,7 +90,7 @@ AIreport <- function(streamPEs, lakeIPEs, targets, csvDir, outFile=NULL,
       for(i in seq(lakeids)) {
         j <- lakeids[i]
         sel <- lake==j
-        mymax <- max(jhi[sel & year>=1985])/1000
+        mymax <- max(ihi[sel & year>=1985], na.rm=TRUE)/1000
         plot(1, 1, type="n", xlim=range(year), ylim=c(0, mymax),
           xlab="", ylab="", main=Lakenames[i], las=1)
         abline(h=targets$targInd[j]/1000, col="gray", lwd=2)
@@ -99,7 +99,7 @@ AIreport <- function(streamPEs, lakeIPEs, targets, csvDir, outFile=NULL,
             col="gray", lwd=2, lty=2)
         }
         points(year[sel], index[sel]/1000)
-        arrows(year[sel], jlo[sel]/1000, year[sel], jhi[sel]/1000, length=0.03,
+        arrows(year[sel], ilo[sel]/1000, year[sel], ihi[sel]/1000, length=0.03,
           angle=90, code=3)
         p4 <- pretty(k[i]*c(0, mymax))
         axis(4, at=p4/k[i], labels=p4, las=1)
@@ -254,8 +254,8 @@ AIreport <- function(streamPEs, lakeIPEs, targets, csvDir, outFile=NULL,
 
   thyr <- round(both$index.this)
   layr <- round(both$index.last)
-  hier <- with(both, jlo.this > jhi.last)
-  loer <- with(both, jhi.this < jlo.last)
+  hier <- with(both, ilo.this > ihi.last)
+  loer <- with(both, ihi.this < ilo.last)
   phrase <- rep("not significantly different from", 5)
   delta <- with(both, round(100*abs(index.this - index.last) / index.last))
 
@@ -325,7 +325,8 @@ AIreport <- function(streamPEs, lakeIPEs, targets, csvDir, outFile=NULL,
       paste(Lakenames[both$lake[sel3]], collapse=", "),
       ")")
   }
-  para("Comparing the jackknifed ranges of the adult sea lamprey indices in ",
+  para("Comparing the 95% confidence intervals of the adult sea lamprey",
+    " indices in ",
     YEAR, " with those in ",
     YEAR-1, ", the number of adults significantly decreased in ",
     numbers2words(sum(sel1)),
@@ -391,8 +392,8 @@ AIreport <- function(streamPEs, lakeIPEs, targets, csvDir, outFile=NULL,
     extraphrase <- "  Dashed horizontal lines represent proposed targets."
   }
 
-  figu("Adult sea lamprey index estimates (with jackknifed ranges) and targets",
-    " for each Great Lake through ", YEAR, ".",
+  figu("Adult sea lamprey index estimates (with 95% confidence intervals)",
+    " and targets for each Great Lake through ", YEAR, ".",
     "  Targets are represented by the horizontal gray lines.", extraphrase,
     FIG=FIG.lakeCI, newpage="port")#, w=6.5, h=7.5)
 
