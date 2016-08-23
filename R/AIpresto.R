@@ -20,7 +20,8 @@
 #'   with stream mark-recapture estimates for which Adult Indices
 #'   have already been estimated (typically from previous years),
 #'   with the same variables as in \code{NEWDATARAW} plus the
-#'   previously estimated contribution \code{indexContrib}.
+#'   previously estimated contribution \code{indexContrib} and 
+#'   \code{indexContribCV}.
 #' @param LAKEDATAPREV
 #'   A character scalar identifying the name of the csv file
 #'   with annual lake-wide Adult Index estimates (typically from previous
@@ -91,9 +92,6 @@ AIpresto <- function(DIRECTORY, NEWDATARAW, STREAMDATAPREV, LAKEDATAPREV) {
   # Prepare csv file with stream mark-recapture estimates
   # Header must include: year, lake, lscode, PEmr, CVmr
   new <- read.csv(paste(DIRECTORY, NEWDATARAW, sep="\\"), as.is=TRUE)
-#  new$lscode <- new$lake + new$streamcode/1000
-  # new2 <- new[, c("year", "lake", "lscode", "trapcatch", "PEmr", "CVmr",
-  #   "comments")]
 
   YEAR <- max(new$year)
   STREAMDATANEW <- paste0("AdultStream", YEAR, ".csv")
@@ -150,20 +148,11 @@ AIpresto <- function(DIRECTORY, NEWDATARAW, STREAMDATAPREV, LAKEDATAPREV) {
 
   targ <- AItarget(lakeIndex=lake1)
 
-  # targ <- AItarget(lakeIndex=lake1,
-  #   years=list(1994:1998, 1995:1999, 2006:2010, 1991:1995, 1993:1997),
-  #   adjust=c(1, 0.5, 0.5, 1, 1))
-
-
-
-
-  lakecomp2 <- lakecomp
-
 
 
   #### expand indices to supposed lake-wide PEs ####
 
-  lakeInd <- plyr::rbind.fill(lake1, lakecomp2)
+  lakeInd <- plyr::rbind.fill(lake1, lakecomp)
   lakeIndPE <- merge(lakeInd[, c("lake", "year", "index", "ilo", "ihi")],
     cbind(lake=1:5, i2pe=index2pe))
   pes <- lakeIndPE[, c("index", "ilo", "ihi")]*lakeIndPE$i2pe
@@ -175,18 +164,10 @@ AIpresto <- function(DIRECTORY, NEWDATARAW, STREAMDATAPREV, LAKEDATAPREV) {
 
   #### Draft Report ####
 
-  # proposed targets for Lake Michigan
-  # using conversion factor (cv): old PE target for Lake Michigan 59,192
-  prop.cf <- 59192 / index2pe[2]
-  # using new years (ny): new years for Lake Michigan, 1995-1999
-  prop.ny <- (5/8.9) *
-    mean(with(lakeIndPE, lakeIndPE$index[lake==2 & year>=1995 & year<=1999]))
-  pt <- data.frame(lake=2, targInd=c(prop.cf, prop.ny))
-
   # combine estimates with initially provided data
   streamPE <- plyr::rbind.fill(stream1[stream1$complete==TRUE, ], streamcomp)
   AIreport(streamPEs=streamPE, lakeIPEs=lakeIndPE, targets=targ,
-    csvDir=DIRECTORY, outFile=NULL, proptargets=pt)
+    csvDir=DIRECTORY, outFile=NULL, proptargets=NULL)
 
 
 
@@ -208,7 +189,7 @@ AIpresto <- function(DIRECTORY, NEWDATARAW, STREAMDATAPREV, LAKEDATAPREV) {
   print(format(
     streamPE[streamPE$year==YEAR,
       c("lscode", "country", "estr", "strname", "index", "maintain", "year",
-      "trapcatch", "PEmr", "CVmr", "indexContrib")]
+      "trapcatch", "PEmr", "CVmr", "indexContrib", "indexContribCV")]
     ), row.names=FALSE)
 
   message("\n\n", YEAR, " Adult Index in Lakes")

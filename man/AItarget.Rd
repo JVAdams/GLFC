@@ -4,8 +4,8 @@
 \alias{AItarget}
 \title{Calculate Targets for the Adult Index}
 \usage{
-AItarget(lakeIndex, years = list(1994:1998, 1988:1992, 1989:1993, 1991:1995,
-  1993:1997), adjust = c(1, 1, 0.25, 1, 1))
+AItarget(lakeIndex, years = list(1994:1998, 1995:1999, 1989:1993, 1991:1995,
+  1993:1997), adjust = c(1, 5/8.9, 0.25, 1, 1))
 }
 \arguments{
 \item{lakeIndex}{A data frame of annual lake-wide Adult Indices with at least these
@@ -15,14 +15,14 @@ AItarget(lakeIndex, years = list(1994:1998, 1988:1992, 1989:1993, 1991:1995,
 Huron, Erie, and Ontario), each element an integer vector of length 5
 specifying the 5 years during which there were acceptable sea lamprey
 wounding rates on lake trout, default
-list(1994:1998, 1988:1992, 1989:1993, 1991:1995, 1993:1997).
+list(1994:1998, 1995:1999, 1989:1993, 1991:1995, 1993:1997).
 These will be used to generate Adult Index targets.}
 
 \item{adjust}{A numeric vector of length 5 (for each Great Lake),
 specifying adjustments to be made to the calculated means to
-generate Adult Index targets, default c(1, 1, 0.25, 1, 1).  Since Lake
+generate Adult Index targets, default c(1, 5/8.9, 0.25, 1, 1).  Since Lake
 Huron did not have a time period with acceptable sea lamprey wounding
-rates, the target is set to 25\% of the mean for 1989-1993.}
+rates, the target was set to 25\% of the mean for 1989-1993.}
 }
 \value{
 A data frame with the calculated targets for the Adult Index of each
@@ -31,5 +31,15 @@ A data frame with the calculated targets for the Adult Index of each
 \description{
 Calculate lake-wide targets for the Adult Index of sea lamprey
 populations in the Great Lakes from the mean of specified years.
+}
+\details{
+The Lake Michigan Committee accepted the Sea Lamprey Control Board's 
+  recommendation for an Adult Index target at its Executive Session, 
+  22 March 2016.  Specifically, the years of acceptable wounding used to 
+  define the Adult Index target for Lake Michigan sea lampreys was 
+  changed to a time period with available Adult Index data, 1995-1999, and 
+  the index target was defined as the mean of the Adult Index during these 
+  years, adjusted by 5/8.9 to compensate for the highest wounding rate 
+  observed during this period.
 }
 

@@ -79,10 +79,11 @@ where $$ CV_{mr} = 100\% \frac{\sqrt{Var(PE_{mr})}}{PE_{mr}} $$
 ```{r, echo=FALSE}
 old <- read.csv(paste(Dir, StreamPrev, sep="\\"), as.is=TRUE)
 old2 <- old[c(896:897, 955:957), c("year", "lake", "lscode", 
-  "PEmr", "CVmr", "indexContrib")]
+  "PEmr", "CVmr", "indexContrib", "indexContribCV")]
 old2$PEmr <- round(old2$PEmr, 0)
 old2$CVmr <- round(old2$CVmr, 1)
 old2$indexContrib <- round(old2$indexContrib, 0)
+old2$indexContribCV<- round(old2$indexContribCV, 2)
 knitr::kable(old2, row.names=FALSE)
 ```
 
@@ -94,6 +95,7 @@ The first row of `STREAMDATAPREV` should be a header row with the following colu
 * `PEmr` = stream population estimate of adult sea lampreys from mark-recapture study
 * `CVmr` = coefficient of variation
 * `indexContrib` = the stream population estimate used in the Adult Index
+* `indexContribCV` = the stream CV used in the 95% confidence interval
 
 **(3)** `LAKEDATAPREV` should contain annual lake-wide adult sea lamprey indices for all of the years prior to the year of interest. 
 
@@ -195,6 +197,7 @@ The returned object from the `AIprep()` function is a single data frame (called 
 * `index` - a logical (TRUE/FALSE) identifying the index streams
 * `maintain` - a logical identifying the streams that will continue to have ongoing trapping even if not part of the Adult Index
 * `indexContrib` - the stream population estimate that will be used in the Adult Index (initially set to missing for `csvNew`)
+* `indexContribCV` - the stream CV that will be used in the 95% confidence interval (initially set to missing for `csvNew`)
 * `complete` - a logical identifying streams and years for which the Adult Index has already been estimated (initially set to FALSE for `csvNew`)
 
 ```{r, echo=FALSE}
@@ -261,6 +264,7 @@ ssc <- strsplit(ss$comments, ",")
 ssc2 <- sapply(ssc, "[", 1)
 ss$comments <- gsub("recapture", "recap", ssc2)
 ss$indexContrib <- round(ss$indexContrib)
+ss$indexContribCV <- round(ss$indexContribCV)
 knitr::kable(ss, row.names=FALSE)
 ```
 

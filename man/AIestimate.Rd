@@ -18,7 +18,9 @@ include: \code{year},
 identifying the index streams; \code{maintain} a logical identifying the
 streams that will continue to have ongoing trapping even if not part of
 the Adult Index; \code{indexContrib} a numeric, the stream population
-estimate that will be used in the Adult Index (NA for new); and
+estimate that will be used in the Adult Index (NA for new); 
+\code{indexContribCV} a numeric, the stream CV that will be used to
+generate 95\% confidence intervals for the Adult Index (NA for new); and
 \code{complete} a logical identifying streams and years for which the
 Adult Index has already been estimated (FALSE for new).}
 

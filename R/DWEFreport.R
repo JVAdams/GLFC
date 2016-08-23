@@ -46,15 +46,6 @@
 #'   \code{\link{DWEFerror}} will be continued and completed by
 #'   \code{DWEFreport}.
 #' @return
-#'   A single data frame that contains the information from all of the inputs,
-#'   including new variables: \code{index}, a logical
-#'   identifying the index streams; \code{maintain} a logical identifying the
-#'   streams that will continue to have ongoing trapping even if not part of
-#'   the Adult Index; \code{indexContrib} a numeric, the stream population
-#'   estimate that will be used in the Adult Index (NA for csvNew); and
-#'   \code{complete} a logical identifying streams and years for which the
-#'   Adult Index has already been estimated (FALSE for csvNew).
-#'
 #'   Three csv files are written to \code{Dir}, with the final catch, lengths,
 #'   and plot data.
 #' @importFrom maps map

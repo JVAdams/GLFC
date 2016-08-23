@@ -14,7 +14,9 @@
 #'   identifying the index streams; \code{maintain} a logical identifying the
 #'   streams that will continue to have ongoing trapping even if not part of
 #'   the Adult Index; \code{indexContrib} a numeric, the stream population
-#'   estimate that will be used in the Adult Index (NA for new); and
+#'   estimate that will be used in the Adult Index (NA for new); 
+#'   \code{indexContribCV} a numeric, the stream CV that will be used to
+#'   generate 95\% confidence intervals for the Adult Index (NA for new); and
 #'   \code{complete} a logical identifying streams and years for which the
 #'   Adult Index has already been estimated (should be all TRUE).
 #' @param lakeIPEs
@@ -160,8 +162,9 @@ AIreport <- function(streamPEs, lakeIPEs, targets, csvDir, outFile=NULL,
 
     magic <- 20
     par(mar=c(0, 0, 0, 0))
-    maps::map("world", col="gray", lwd=0.5, xlim=xr + c(-1, 1)*bufx,
+    maps::map("world", type="n", xlim=xr + c(-1, 1)*bufx,
       ylim=yr + c(-magic, 1)*bufy, mar=c(0, 0, 0, 0))
+    maps::map("lakes", col="gray", lwd=0.5, add=TRUE)
     pusr <- par("usr")
     with(df, {
       textx <- rep(NA, dim(df)[1])

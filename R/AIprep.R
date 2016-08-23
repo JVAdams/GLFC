@@ -19,7 +19,8 @@
 #'   with stream mark-recapture estimates for which Adult Indices
 #'   have already been estimated (typically from previous years),
 #'   with the same variables as in \code{csvNew} plus the
-#'   previously estimated contribution \code{indexContrib}, default NULL.
+#'   previously estimated contributions \code{indexContrib} and 
+#'   \code{indexContribCV}, default NULL.
 #'   See details.
 #' @param streamInfo
 #'   A data frame with stream information to be combined with the estimates
@@ -45,7 +46,9 @@
 #'   identifying the index streams; \code{maintain} a logical identifying the
 #'   streams that will continue to have ongoing trapping even if not part of
 #'   the Adult Index; \code{indexContrib} a numeric, the stream population
-#'   estimate that will be used in the Adult Index (NA for csvNew); and
+#'   estimate that will be used in the Adult Index (NA for csvNew); 
+#'   \code{indexContribCV} a numeric, the stream CV that will be used to
+#'   generate 95\% confidence intervals for the Adult Index (NA for new); and
 #'   \code{complete} a logical identifying streams and years for which the
 #'   Adult Index has already been estimated (FALSE for csvNew).
 #' @importFrom plyr rbind.fill
@@ -59,7 +62,8 @@ AIprep <- function(csvDir, csvNew, csvOld=NULL, streamInfo=trappedStreams,
   }
 
   varShort <- c("year", "lake", "lscode", "PEmr", "CVmr")
-  varLong <- c("year", "lake", "lscode", "PEmr", "CVmr", "indexContrib")
+  varLong <- c("year", "lake", "lscode", "PEmr", "CVmr", 
+    "indexContrib", "indexContribCV")
 
   # bring in this year's stream data
 
@@ -70,7 +74,7 @@ AIprep <- function(csvDir, csvNew, csvOld=NULL, streamInfo=trappedStreams,
   strnew$complete <- FALSE
 
   if (any(is.na(match(varShort, names(strnew))))) {
-    stop("csvNew must include these variables:",
+    stop(csvNew, "must include these variables:",
       paste(varShort, collapse=", "), ".")
   }
 
@@ -86,7 +90,7 @@ AIprep <- function(csvDir, csvNew, csvOld=NULL, streamInfo=trappedStreams,
     strold$complete <- TRUE
 
     if (any(is.na(match(varLong, names(strold))))) {
-      stop("strold (if not NULL) must include these variables:",
+      stop(csvOld, "(if not NULL) must include these variables:",
         paste(varLong, collapse=", "), ".")
     }
 

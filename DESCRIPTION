@@ -1,5 +1,5 @@
 Package: GLFC
-Version: 1.0.0.9000
+Version: 1.0.1.9000
 Date: 2016-08-23
 Title: Great Lakes Fishery Commission
 Authors@R: person(given="Jean V.", family="Adams", email="jvadams@usgs.gov", 
@@ -7,7 +7,7 @@ Authors@R: person(given="Jean V.", family="Adams", email="jvadams@usgs.gov",
 Author: Jean V. Adams [aut, cre]
 Maintainer: Jean V. Adams <jvadams@usgs.gov>
 Depends: 
-    R (>= 3.3.0),
+    R (>= 3.3.1),
     maps
 Imports: 
     geosphere,
