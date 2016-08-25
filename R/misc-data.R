@@ -1,4 +1,22 @@
 #' @name
+#'   mapL
+#' @title
+#'   Great Lakes Shorelines
+#' @description
+#'   List of five data frames, one for each Great Lake
+#'   (Superior, Michigan, Huron, Erie, Ontario)
+#'   with longitude and latitude coordinates of the shorelines.
+#' @format
+#'   One row for each point, consecutive rows with non-missing values for
+#'   each line.
+#' @source
+#'   NOAA National Geophysical Data Center, (the now defunct) Coastline
+#'   Extractor,
+#'   \href{http://www.ngdc.noaa.gov/mgg/coast/}{ngdc.noaa.gov/mgg/coast}.
+#' @author
+#'   Rich Signell, USGS.
+NULL
+#' @name
 #'   lsIndex
 #' @title
 #'   Great Lakes Streams used in the Index of Adult Sea Lampreys
