@@ -17,4 +17,3 @@ IDs identifying streams to used to generate the Adult Index.
 \author{
 GLFC Trapping Task Force.
 }
-

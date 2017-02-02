@@ -52,4 +52,3 @@ The figure and caption are written to the rtf file.
   \code{\link{para}}, \code{\link{tabl}},
   \code{\link{endrtf}}, \code{\link[rtf]{RTF}}.
 }
-

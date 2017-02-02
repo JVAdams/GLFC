@@ -77,4 +77,3 @@ endrtf()
   \code{\link{figu}}, \code{\link{figbig}}, \code{\link{endrtf}},
   \code{\link[rtf]{RTF}}.
 }
-

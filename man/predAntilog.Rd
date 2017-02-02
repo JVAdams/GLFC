@@ -34,4 +34,3 @@ predAntilog(fit, npk)
 This is a copy of the \code{predAntilog} function from the
   \href{https://github.com/JVAdams/jvamisc}{[jvamisc]} package.
 }
-

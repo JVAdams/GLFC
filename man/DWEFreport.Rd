@@ -60,4 +60,3 @@ It is assumed that this function will be run immediately after the
   \code{\link{DWEFerror}} will be continued and completed by
   \code{DWEFreport}.
 }
-

@@ -51,4 +51,3 @@ Determine the status and trends of a time series relative to a target.
  SRstatus(bydat=rawdat$group, timedat=rawdat$year,
   measdat=rawdat$x, targdat=targetdat$targ)
 }
-

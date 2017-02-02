@@ -51,7 +51,7 @@
 #' @importFrom maps map
 #' @importFrom plotrix rescale
 #' @import
-#'   lubridate 
+#'   lubridate survey
 #' @export
 
 DWEFreport <- function(Dir, CatchClean, LengthsClean, Plots, Downstream,
@@ -264,10 +264,34 @@ DWEFreport <- function(Dir, CatchClean, LengthsClean, Plots, Downstream,
 
   # estimation
   doit <- function(df) {
-    coch <- stratCochran(yhi=df$sl.larv.adj/Ai, hi=df$stratum,
-      Wh=Ah/A.expanded, N=A.expanded)
-    muhat.f <- muf*coch["ybarst"]
-    sigmahat.f <- sigf*coch["seybarst"]
+
+    # larval density
+    df$slden <- df$sl.larv.adj/Ai
+
+    # calculate weights (inverse probabilities) for each sample
+    strcount <- table(df$stratum)
+    strcount2 <- data.frame(stratum=names(strcount), n=as.numeric(strcount),
+      stringsAsFactors=FALSE)
+    areas3$n <- strcount2$n[match(areas3$stratum, strcount2$stratum)]
+    areas3$n[is.na(areas3$n)] <- 0
+    areas3$prob <- with(areas3, n/haStrat)
+    areas3$weight <- 1/areas3$prob
+    df$w <- areas3$weight[match(df$stratum, areas3$stratum)]
+    # note that sum of weights should be the area of the river
+    # sum(df$w)
+    # A.expanded
+
+    # old way
+    # coch <- stratCochran(yhi=df$sl.larv.adj/Ai, hi=df$stratum,
+    #   Wh=Ah/A.expanded, N=A.expanded)
+    # muhat.f <- muf*coch["ybarst"]
+    # sigmahat.f <- sigf*coch["seybarst"]
+
+    # new way
+    dw <- svydesign(id=~1, strata=~stratum, weights=~w, data=df)
+    coch <- svymean(~slden, design=dw)
+    muhat.f <- muf*coef(coch)
+    sigmahat.f <- sigf*SE(coch)
     out <- list(muhat.f=muhat.f, sigmahat.f=sigmahat.f,
       PE=muhat.f*A.expanded, PE.sd=sigmahat.f*A.expanded,
       PE.cv=sigmahat.f/muhat.f,

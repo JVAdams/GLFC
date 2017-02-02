@@ -159,3 +159,21 @@ NULL
 #'   Post from Hadley Wickham to r-help on 2 Dec 2014
 #'  \href{https://stat.ethz.ch/pipermail/r-help/2014-December/423847.html}{[link]}.
 NULL
+#' @name
+#'   mapSMR
+#' @title
+#'   St. Marys River Shoreline
+#' @description
+#'   Data frame with longitude and latitude coordinates
+#'   of the St. Marys River shoreline (the connecting channel between
+#'   Lakes Superior and Huron in the Great Lakes basin).
+#' @format
+#'   One row for each point, consecutive rows with non-missing values for
+#'   each line.
+#' @source
+#'   NOAA National Geophysical Data Center, (the now defunct) Coastline
+#'   Extractor,
+#'   \href{http://www.ngdc.noaa.gov/mgg/coast/}{ngdc.noaa.gov/mgg/coast}.
+#' @author
+#'   Rich Signell, USGS.
+NULL

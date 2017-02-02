@@ -24,4 +24,3 @@ Data frame with three variables: \code{inbplot} indicating whether the
 \author{
 GLFC Larval Assessment Task Force.
 }
-

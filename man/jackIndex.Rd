@@ -37,4 +37,3 @@ The index is simply the sum of the columns in \code{m} for
 streampe <- matrix(1:12, nrow=3, dimnames=list(1996:1998, letters[1:4]))
 jackIndex(streampe, simple=FALSE)
 }
-

@@ -46,4 +46,3 @@ the Adult Index) for errors.
 Lake-stream IDs are combination of lake ID and stream ID
   e.g., 1.064 = lake ID + (stream ID)/1000.
 }
-

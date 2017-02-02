@@ -44,4 +44,3 @@ Robinson, JM, MJ Wilberg, JV Adams, and ML Jones. 2014.
  Journal of Great Lakes Research 40(3):739-747.
  \href{http://www.sciencedirect.com/science/article/pii/S0380133014001385}{[link]}
 }
-

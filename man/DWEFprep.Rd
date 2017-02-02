@@ -63,4 +63,3 @@ The order of the columns and the case of the column names in the
   Additional columns may be also be part of theses files,
   but they will be ignored.
 }
-

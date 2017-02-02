@@ -1,0 +1,254 @@
+---
+title: "DWEF Larval Estimation"
+author: "Jean V. Adams"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{DWEF Larval Estimation}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, echo=FALSE, warning=FALSE}
+library(knitr) 
+opts_chunk$set(echo=TRUE, warning=FALSE, message=FALSE, width=80)
+# , autodep=TRUE, cache=TRUE, cache.lazy=FALSE)
+```
+
+The R package **GLFC** includes functions to estimate larval sea lamprey abundance in the St. Marys River using DWEFES, the Deep-Water ElectroFisher Estimation System.
+
+
+
+## Install
+
+Install the latest version of [R](https://www.r-project.org/) from [CRAN](https://cran.r-project.org/bin/windows/base/).
+
+Install the latest version of the **GLFC** package following the instructions at [Readme](https://github.com/JVAdams/GLFC/blob/master/README.md).  The easiest way to do this, if you already have the package **devtools** installed, is:
+
+```{r install_glfc, eval=FALSE}
+devtools::install_github("JVAdams/GLFC")
+```
+
+If you run into difficulties, try this approach:
+
+```{r install_glfc2, eval=FALSE}
+source("https://raw.githubusercontent.com/MangoTheCat/remotes/master/install-github.R")$
+  value("mangothecat/remotes")
+remotes::install_github("JVAdams/GLFC")
+```
+
+
+
+## Prepare the data
+
+```{r, echo=FALSE}
+directory   <- "C:/temp"
+catch.file.name <- "2016_Base_Data.xlsx"
+length.file.name <- c("LENGTHS_4.xlsx", "LENGTHS_7.xlsx")
+plots.file.name <- "2016_Treat_Plots.xlsx"
+```
+
+Three files (either *.xl* or *.dbf files) are needed to generate larval sea lamprey estimates, one with catch data, one with length data, and one with plot data.
+
+**(1) Catch** - An *.xl* or *.dbf file with the catch data.  The catch file should have at least the following 19 columns, named in the header row:
+
+* `SAMPID` = Sample identification number.
+* `LATITUDE` = Latitude in decimal degrees.
+* `LONGITUDE` = Longitude in decimal degrees.
+* `STIME` = Time sample was collected, e.g., `13:45`.
+* `BOAT` = Boat identification number.
+* `SAMPLE` = The type of sample (1=, 2=, 3=adaptive).
+* `DEPTH` = The depth of the sample (bottom depth) in m.
+* `SUB_MAJOR` = The dominant type of bottom substrate (1-8). **Need description of substrate types!**
+* `SUB_MINOR1` = The second most dominant type of bottom substrate (1-8).
+* `SUB_MINOR2` = The third most dominant type of bottom substrate (1-8).
+* `GPSDATE` = Date the sample was collected, e.g., `14/06/2016`.
+* `HAB_TYPE` = Habitat type in terms of larval sea lamprey preference (1=preferred, 2=acceptable, 3=unacceptable).
+* `SL_TOTAL` = Total catch of larval sea lampreys.
+* `AB_TOTAL` = Total catch of American brook lampreys.
+* `I_TOTAL` = Total catch of Ichthyomyzon lampreys.
+* `COMMENT` = Comments on sampling.
+* `NEW_NUMB` = Plot identification number.
+* `INBPLOT` = Indicator variable equal to 1 if the sample is inside of a hotspot and equal to 0 if the sample is outside of a hotspot.
+* `REGION` = Stratum identification number (in this case, region of the St. Marys River, 1-5).
+
+The last three columns are typically added after sampling, in [ArcGIS Pro](http://www.esri.com/en/arcgis/products/arcgis-pro/Overview).
+Missing values are entered as -9999.
+
+```{r, echo=FALSE}
+library(XLConnect)
+wb <- loadWorkbook(paste(directory, catch.file.name, sep="/"))
+fin <- readWorksheet(wb, sheet=getSheets(wb)[1])
+knitr::kable(fin[8:12, ], row.names=FALSE)
+```
+
+**(2) Lengths** - One or more *.xl* or *.dbf files with lengths data.  The files should have at least the following 2 columns named in the header row: 
+
+* `SAMPID` - Sample identification number (corresponding to the same column in the catch file).
+* `LENGTH` - Length of larva, in mm.
+
+```{r, echo=FALSE}
+wb <- loadWorkbook(paste(directory, length.file.name[1], sep="/"))
+len <- readWorksheet(wb, sheet=getSheets(wb)[1])
+knitr::kable(head(len), row.names=FALSE)
+```
+
+**(3) Plots** - An *.xl* or *.dbf file with information on each plot.  The files should have at least the following 3 columns, named in the header row:
+
+* `AREA` - Area of plot, in ha.
+* `Plot_09` - Plot identification number (corresponding to the `NEW_NUMB` column in the catch file for recent years or old ID numbers for past years).
+* `Treat_YYYY`, where YYYY is the current year. - An indicator variable equal to 1 if the plot was treated that year, equal to 0 if the plot was not treated.  If a plot was treated twice in one year, it will be listed on two separate rows, each with Treat_YYYY=1.
+
+```{r, echo=FALSE}
+wb <- loadWorkbook(paste(directory, plots.file.name, sep="/"))
+plotinfo <- readWorksheet(wb, sheet=getSheets(wb)[1])
+knitr::kable(head(plotinfo), row.names=FALSE)
+```
+
+For all 3 files, 
+
+* the names of the columns must be spelled as described above,
+* the case of the column names are unimportant,
+* the order of the columns is unimportant, and
+* additional columns may be included (but will be ignored).
+
+All 3 files should all be stored in a single directory, `directory`.
+
+
+
+
+## Read in the data
+
+Load the **GLFC** package to have access to the DWEFES functions.
+
+```{r}
+library(GLFC)
+```
+
+Assign the name of the directory (using forward slashes, /, in the file path) and the names of the three files.  For example:
+
+```{r, eval=FALSE}
+directory   <- "C:/temp"
+catch.file.name <- "2016_Base_Data.xlsx"
+length.file.name <- c("LENGTHS_4.xlsx", "LENGTHS_7.xlsx")
+plots.file.name <- "2016_Treat_Plots.xlsx"
+```
+
+Use the `DWEFprep()` function to read in the deep-water electrofishing data (including information on the lamprey catch, the lamprey lengths, and the identification of plots that were treated) and prepare them for estimation.  In addition to providing the directory and file names as arguments to this function, you also need to provide information on treatment and survey timing.  
+
+Argument `TRTtiming` is a character scalar identifying the timing of the assessment survey relative to treatment.  It should take on one of four values:
+
+* `"AFTER"` if all plots were surveyed *after* they were treated (the default), 
+* `"BEFORE"` if all plots were survey *before* they were treated, 
+* `"NONE"` if *no* plots were treated, and 
+* `"MIXED"` if some plots were surveyed before and some plots were surveyed after treatment.
+
+Argument `b4plots` is a numeric vector identifying the plots that were surveyed *before* they were treated.  This is **rarely** needed (default NULL).  A value for this should only be provided if `TRTtiming` is set to "MIXED".  For example, if there were three plots surveyed before treatment, `b4plots = c(18, 39, 112)`.
+
+The output from the `DWEFprep()` function is a list with catch, length, and plot data in three data frames (`CAT`, `LEN`, `PLT`) and a character vector of the directory and file names (`SOURCE`).  The plot data is reorganized to have only one row per plot, with the treated variable indicating the number of treatments each plot received that year.
+
+```{r}
+mydat <- DWEFprep(Dir=directory, Catch=catch.file.name,
+  Lengths=length.file.name, Plots=plots.file.name,
+  TRTtiming="AFTER", b4plots=NULL)
+lapply(mydat, head, 2)
+```
+
+
+## Error check the data
+
+Use the `DWEFerror()` function to error check the deep-water electrofishing data (including information on the lamprey catch, the lamprey lengths, and the identification of plots that were treated) prior to estimation.
+
+In addition to providing output from the `DWEFprep()` function as arguments to this function, you also need to indicate whether you want to create a stand alone error report (`Continue=FALSE`) or if you want to start a report that will left open for the estimates to be added in the next step (`Continue=TRUE`).
+
+The output from the `DWEFerror()` function is a list with cleaned (errors removed) DWEF catch and lengths in two data frames (`CAT2`, `LEN2`), a character vector of the table references for any remaining errors (`ERR`), a character vector of the directory and file names (`SOURCE`), and a character vector of the output file names (`OUT`).
+
+If `Continue=FALSE`, a rich text file will be saved to `directory` with error checking text, tables, and figures.  If `Continue=TRUE`, the same rich text file will be started, but left open, typically to add in more text, tables, and figures generated by the `DWEFreport()` function. 
+
+The generated report is an *rtf* (rich text format) file but it has a *\*.doc* extension so that it will be automatically opened by Microsoft Word. The report is named `YYYY DWEFES Report dd-Mon-YYYY.doc`, where *YYYY* is the latest year represented in the input data, and placed in  `directory`.
+
+The following conditions and graphs are used to highlight potential errors in the data:
+
+* missing habitat data,
+* extreme depths,
+* frequency of comments,
+* catches by boat,
+* histogram of lengths captured,
+* bar plot of collection dates, and
+* histograms of catch data columns.
+
+
+
+
+```{r}
+myclean <- DWEFerror(Dir=mydat$SOURCE["Dir"], Catch=mydat$CAT,
+  Lengths=mydat$LEN, Source=mydat$SOURCE, Continue=TRUE)
+lapply(myclean, head, 2)
+```
+
+## Estimate larval abundance
+
+Use the `DWEFreport()` function to generate estimates of larval sea lamprey abundance from the deep-water electrofishing data.
+
+In addition to providing output from the `DWEFprep()` and `DWEFerror()` functions as arguments to this function, you also need to (1) indicate whether the downstream portion of the St. Marys River was surveyed (`Downstream=TRUE`) or if only the upstream portion of the river was surveyed (`Downstream=FALSE`) and (2) provide a data frame of stratum areas, `StratArea`, with three variables:
+
+* `inbplot` indicating whether the sample is in a high larval density area (=1) or not (=0), 
+* `region` indicating the general location in the river (1 = North Channel, 2 = turning basin, 3 = widening part, 4 = Neebish channels, and 5 = most upstream part), and
+* `haStrat` area of the stratum in hectares.  Strata of the St. Marys River larval sea lamprey survey are defined by the combination of `inbplot` and `region`.  By default the 2013 areas, which are part of the **GLFC** package, are provided, `SMRStratArea`.
+
+```{r}
+SMRStratArea
+```
+
+
+It is assumed that this function will be run immediately after the `DWEFerror()` function, in which case the rtf file created by `DWEFerror()` will be continued and completed by `DWEFreport()`.
+
+The report has few paragraphs summarizing the latest estimates, along with 3 tables:
+
+* sampling effort and catch of larval sea lampreys for each stratum,
+* pre- and post-treatment population estimates of larval sea lampreys, and
+* post-treatment population estimates of larval sea lampreys in St. Marys River hotspot;
+
+and 3 figures:
+
+* map of sample design and catch of larval sea lamprey survey in the St. Marys River,
+* length frequency distribution of the post-treatment larval sea lamprey population,
+* map of estimated post-treatment larval sea lamprey density in St. Marys River hotspots.
+
+In addition pre- and post-treatment whole-river estimates are printed to the screen (along with any relevant messages regarding the estimation process). And three csv files are written to `directory`, with the final catch (`YYYYCatchesSMR.csv`), lengths (`YYYYLengthsSMR.csv`), and plot data (`YYYYBPlotEstsSMR.csv`).
+
+```{r}
+DWEFreport(Dir=mydat$SOURCE["Dir"], Plots=mydat$PLT, 
+  CatchClean=myclean$CAT2, LengthsClean=myclean$LEN2, 
+  Errors=myclean$ERR, Outfiles=myclean$OUT, 
+  Downstream=FALSE, StratArea=SMRStratArea)
+```
+
+
+
+## Summary
+
+Below is the pared down version of the R code above needed to estimate larval sea lamprey abundance in the St. Marys River.
+
+```{r, eval=FALSE}
+library(GLFC)
+
+# read in the data
+directory   <- "C:/temp"
+catch.file.name <- "2016_Base_Data.xlsx"
+length.file.name <- c("LENGTHS_4.xlsx", "LENGTHS_7.xlsx")
+plots.file.name <- "2016_Treat_Plots.xlsx"
+
+mydat <- DWEFprep(Dir=directory, Catch=catch.file.name,
+  Lengths=length.file.name, Plots=plots.file.name)
+
+# error check the data
+myclean <- DWEFerror(Dir=mydat$SOURCE["Dir"], Catch=mydat$CAT,
+  Lengths=mydat$LEN, Source=mydat$SOURCE, Continue=TRUE)
+
+# estimate larval abundance
+DWEFreport(Dir=mydat$SOURCE["Dir"], Plots=mydat$PLT, 
+  CatchClean=myclean$CAT2, LengthsClean=myclean$LEN2, 
+  Errors=myclean$ERR, Outfiles=myclean$OUT, 
+  Downstream=FALSE)
+```

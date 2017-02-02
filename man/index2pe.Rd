@@ -18,4 +18,3 @@ Lake-specific conversion factors to scale up indices of adult sea
 \author{
 GLFC Trapping Task Force.
 }
-

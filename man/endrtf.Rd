@@ -23,4 +23,3 @@ Write and close an rtf (rich text format) document.
   \code{\link{figu}}, \code{\link{figbig}},
   \code{\link[rtf]{RTF}}, \code{\link[rtf]{addPageBreak}}.
 }
-

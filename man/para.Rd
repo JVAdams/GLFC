@@ -29,4 +29,3 @@ The specified heading is written to the rtf file.
   \code{\link{figbig}}, \code{\link{endrtf}},
   \code{\link[rtf]{RTF}}.
 }
-

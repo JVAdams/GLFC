@@ -63,4 +63,3 @@ Lake-stream IDs are combination of lake ID and stream ID
   Those with the same name as variables in \code{streamInfo} will be
   replaced.  Others will be kept.
 }
-

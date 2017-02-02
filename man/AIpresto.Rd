@@ -81,4 +81,3 @@ For more details on the entire process and the steps involved,
 \code{\link{AIprep}}, \code{\link{AIcheck}},
   \code{\link{AIestimate}}, \code{\link{AItarget}}, \code{\link{AIreport}}
 }
-

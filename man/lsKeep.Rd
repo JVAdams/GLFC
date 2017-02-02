@@ -18,4 +18,3 @@ IDs identifying streams which will continue to have ongoing trapping
 \author{
 GLFC Trapping Task Force.
 }
-

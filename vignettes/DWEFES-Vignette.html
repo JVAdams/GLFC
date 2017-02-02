@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Jean V. Adams" />
+
+<meta name="date" content="2017-02-02" />
+
+<title>DWEF Larval Estimation</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">DWEF Larval Estimation</h1>
+<h4 class="author"><em>Jean V. Adams</em></h4>
+<h4 class="date"><em>2017-02-02</em></h4>
+
+
+
+<p>The R package <strong>GLFC</strong> includes functions to estimate larval sea lamprey abundance in the St. Marys River using DWEFES, the Deep-Water ElectroFisher Estimation System.</p>
+<div id="install" class="section level2">
+<h2>Install</h2>
+<p>Install the latest version of <a href="https://www.r-project.org/">R</a> from <a href="https://cran.r-project.org/bin/windows/base/">CRAN</a>.</p>
+<p>Install the latest version of the <strong>GLFC</strong> package following the instructions at <a href="https://github.com/JVAdams/GLFC/blob/master/README.md">Readme</a>. The easiest way to do this, if you already have the package <strong>devtools</strong> installed, is:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools::<span class="kw">install_github</span>(<span class="st">&quot;JVAdams/GLFC&quot;</span>)</code></pre></div>
+<p>If you run into difficulties, try this approach:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">source</span>(<span class="st">&quot;https://raw.githubusercontent.com/MangoTheCat/remotes/master/install-github.R&quot;</span>)$
+<span class="st">  </span><span class="kw">value</span>(<span class="st">&quot;mangothecat/remotes&quot;</span>)
+remotes::<span class="kw">install_github</span>(<span class="st">&quot;JVAdams/GLFC&quot;</span>)</code></pre></div>
+</div>
+<div id="prepare-the-data" class="section level2">
+<h2>Prepare the data</h2>
+<p>Three files (either <em>.xl</em> or *.dbf files) are needed to generate larval sea lamprey estimates, one with catch data, one with length data, and one with plot data.</p>
+<p><strong>(1) Catch</strong> - An <em>.xl</em> or *.dbf file with the catch data. The catch file should have at least the following 19 columns, named in the header row:</p>
+<ul>
+<li><code>SAMPID</code> = Sample identification number.</li>
+<li><code>LATITUDE</code> = Latitude in decimal degrees.</li>
+<li><code>LONGITUDE</code> = Longitude in decimal degrees.</li>
+<li><code>STIME</code> = Time sample was collected, e.g., <code>13:45</code>.</li>
+<li><code>BOAT</code> = Boat identification number.</li>
+<li><code>SAMPLE</code> = The type of sample (1=, 2=, 3=adaptive).</li>
+<li><code>DEPTH</code> = The depth of the sample (bottom depth) in m.</li>
+<li><code>SUB_MAJOR</code> = The dominant type of bottom substrate (1-8). <strong>Need description of substrate types!</strong></li>
+<li><code>SUB_MINOR1</code> = The second most dominant type of bottom substrate (1-8).</li>
+<li><code>SUB_MINOR2</code> = The third most dominant type of bottom substrate (1-8).</li>
+<li><code>GPSDATE</code> = Date the sample was collected, e.g., <code>14/06/2016</code>.</li>
+<li><code>HAB_TYPE</code> = Habitat type in terms of larval sea lamprey preference (1=preferred, 2=acceptable, 3=unacceptable).</li>
+<li><code>SL_TOTAL</code> = Total catch of larval sea lampreys.</li>
+<li><code>AB_TOTAL</code> = Total catch of American brook lampreys.</li>
+<li><code>I_TOTAL</code> = Total catch of Ichthyomyzon lampreys.</li>
+<li><code>COMMENT</code> = Comments on sampling.</li>
+<li><code>NEW_NUMB</code> = Plot identification number.</li>
+<li><code>INBPLOT</code> = Indicator variable equal to 1 if the sample is inside of a hotspot and equal to 0 if the sample is outside of a hotspot.</li>
+<li><code>REGION</code> = Stratum identification number (in this case, region of the St. Marys River, 1-5).</li>
+</ul>
+<p>The last three columns are typically added after sampling, in <a href="http://www.esri.com/en/arcgis/products/arcgis-pro/Overview">ArcGIS Pro</a>. Missing values are entered as -9999.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">ID</th>
+<th align="right">X</th>
+<th align="right">Y</th>
+<th align="right">SAMPID</th>
+<th align="right">LATITUDE</th>
+<th align="right">LONGITUDE</th>
+<th align="left">STIME</th>
+<th align="right">BOAT</th>
+<th align="right">SAMPLE</th>
+<th align="right">DEPTH</th>
+<th align="right">SUB_MAJOR</th>
+<th align="right">SUB_MINOR1</th>
+<th align="right">SUB_MINOR2</th>
+<th align="left">GPSDATE</th>
+<th align="right">HAB_TYPE</th>
+<th align="right">SL_TOTAL</th>
+<th align="right">AB_TOTAL</th>
+<th align="right">I_TOTAL</th>
+<th align="left">COMMENT</th>
+<th align="right">INPLOT</th>
+<th align="right">REGION</th>
+<th align="right">NEW_NUMB</th>
+<th align="right">ADJCTH_T_4</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">8</td>
+<td align="right">-84.32611</td>
+<td align="right">46.49690</td>
+<td align="right">201640008</td>
+<td align="right">46.49690</td>
+<td align="right">-84.32611</td>
+<td align="left">09:44</td>
+<td align="right">4</td>
+<td align="right">2</td>
+<td align="right">32</td>
+<td align="right">5</td>
+<td align="right">6</td>
+<td align="right">4</td>
+<td align="left">14/06/2016</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="left">No comment</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">34</td>
+<td align="right">2.522875</td>
+</tr>
+<tr class="even">
+<td align="right">9</td>
+<td align="right">-84.32475</td>
+<td align="right">46.49676</td>
+<td align="right">201640009</td>
+<td align="right">46.49676</td>
+<td align="right">-84.32475</td>
+<td align="left">10:22</td>
+<td align="right">4</td>
+<td align="right">2</td>
+<td align="right">33</td>
+<td align="right">5</td>
+<td align="right">6</td>
+<td align="right">4</td>
+<td align="left">14/06/2016</td>
+<td align="right">2</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="left">No comment</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">34</td>
+<td align="right">0.000000</td>
+</tr>
+<tr class="odd">
+<td align="right">10</td>
+<td align="right">-84.32338</td>
+<td align="right">46.49679</td>
+<td align="right">201640010</td>
+<td align="right">46.49679</td>
+<td align="right">-84.32338</td>
+<td align="left">10:32</td>
+<td align="right">4</td>
+<td align="right">2</td>
+<td align="right">32</td>
+<td align="right">5</td>
+<td align="right">6</td>
+<td align="right">4</td>
+<td align="left">14/06/2016</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="left">No comment</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">34</td>
+<td align="right">2.620185</td>
+</tr>
+<tr class="even">
+<td align="right">11</td>
+<td align="right">-84.32220</td>
+<td align="right">46.49674</td>
+<td align="right">201640011</td>
+<td align="right">46.49674</td>
+<td align="right">-84.32220</td>
+<td align="left">10:52</td>
+<td align="right">4</td>
+<td align="right">2</td>
+<td align="right">31</td>
+<td align="right">5</td>
+<td align="right">6</td>
+<td align="right">-9999</td>
+<td align="left">14/06/2016</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="left">No comment</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">34</td>
+<td align="right">2.183765</td>
+</tr>
+<tr class="odd">
+<td align="right">12</td>
+<td align="right">-84.32085</td>
+<td align="right">46.49676</td>
+<td align="right">201640012</td>
+<td align="right">46.49676</td>
+<td align="right">-84.32085</td>
+<td align="left">11:10</td>
+<td align="right">4</td>
+<td align="right">2</td>
+<td align="right">32</td>
+<td align="right">5</td>
+<td align="right">6</td>
+<td align="right">-9999</td>
+<td align="left">14/06/2016</td>
+<td align="right">2</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="left">No comment</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">34</td>
+<td align="right">0.000000</td>
+</tr>
+</tbody>
+</table>
+<p><strong>(2) Lengths</strong> - One or more <em>.xl</em> or *.dbf files with lengths data. The files should have at least the following 2 columns named in the header row:</p>
+<ul>
+<li><code>SAMPID</code> - Sample identification number (corresponding to the same column in the catch file).</li>
+<li><code>LENGTH</code> - Length of larva, in mm.</li>
+</ul>
+<table>
+<thead>
+<tr class="header">
+<th align="left">SAMPID</th>
+<th align="right">ID</th>
+<th align="right">LENGTH</th>
+<th align="left">CLASS</th>
+<th align="right">ADJCTH</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">201640008</td>
+<td align="right">1</td>
+<td align="right">94</td>
+<td align="left">A</td>
+<td align="right">2.522875</td>
+</tr>
+<tr class="even">
+<td align="left">201640010</td>
+<td align="right">1</td>
+<td align="right">25</td>
+<td align="left">A</td>
+<td align="right">1.313643</td>
+</tr>
+<tr class="odd">
+<td align="left">201640010</td>
+<td align="right">2</td>
+<td align="right">24</td>
+<td align="left">A</td>
+<td align="right">1.306542</td>
+</tr>
+<tr class="even">
+<td align="left">201640011</td>
+<td align="right">1</td>
+<td align="right">83</td>
+<td align="left">A</td>
+<td align="right">2.183765</td>
+</tr>
+<tr class="odd">
+<td align="left">201640016</td>
+<td align="right">1</td>
+<td align="right">21</td>
+<td align="left">A</td>
+<td align="right">1.286190</td>
+</tr>
+<tr class="even">
+<td align="left">201640017</td>
+<td align="right">1</td>
+<td align="right">22</td>
+<td align="left">A</td>
+<td align="right">1.292819</td>
+</tr>
+</tbody>
+</table>
+<p><strong>(3) Plots</strong> - An <em>.xl</em> or *.dbf file with information on each plot. The files should have at least the following 3 columns, named in the header row:</p>
+<ul>
+<li><code>AREA</code> - Area of plot, in ha.</li>
+<li><code>Plot_09</code> - Plot identification number (corresponding to the <code>NEW_NUMB</code> column in the catch file for recent years or old ID numbers for past years).</li>
+<li><code>Treat_YYYY</code>, where YYYY is the current year. - An indicator variable equal to 1 if the plot was treated that year, equal to 0 if the plot was not treated. If a plot was treated twice in one year, it will be listed on two separate rows, each with Treat_YYYY=1.</li>
+</ul>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Id</th>
+<th align="right">AREA</th>
+<th align="right">Plot_09</th>
+<th align="right">Treat_2016</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">0</td>
+<td align="right">15.780394</td>
+<td align="right">50</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="right">0</td>
+<td align="right">11.301904</td>
+<td align="right">51</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="right">0</td>
+<td align="right">4.329009</td>
+<td align="right">27</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="right">0</td>
+<td align="right">3.536266</td>
+<td align="right">3</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="right">0</td>
+<td align="right">15.040621</td>
+<td align="right">22</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="right">0</td>
+<td align="right">17.081183</td>
+<td align="right">112</td>
+<td align="right">1</td>
+</tr>
+</tbody>
+</table>
+<p>For all 3 files,</p>
+<ul>
+<li>the names of the columns must be spelled as described above,</li>
+<li>the case of the column names are unimportant,</li>
+<li>the order of the columns is unimportant, and</li>
+<li>additional columns may be included (but will be ignored).</li>
+</ul>
+<p>All 3 files should all be stored in a single directory, <code>directory</code>.</p>
+</div>
+<div id="read-in-the-data" class="section level2">
+<h2>Read in the data</h2>
+<p>Load the <strong>GLFC</strong> package to have access to the DWEFES functions.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(GLFC)</code></pre></div>
+<p>Assign the name of the directory (using forward slashes, /, in the file path) and the names of the three files. For example:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">directory   &lt;-<span class="st"> &quot;C:/temp&quot;</span>
+catch.file.name &lt;-<span class="st"> &quot;2016_Base_Data.xlsx&quot;</span>
+length.file.name &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;LENGTHS_4.xlsx&quot;</span>, <span class="st">&quot;LENGTHS_7.xlsx&quot;</span>)
+plots.file.name &lt;-<span class="st"> &quot;2016_Treat_Plots.xlsx&quot;</span></code></pre></div>
+<p>Use the <code>DWEFprep()</code> function to read in the deep-water electrofishing data (including information on the lamprey catch, the lamprey lengths, and the identification of plots that were treated) and prepare them for estimation. In addition to providing the directory and file names as arguments to this function, you also need to provide information on treatment and survey timing.</p>
+<p>Argument <code>TRTtiming</code> is a character scalar identifying the timing of the assessment survey relative to treatment. It should take on one of four values:</p>
+<ul>
+<li><code>&quot;AFTER&quot;</code> if all plots were surveyed <em>after</em> they were treated (the default),</li>
+<li><code>&quot;BEFORE&quot;</code> if all plots were survey <em>before</em> they were treated,</li>
+<li><code>&quot;NONE&quot;</code> if <em>no</em> plots were treated, and</li>
+<li><code>&quot;MIXED&quot;</code> if some plots were surveyed before and some plots were surveyed after treatment.</li>
+</ul>
+<p>Argument <code>b4plots</code> is a numeric vector identifying the plots that were surveyed <em>before</em> they were treated. This is <strong>rarely</strong> needed (default NULL). A value for this should only be provided if <code>TRTtiming</code> is set to “MIXED”. For example, if there were three plots surveyed before treatment, <code>b4plots = c(18, 39, 112)</code>.</p>
+<p>The output from the <code>DWEFprep()</code> function is a list with catch, length, and plot data in three data frames (<code>CAT</code>, <code>LEN</code>, <code>PLT</code>) and a character vector of the directory and file names (<code>SOURCE</code>). The plot data is reorganized to have only one row per plot, with the treated variable indicating the number of treatments each plot received that year.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mydat &lt;-<span class="st"> </span><span class="kw">DWEFprep</span>(<span class="dt">Dir=</span>directory, <span class="dt">Catch=</span>catch.file.name,
+  <span class="dt">Lengths=</span>length.file.name, <span class="dt">Plots=</span>plots.file.name,
+  <span class="dt">TRTtiming=</span><span class="st">&quot;AFTER&quot;</span>, <span class="dt">b4plots=</span><span class="ot">NULL</span>)
+<span class="kw">lapply</span>(mydat, head, <span class="dv">2</span>)</code></pre></div>
+<pre><code>## $CAT
+##   year mm dd stime period    sampid transamp transect site boat latitude
+## 2 2016  6 13  1150      1 201640001       NA       NA    1    4 46.49410
+## 3 2016  6 13  1209      1 201640002       NA       NA    2    4 46.49498
+##   longitude region label inbplot plot.num new.numb sample cluster depth
+## 2 -84.32111      2    NA       1       NA       34      2      NA    19
+## 3 -84.32110      2    NA       1       NA       34      2      NA    32
+##   hab.type sub.major sub.minor1 sub.minor2 ab.total i.total sl.total
+## 2        2         5          6          4        0       0        0
+## 3        2         5          6      -9999        0       0        0
+##      comment commentwrap hr mn dec.time       date
+## 2 No comment  No comment 11 50 11.83333 2016-06-13
+## 3 No comment  No comment 12  9 12.15000 2016-06-13
+## 
+## $LEN
+##      sampid class length sl.larv.n sl.larv.adj sl.meta.n sl.meta.adj
+## 1 201640008     A     94         1    2.522875         0           0
+## 2 201640010     A     25         1    1.313643         0           0
+## 
+## $PLT
+##    area.ha new.numb trtd
+## 1 2.291365        1    0
+## 2 2.816693        2    0
+## 
+## $SOURCE
+##                   Dir             CatchFile 
+##             &quot;C:/temp&quot; &quot;2016_Base_Data.xlsx&quot;</code></pre>
+</div>
+<div id="error-check-the-data" class="section level2">
+<h2>Error check the data</h2>
+<p>Use the <code>DWEFerror()</code> function to error check the deep-water electrofishing data (including information on the lamprey catch, the lamprey lengths, and the identification of plots that were treated) prior to estimation.</p>
+<p>In addition to providing output from the <code>DWEFprep()</code> function as arguments to this function, you also need to indicate whether you want to create a stand alone error report (<code>Continue=FALSE</code>) or if you want to start a report that will left open for the estimates to be added in the next step (<code>Continue=TRUE</code>).</p>
+<p>The output from the <code>DWEFerror()</code> function is a list with cleaned (errors removed) DWEF catch and lengths in two data frames (<code>CAT2</code>, <code>LEN2</code>), a character vector of the table references for any remaining errors (<code>ERR</code>), a character vector of the directory and file names (<code>SOURCE</code>), and a character vector of the output file names (<code>OUT</code>).</p>
+<p>If <code>Continue=FALSE</code>, a rich text file will be saved to <code>directory</code> with error checking text, tables, and figures. If <code>Continue=TRUE</code>, the same rich text file will be started, but left open, typically to add in more text, tables, and figures generated by the <code>DWEFreport()</code> function.</p>
+<p>The generated report is an <em>rtf</em> (rich text format) file but it has a <em>*.doc</em> extension so that it will be automatically opened by Microsoft Word. The report is named <code>YYYY DWEFES Report dd-Mon-YYYY.doc</code>, where <em>YYYY</em> is the latest year represented in the input data, and placed in <code>directory</code>.</p>
+<p>The following conditions and graphs are used to highlight potential errors in the data:</p>
+<ul>
+<li>missing habitat data,</li>
+<li>extreme depths,</li>
+<li>frequency of comments,</li>
+<li>catches by boat,</li>
+<li>histogram of lengths captured,</li>
+<li>bar plot of collection dates, and</li>
+<li>histograms of catch data columns.</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">myclean &lt;-<span class="st"> </span><span class="kw">DWEFerror</span>(<span class="dt">Dir=</span>mydat$SOURCE[<span class="st">&quot;Dir&quot;</span>], <span class="dt">Catch=</span>mydat$CAT,
+  <span class="dt">Lengths=</span>mydat$LEN, <span class="dt">Source=</span>mydat$SOURCE, <span class="dt">Continue=</span><span class="ot">TRUE</span>)</code></pre></div>
+<pre><code>## New RTF document created, C:/temp/2016 DWEFES Report 02-Feb-2017.doc</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">lapply</span>(myclean, head, <span class="dv">2</span>)</code></pre></div>
+<pre><code>## $CAT2
+##   year mm dd stime period    sampid transamp transect site boat latitude
+## 2 2016  6 13  1150      1 201640001       NA       NA    1    4 46.49410
+## 3 2016  6 13  1209      1 201640002       NA       NA    2    4 46.49498
+##   longitude region label inbplot plot.num new.numb sample cluster depth
+## 2 -84.32111      2    NA       1       NA       34      2      NA    19
+## 3 -84.32110      2    NA       1       NA       34      2      NA    32
+##   hab.type sub.major sub.minor1 sub.minor2 ab.total i.total sl.total
+## 2        2         5          6          4        0       0        0
+## 3        2         5          6         NA        0       0        0
+##      comment commentwrap hr mn dec.time       date sl.larv.n sl.larv.adj
+## 2 No comment  No comment 11 50 11.83333 2016-06-13         0           0
+## 3 No comment  No comment 12  9 12.15000 2016-06-13         0           0
+##   sl.meta.n sl.meta.adj sl.adjctch
+## 2         0           0          0
+## 3         0           0          0
+## 
+## $LEN2
+##      sampid class length sl.larv.n sl.larv.adj sl.meta.n sl.meta.adj len5
+## 1 201640008     A     94         1    2.522875         0           0   95
+## 2 201640010     A     25         1    1.313643         0           0   25
+## 
+## $ERR
+## [1] &quot;Table 4&quot;
+## 
+## $SOURCE
+##                   Dir             CatchFile 
+##             &quot;C:/temp&quot; &quot;2016_Base_Data.xlsx&quot; 
+## 
+## $OUT
+## [1] &quot;2016CatchesSMR.csv&quot; &quot;2016LengthsSMR.csv&quot;</code></pre>
+</div>
+<div id="estimate-larval-abundance" class="section level2">
+<h2>Estimate larval abundance</h2>
+<p>Use the <code>DWEFreport()</code> function to generate estimates of larval sea lamprey abundance from the deep-water electrofishing data.</p>
+<p>In addition to providing output from the <code>DWEFprep()</code> and <code>DWEFerror()</code> functions as arguments to this function, you also need to (1) indicate whether the downstream portion of the St. Marys River was surveyed (<code>Downstream=TRUE</code>) or if only the upstream portion of the river was surveyed (<code>Downstream=FALSE</code>) and (2) provide a data frame of stratum areas, <code>StratArea</code>, with three variables:</p>
+<ul>
+<li><code>inbplot</code> indicating whether the sample is in a high larval density area (=1) or not (=0),</li>
+<li><code>region</code> indicating the general location in the river (1 = North Channel, 2 = turning basin, 3 = widening part, 4 = Neebish channels, and 5 = most upstream part), and</li>
+<li><code>haStrat</code> area of the stratum in hectares. Strata of the St. Marys River larval sea lamprey survey are defined by the combination of <code>inbplot</code> and <code>region</code>. By default the 2013 areas, which are part of the <strong>GLFC</strong> package, are provided, <code>SMRStratArea</code>.</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">SMRStratArea</code></pre></div>
+<pre><code>##   inbplot region haStrat
+## 1       0      1  846.86
+## 2       0      2 1000.57
+## 3       0      3 3366.97
+## 4       0      4 1807.39
+## 5       0      5  203.78
+## 6       1      1  140.99
+## 7       1      2  475.95
+## 8       1      3  248.08
+## 9       1      5   56.65</code></pre>
+<p>It is assumed that this function will be run immediately after the <code>DWEFerror()</code> function, in which case the rtf file created by <code>DWEFerror()</code> will be continued and completed by <code>DWEFreport()</code>.</p>
+<p>The report has few paragraphs summarizing the latest estimates, along with 3 tables:</p>
+<ul>
+<li>sampling effort and catch of larval sea lampreys for each stratum,</li>
+<li>pre- and post-treatment population estimates of larval sea lampreys, and</li>
+<li>post-treatment population estimates of larval sea lampreys in St. Marys River hotspot;</li>
+</ul>
+<p>and 3 figures:</p>
+<ul>
+<li>map of sample design and catch of larval sea lamprey survey in the St. Marys River,</li>
+<li>length frequency distribution of the post-treatment larval sea lamprey population,</li>
+<li>map of estimated post-treatment larval sea lamprey density in St. Marys River hotspots.</li>
+</ul>
+<p>In addition pre- and post-treatment whole-river estimates are printed to the screen (along with any relevant messages regarding the estimation process). And three csv files are written to <code>directory</code>, with the final catch (<code>YYYYCatchesSMR.csv</code>), lengths (<code>YYYYLengthsSMR.csv</code>), and plot data (<code>YYYYBPlotEstsSMR.csv</code>).</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">DWEFreport</span>(<span class="dt">Dir=</span>mydat$SOURCE[<span class="st">&quot;Dir&quot;</span>], <span class="dt">Plots=</span>mydat$PLT, 
+  <span class="dt">CatchClean=</span>myclean$CAT2, <span class="dt">LengthsClean=</span>myclean$LEN2, 
+  <span class="dt">Errors=</span>myclean$ERR, <span class="dt">Outfiles=</span>myclean$OUT, 
+  <span class="dt">Downstream=</span><span class="ot">FALSE</span>, <span class="dt">StratArea=</span>SMRStratArea)</code></pre></div>
+<pre><code>## Okay.  We will have to apply an expansion factor to the survey data  to get a whole river estimate of abundance.
+## 
+## 
+##     Pre-treatment whole-river estimate
+## 
+## $PE
+## [1] &quot;1,494,348&quot;
+## 
+## $PE.sd
+## [1] &quot;207,447.9&quot;
+## 
+## $PE.cv
+## [1] &quot;0.1388216&quot;
+## 
+## $PE.ci
+## [1] &quot;1,087,750&quot; &quot;1,900,946&quot;
+## 
+## 
+##     Post-treatment whole-river estimate
+## 
+## $PE
+## [1] &quot;999,194.2&quot;
+## 
+## $PE.sd
+## [1] &quot;142,316.8&quot;
+## 
+## $PE.cv
+## [1] &quot;0.1424316&quot;
+## 
+## $PE.ci
+## [1] &quot;  720,253.2&quot; &quot;1,278,135.1&quot;</code></pre>
+</div>
+<div id="summary" class="section level2">
+<h2>Summary</h2>
+<p>Below is the pared down version of the R code above needed to estimate larval sea lamprey abundance in the St. Marys River.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(GLFC)
+
+<span class="co"># read in the data</span>
+directory   &lt;-<span class="st"> &quot;C:/temp&quot;</span>
+catch.file.name &lt;-<span class="st"> &quot;2016_Base_Data.xlsx&quot;</span>
+length.file.name &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;LENGTHS_4.xlsx&quot;</span>, <span class="st">&quot;LENGTHS_7.xlsx&quot;</span>)
+plots.file.name &lt;-<span class="st"> &quot;2016_Treat_Plots.xlsx&quot;</span>
+
+mydat &lt;-<span class="st"> </span><span class="kw">DWEFprep</span>(<span class="dt">Dir=</span>directory, <span class="dt">Catch=</span>catch.file.name,
+  <span class="dt">Lengths=</span>length.file.name, <span class="dt">Plots=</span>plots.file.name)
+
+<span class="co"># error check the data</span>
+myclean &lt;-<span class="st"> </span><span class="kw">DWEFerror</span>(<span class="dt">Dir=</span>mydat$SOURCE[<span class="st">&quot;Dir&quot;</span>], <span class="dt">Catch=</span>mydat$CAT,
+  <span class="dt">Lengths=</span>mydat$LEN, <span class="dt">Source=</span>mydat$SOURCE, <span class="dt">Continue=</span><span class="ot">TRUE</span>)
+
+<span class="co"># estimate larval abundance</span>
+<span class="kw">DWEFreport</span>(<span class="dt">Dir=</span>mydat$SOURCE[<span class="st">&quot;Dir&quot;</span>], <span class="dt">Plots=</span>mydat$PLT, 
+  <span class="dt">CatchClean=</span>myclean$CAT2, <span class="dt">LengthsClean=</span>myclean$LEN2, 
+  <span class="dt">Errors=</span>myclean$ERR, <span class="dt">Outfiles=</span>myclean$OUT, 
+  <span class="dt">Downstream=</span><span class="ot">FALSE</span>)</code></pre></div>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

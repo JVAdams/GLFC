@@ -53,4 +53,3 @@ The table and caption are written to the rtf file.
   \code{\link{figbig}}, \code{\link{endrtf}},
   \code{\link[rtf]{RTF}}.
 }
-

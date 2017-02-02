@@ -49,4 +49,3 @@ The annual Adult Index is simply the sum of stream population estimates for
   ANOVA model relating the log of the stream estimates to the main effects
   of each stream and each year, weighted by the inverse of the CV squared.
 }
-

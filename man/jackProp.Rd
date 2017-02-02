@@ -42,4 +42,3 @@ jI <- jackIndex(streampe, simple=FALSE)
 jraw <- jI$jack.raw
 jackProp(jackRaw=jraw, target=17, idCols=NULL)
 }
-

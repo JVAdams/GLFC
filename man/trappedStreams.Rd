@@ -19,4 +19,3 @@ Location information on trapped streams (past and present).
 \author{
 GLFC Trapping Task Force.
 }
-

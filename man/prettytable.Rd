@@ -38,4 +38,3 @@ prettytable(head(mtcars))
 This is a copy of the \code{prettytable} function from the
   \href{https://github.com/JVAdams/jvamisc}{[jvamisc]} package.
 }
-

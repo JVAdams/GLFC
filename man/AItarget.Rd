@@ -42,4 +42,3 @@ The Lake Michigan Committee accepted the Sea Lamprey Control Board's
   years, adjusted by 5/8.9 to compensate for the highest wounding rate 
   observed during this period.
 }
-
