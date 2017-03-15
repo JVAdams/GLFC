@@ -460,9 +460,9 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
 
   score <- (inr + wrr)/((inr>0) + (wrr>0))
   ALL2$above.score <- score
-  # base line width and type on status average for last 3 years
-  last3 <- (YEAR - ALL2$spawner.year) < 2.5
-  mean3 <- tapply(ALL2$above.score[last3], ALL2$lake[last3], mean, na.rm=TRUE)
+  # base line width and type on status average for last 5 years
+  last5 <- (YEAR - ALL2$spawner.year) < 2.5
+  mean3 <- tapply(ALL2$above.score[last5], ALL2$lake[last5], mean, na.rm=TRUE)
   lwid <- round(rescale(mean3, c(1, 5)))
   ltyp <- recode(lwid, 5:1, c(1, 5, 4, 2, 3))
   last1 <- ALL2$spawner.year == YEAR
