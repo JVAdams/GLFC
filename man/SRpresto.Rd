@@ -104,9 +104,9 @@ process in one fell swoop.
 \dontrun{
  SRpresto(
   FOLDER="C:/JVA/GLFC/People/Siefkes/Status graphs/",
-  INDEX.LAKE="AdultLakeThru2015.csv",
-  INDEX.STREAM="AdultStreamThru2015.csv",
-  MAXLARVAE="MaxLarvalEstimatesSummary2013.xls")
+  INDEX.LAKE="AdultLakeThru2016.csv",
+  INDEX.STREAM="AdultStreamThru2016.csv",
+  MAXLARVAE="MaxLarvalEstimatesSummary2013mod2016-08-25.xls")
 }
 }
 \seealso{
