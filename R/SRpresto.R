@@ -378,8 +378,8 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
   a <- merge(adult, control, all=TRUE)
   ALL <- merge(a, trout, all=TRUE)
   ALL$treat.year <- ALL$spawner.year - 2
-  ALL <- ALL[!(is.na(ALL$index) & is.na(ALL$staff.days) & is.na(ALL$trout) &
-      is.na(ALL$rate)), ]
+  # ALL <- ALL[!(is.na(ALL$index) & is.na(ALL$staff.days) & is.na(ALL$trout) &
+  #     is.na(ALL$rate)), ]
 
   # the season for Lake Huron has been confirmed by Ji He 4/13/09
   ALL$season[is.element(ALL$lake, c(1, 3))] <- "spring"
@@ -461,7 +461,7 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
   score <- (inr + wrr)/((inr>0) + (wrr>0))
   ALL2$above.score <- score
   # base line width and type on status average for last 5 years
-  last5 <- (YEAR - ALL2$spawner.year) < 2.5
+  last5 <- (YEAR - ALL2$spawner.year) < 4.5
   mean3 <- tapply(ALL2$above.score[last5], ALL2$lake[last5], mean, na.rm=TRUE)
   lwid <- round(rescale(mean3, c(1, 5)))
   ltyp <- recode(lwid, 5:1, c(1, 5, 4, 2, 3))
@@ -479,9 +479,9 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
 
   xr <- range(ALL2$spawner.year[(YEAR - ALL2$spawner.year) < 4.5 &
       (!is.na(ALL2$index) | !is.na(ALL2$rate))])
+  yr <- range((ALL2$index/ALL2$index.target)[last5 & !is.na(ALL2$index)],
+    (ALL2$rate/ALL2$wound.target)[last5 & !is.na(ALL2$rate)], na.rm=TRUE)
   fig <- function() {
-    yr <- range((ALL2$index/ALL2$index.target)[last5 & !is.na(ALL2$index)],
-      (ALL2$rate/ALL2$wound.target)[last5 & !is.na(ALL2$rate)], na.rm=TRUE)
   	par(mfrow=c(1, 2), mar=c(2, 3, 2, 4), oma=c(1, 1, 0, 0))
   	plot(ALL2$spawner.year, ALL2$index/ALL2$index.target, type="n", las=1,
       xlim=xr, ylim=yr, xlab="", ylab="")
