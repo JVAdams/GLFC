@@ -291,7 +291,7 @@ DWEFreport <- function(Dir, CatchClean, LengthsClean, Plots, Downstream,
     dw <- svydesign(id=~1, strata=~stratum, weights=~w, data=df)
     coch <- svymean(~slden, design=dw)
     muhat.f <- muf*coef(coch)
-    sigmahat.f <- sigf*SE(coch)
+    sigmahat.f <- sigf*as.vector(SE(coch))
     out <- list(muhat.f=muhat.f, sigmahat.f=sigmahat.f,
       PE=muhat.f*A.expanded, PE.sd=sigmahat.f*A.expanded,
       PE.cv=sigmahat.f/muhat.f,
@@ -300,6 +300,9 @@ DWEFreport <- function(Dir, CatchClean, LengthsClean, Plots, Downstream,
     }
   pre.ests <- doit(df.pre.est)
   post.ests <- doit(df.post.est)
+
+  cat("\n\n\n*** Send these estimates to Jean.\n")
+  cat("*** She will use them to update the SMR Assessment Plan metrics.\n")
 
   cat("\n    Pre-treatment whole-river estimate\n\n")
   print(lapply(pre.ests[-(1:2)], format, big.mark=","))
@@ -323,9 +326,9 @@ DWEFreport <- function(Dir, CatchClean, LengthsClean, Plots, Downstream,
     dpe$sl.larv.adj[sel] <- with(dpe[sel, ],
       sl.larv.adj * ((1-bkill)^trtd) )
     peup <- doit(dpe)
-    cat("\n\n\n*** Send the following numbers to Jean.")
-    cat("\n\n\n*** She will use them to update the expansion factors for",
-      " future surveys.")
+    cat("\n\n\n*** Send these numbers to Jean, too.\n")
+    cat("*** She will use them to update the expansion factors for",
+      "future surveys.\n")
     cat("\n  * Whole river *")
     cat(paste0("\n     Post-trt muhat = ", post.ests$muhat.f, ", sigmahat = ",
       post.ests$sigmahat.f))
