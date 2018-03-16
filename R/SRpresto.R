@@ -107,8 +107,7 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
   # @importFrom plyr rbind.fill
 
   # make sure all needed packages are installed
-  wantpkgs <- c("geosphere", "lubridate", "maps", "plotrix", "plyr", "rtf",
-    "rJava", "XLConnect")
+  wantpkgs <- c("geosphere", "lubridate", "maps", "plotrix", "plyr", "rtf")
   needpkgs <- setdiff(wantpkgs, row.names(installed.packages()))
   if(length(needpkgs) > 0) install.packages(needpkgs)
 
@@ -121,7 +120,7 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
   HIST.SPAWN <- c(780, 600, 700, 40, 450)*1000
 
   # install necessary packages
-  getpkgs(c("XLConnect", "rtf", "maps", "plotrix", "zoo", "plyr",
+  getpkgs(c("rtf", "maps", "plotrix", "zoo", "plyr",
     "devtools", "plotrix"))
 
   #### Functions and vectors that will be used later ####

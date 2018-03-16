@@ -75,8 +75,7 @@
 AIpresto <- function(DIRECTORY, NEWDATARAW, STREAMDATAPREV, LAKEDATAPREV) {
 
   # make sure all needed packages are installed
-  wantpkgs <- c("geosphere", "lubridate", "maps", "plotrix", "plyr", "rtf",
-    "rJava", "XLConnect")
+  wantpkgs <- c("geosphere", "lubridate", "maps", "plotrix", "plyr", "rtf")
   needpkgs <- setdiff(wantpkgs, row.names(installed.packages()))
   if(length(needpkgs) > 0) install.packages(needpkgs)
 

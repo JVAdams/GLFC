@@ -18,11 +18,11 @@
 #' Or use \code{\link{AIpresto}} to do it all in one fell swoop.
 #'
 #' \emph{U.S. Geological Survey} (USGS) Computer Program \pkg{GLFC}
-#'   version 1.3.3.9000
+#'   version 1.3.4.9000
 #' Written by Jean V. Adams, USGS - Great Lakes Science Center
 #' \href{http://www.glsc.usgs.gov/}{glsc.usgs.gov}, Ann Arbor, Michigan, USA.
 #' Written in programming language R (R Core Team, 2016, www.R-project.org),
-#' version 3.4.1 (2017-06-30).
+#' version 3.4.3 (2017-11-30).
 #' Run on a PC with Intel(R) Core(TM) I7-4600m CPU, 2.90 GHz processor,
 #' 16.0 GB RAM, and Microsoft Windows 7 Enterprise operating system 2009
 #' Service Pack 1.

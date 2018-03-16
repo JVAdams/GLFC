@@ -51,8 +51,6 @@
 #'   The plot data is reorganized to have only one row per plot, with the
 #'   trtd variable indicating the number of treatments each plot received
 #'   that year.
-#' @import
-#'   XLConnect
 #' @export
 
 DWEFprep <- function(Dir, CatchFile, LengthsFile, PlotsFile, TRTtiming="AFTER",
