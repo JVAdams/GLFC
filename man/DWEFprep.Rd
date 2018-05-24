@@ -11,7 +11,7 @@ DWEFprep(Dir, CatchFile, LengthsFile, PlotsFile, TRTtiming = "AFTER",
 \item{Dir}{A character scalar identifying the path where the data files are
 stored.  Use forward slashes, e.g., \code{Dir = "C:/temp/mydir"}.}
 
-\item{CatchFile}{A character scalar identifying the name of the *.xl* or *.dbf file with
+\item{CatchFile}{A character scalar identifying the name of the *.xl* file with
 catch data.  The file should have at least the following 19 columns,
 named in the header row:
 SAMPID, LATITUDE, LONGITUDE, STIME, BOAT, SAMPLE, DEPTH, SUB_MAJOR,
@@ -20,12 +20,12 @@ COMMENT, NEW_NUMB, INBPLOT, REGION
 (these last 3 columns are added in using ArcInfo).
 See details.}
 
-\item{LengthsFile}{A character vector identifying the names of the *.xl* or *.dbf files with
+\item{LengthsFile}{A character vector identifying the names of the *.xl* files with
 the lengths data.  The files should have at least the following 2 columns,
 named in the header row: SAMPID, LENGTH.
 See details.}
 
-\item{PlotsFile}{A character vector identifying the name of the *.xl* or *.dbf file with
+\item{PlotsFile}{A character vector identifying the name of the *.xl* file with
 the treatment plots data.  The files should have at least the following 3
 columns, named in the header row:
 AREA, Plot_09, Treat_YYYY, where YYYY is the current year.

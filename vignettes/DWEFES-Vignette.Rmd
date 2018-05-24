@@ -48,9 +48,9 @@ length.file.name <- c("LENGTHS_4.xlsx", "LENGTHS_7.xlsx")
 plots.file.name <- "2016_Treat_Plots.xlsx"
 ```
 
-Three files (either *.xl* or *.dbf files) are needed to generate larval sea lamprey estimates, one with catch data, one with length data, and one with plot data.
+Three *.xl* files are needed to generate larval sea lamprey estimates, one with catch data, one with length data, and one with plot data.
 
-**(1) Catch** - An *.xl* or *.dbf file with the catch data.  The catch file should have at least the following 19 columns, named in the header row:
+**(1) Catch** - An *.xl* file with the catch data.  The catch file should have at least the following 19 columns, named in the header row:
 
 * `SAMPID` = Sample identification number.
 * `LATITUDE` = Latitude in decimal degrees.
@@ -76,32 +76,28 @@ The last three columns are typically added after sampling, in [ArcGIS Pro](http:
 Missing values are entered as -9999.
 
 ```{r, echo=FALSE}
-library(XLConnect)
-wb <- loadWorkbook(paste(directory, catch.file.name, sep="/"))
-fin <- readWorksheet(wb, sheet=getSheets(wb)[1])
+fin <- readxl::read_excel(paste(directory, catch.file.name, sep="/"), sheet=1)
 knitr::kable(fin[8:12, ], row.names=FALSE)
 ```
 
-**(2) Lengths** - One or more *.xl* or *.dbf files with lengths data.  The files should have at least the following 2 columns named in the header row: 
+**(2) Lengths** - One or more *.xl* files with lengths data.  The files should have at least the following 2 columns named in the header row: 
 
 * `SAMPID` - Sample identification number (corresponding to the same column in the catch file).
 * `LENGTH` - Length of larva, in mm.
 
 ```{r, echo=FALSE}
-wb <- loadWorkbook(paste(directory, length.file.name[1], sep="/"))
-len <- readWorksheet(wb, sheet=getSheets(wb)[1])
+len <- readxl::read_excel(paste(directory, length.file.name[1], sep="/"), sheet=1)
 knitr::kable(head(len), row.names=FALSE)
 ```
 
-**(3) Plots** - An *.xl* or *.dbf file with information on each plot.  The files should have at least the following 3 columns, named in the header row:
+**(3) Plots** - An *.xl* file with information on each plot.  The files should have at least the following 3 columns, named in the header row:
 
 * `AREA` - Area of plot, in ha.
 * `Plot_09` - Plot identification number (corresponding to the `NEW_NUMB` column in the catch file for recent years or old ID numbers for past years).
 * `Treat_YYYY`, where YYYY is the current year. - An indicator variable equal to 1 if the plot was treated that year, equal to 0 if the plot was not treated.  If a plot was treated twice in one year, it will be listed on two separate rows, each with Treat_YYYY=1.
 
 ```{r, echo=FALSE}
-wb <- loadWorkbook(paste(directory, plots.file.name, sep="/"))
-plotinfo <- readWorksheet(wb, sheet=getSheets(wb)[1])
+plotinfo <- readxl::read_excel(paste(directory, plots.file.name, sep="/"), sheet=1)
 knitr::kable(head(plotinfo), row.names=FALSE)
 ```
 

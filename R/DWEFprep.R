@@ -7,7 +7,7 @@
 #'   A character scalar identifying the path where the data files are
 #'   stored.  Use forward slashes, e.g., \code{Dir = "C:/temp/mydir"}.
 #' @param CatchFile
-#'   A character scalar identifying the name of the *.xl* or *.dbf file with
+#'   A character scalar identifying the name of the *.xl* file with
 #'   catch data.  The file should have at least the following 19 columns,
 #'   named in the header row:
 #'   SAMPID, LATITUDE, LONGITUDE, STIME, BOAT, SAMPLE, DEPTH, SUB_MAJOR,
@@ -16,12 +16,12 @@
 #'   (these last 3 columns are added in using ArcInfo).
 #'   See details.
 #' @param LengthsFile
-#'   A character vector identifying the names of the *.xl* or *.dbf files with
+#'   A character vector identifying the names of the *.xl* files with
 #'   the lengths data.  The files should have at least the following 2 columns,
 #'   named in the header row: SAMPID, LENGTH.
 #'   See details.
 #' @param PlotsFile
-#'   A character vector identifying the name of the *.xl* or *.dbf file with
+#'   A character vector identifying the name of the *.xl* file with
 #'   the treatment plots data.  The files should have at least the following 3
 #'   columns, named in the header row:
 #'   AREA, Plot_09, Treat_YYYY, where YYYY is the current year.
@@ -51,29 +51,11 @@
 #'   The plot data is reorganized to have only one row per plot, with the
 #'   trtd variable indicating the number of treatments each plot received
 #'   that year.
+#' @import readxl
 #' @export
 
 DWEFprep <- function(Dir, CatchFile, LengthsFile, PlotsFile, TRTtiming="AFTER",
   b4plots=NULL) {
-
-# Dir   <- "C:/JVA/Lamprey/StMarys/Larval Sampling/DWEFES/2014"
-# CatchFile <- "2014_Base_Data.xlsx"
-# LengthsFile <- c("LENGTHS_4.xlsx", "LENGTHS_7.xlsx")
-# PlotsFile <- "2014_Treat_Plots.xlsx"
-# TRTtiming <- treatment.timing
-# b4plots <- plots.surveyed.before
-
-# library(XLConnect)
-# a <- DWEFprep(Dir="C:/JVA/Lamprey/StMarys/Larval Sampling/DWEFES/2014",
-#   CatchFile="2014_Base_Data.xlsx",
-#   LengthsFile=c("LENGTHS_4.xlsx", "LENGTHS_7.xlsx"),
-#   PlotsFile="2014_Treat_Plots.xlsx")
-# lapply(a, head)
-
-
-
-
-
 
   # treatment timing
   tt <- casefold(substring(TRTtiming, 1, 1))
@@ -90,15 +72,9 @@ DWEFprep <- function(Dir, CatchFile, LengthsFile, PlotsFile, TRTtiming="AFTER",
   for(i in seq(length(lens))) {
     filei <- LengthsFile[i]
     if(length(grep("\\.xl", filei, ignore.case=TRUE))==1) {
-      wb <- loadWorkbook(paste(Dir, filei, sep="/"))
-      lens[[i]] <- readWorksheet(wb, sheet=getSheets(wb)[1])
-      rm(wb)
+      lens[[i]] <- read_excel(paste(Dir, filei, sep="/"), sheet=1)
       } else {
-      if(length(grep("\\.dbf", filei, ignore.case=TRUE))==1) {
-        lens[[i]] <- read.dbf(paste(Dir, filei, sep="/"), as.is=TRUE)
-        } else {
-        stop("LengthsFile file must be file type *.DBF or *.XLS*")
-        }
+      stop("LengthsFile file must be file type *.XLS*")
       }
     }
   lens <- do.call(rbind, lens)
@@ -119,15 +95,9 @@ DWEFprep <- function(Dir, CatchFile, LengthsFile, PlotsFile, TRTtiming="AFTER",
 
   # bring in catch data
   if(length(grep("\\.xl", filei, ignore.case=TRUE))==1) {
-    wb <- loadWorkbook(paste(Dir, CatchFile, sep="/"))
-    fin <- readWorksheet(wb, sheet=getSheets(wb)[1])
-    rm(wb)
+    fin <- read_excel(paste(Dir, CatchFile, sep="/"), sheet=1)
     } else {
-    if(length(grep("\\.dbf", filei, ignore.case=TRUE))==1) {
-      fin <- read.dbf(paste(Dir, CatchFile, sep="/"), as.is=TRUE)
-      } else {
-      stop("CatchFile file must be file type *.DBF or *.XLS*")
-      }
+    stop("CatchFile file must be file type *.XLS*")
     }
   names(fin) <- make.names(casefold(names(fin)), unique=TRUE, allow_=FALSE)
   gps <- strsplit(fin$gpsdate, "/")
@@ -172,22 +142,16 @@ DWEFprep <- function(Dir, CatchFile, LengthsFile, PlotsFile, TRTtiming="AFTER",
 
   # bring in plot information
   if(length(grep("\\.xl", filei, ignore.case=TRUE))==1) {
-    wb <- loadWorkbook(paste(Dir, PlotsFile, sep="/"))
-    plotinfo <- readWorksheet(wb, sheet=getSheets(wb)[1])
-    rm(wb)
+    plotinfo <- read_excel(paste(Dir, PlotsFile, sep="/"), sheet=1)
     } else {
-    if(length(grep("\\.dbf", filei, ignore.case=TRUE))==1) {
-      plotinfo <- read.dbf(paste(Dir, PlotsFile, sep="/"), as.is=TRUE)
-      } else {
-      stop("Plot information file must be file type *.DBF or *.XLS*")
-      }
+    stop("Plot information file must be file type *.XLS*")
     }
   orig.names <- names(plotinfo)
   names(plotinfo) <- make.names(casefold(names(plotinfo)), unique=TRUE,
     allow_=FALSE)
   plotinfo$new.numb <- plotinfo$plot.09
   treatvarname <- names(plotinfo)[grep("treat", names(plotinfo))]
-  plotinfo$trtd <- plotinfo[, treatvarname]
+  plotinfo$trtd <- plotinfo[[treatvarname]]
   plotinfo$area.ha <- plotinfo$area
   area.treated <- sum(plotinfo$area.ha[plotinfo$trtd==1])
   plotinfo2 <- aggregate(trtd ~ area.ha + new.numb, data=plotinfo, FUN=sum)

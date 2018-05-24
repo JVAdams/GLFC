@@ -336,8 +336,7 @@ knitr::kable(m)
 ```
 
 ```{r, echo=-7}
-library(plyr)
-lakeall <- rbind.fill(lakeprev, lakeainew)
+lakeall <- plyr::rbind.fill(lakeprev, lakeainew)
 lakeallpe <- merge(
   lakeall[, c("lake", "year", "index", "ilo", "ihi")],
   cbind(lake=1:5, i2pe=index2pe))

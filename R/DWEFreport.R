@@ -50,8 +50,8 @@
 #'   and plot data.
 #' @importFrom maps map
 #' @importFrom plotrix rescale
-#' @import
-#'   lubridate survey
+#' @importFrom lubridate year mday month
+#' @import survey
 #' @export
 
 DWEFreport <- function(Dir, CatchClean, LengthsClean, Plots, Downstream,
@@ -150,9 +150,9 @@ DWEFreport <- function(Dir, CatchClean, LengthsClean, Plots, Downstream,
   } else {
     uponly <- TRUE
     # these expansion factors are based on means from source.years
-    source.years <- "2002, 2003, 2008, and 2012"
-    muf <- 0.606407889
-    sigf <- 0.553361875
+    source.years <- "2002, 2003, 2008, 2012, and 2017"
+    muf <- 0.570202977
+    sigf <- 0.517269331
     last.year <- rev(strsplit(source.years, " ")[[1]])[1]
     para("The larval sea lamprey survey in ", YEAR,
       " included only the upper river (", nupper,
