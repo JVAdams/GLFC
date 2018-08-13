@@ -31,15 +31,6 @@ Install the latest version of the **GLFC** package following the instructions at
 devtools::install_github("JVAdams/GLFC")
 ```
 
-If, instead, you install the **GLFC** package by downloading the [zip file](https://github.com/JVAdams/GLFC/raw/master/GLFC.zip) and installing it from the R Menu (*Packages*, *Install package(s) from local zip files...*), then you should run the following lines of code, to ensure that all the packages on which **GLFC** depends are installed.
-
-```{r install_packages}
-wantpkgs <- c("geosphere", "lubridate", "maps", "plotrix", "plyr", "rtf")
-needpkgs <- setdiff(wantpkgs, row.names(installed.packages()))
-if(length(needpkgs) > 0) install.packages(needpkgs)
-```
-
-
 
 ## Prepare the data
 

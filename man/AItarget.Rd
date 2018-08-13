@@ -4,8 +4,8 @@
 \alias{AItarget}
 \title{Calculate Targets for the Adult Index}
 \usage{
-AItarget(lakeIndex, years = list(1994:1998, 1995:1999, 1989:1993, 1991:1995,
-  1993:1997), adjust = c(1, 5/8.9, 0.25, 1, 1))
+AItarget(lakeIndex, years = list(1994:1998, 1995:1999, 1989:1993,
+  1991:1995, 1993:1997), adjust = c(1, 5/8.9, 0.25, 1, 1))
 }
 \arguments{
 \item{lakeIndex}{A data frame of annual lake-wide Adult Indices with at least these

@@ -288,7 +288,7 @@ DWEFreport <- function(Dir, CatchClean, LengthsClean, Plots, Downstream,
     # sigmahat.f <- sigf*coch["seybarst"]
 
     # new way
-    dw <- svydesign(id=~1, strata=~stratum, weights=~w, data=df)
+    dw <- svydesign(ids=~1, strata=~stratum, weights=~w, data=df)
     coch <- svymean(~slden, design=dw)
     muhat.f <- muf*coef(coch)
     sigmahat.f <- sigf*as.vector(SE(coch))

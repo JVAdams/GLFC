@@ -5,8 +5,8 @@
 \title{Determining Status and Trends}
 \usage{
 SRstatus(bydat, timedat, measdat, targdat, bytar = sort(unique(bydat)),
-  status.length = 3, trend.length = 5, response.stat = c("Met", "Above"),
-  response.trend = c("Decr.", "Steady", "Incr."))
+  status.length = 3, trend.length = 5, response.stat = c("Met",
+  "Above"), response.trend = c("Decr.", "Steady", "Incr."))
 }
 \arguments{
 \item{bydat}{A vector of grouping variables.}

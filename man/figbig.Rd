@@ -4,8 +4,9 @@
 \alias{figbig}
 \title{Add a Big Figure to an RTF Document}
 \usage{
-figbig(..., FIG = fig, rtf = doc, figc = GLFCenv$figcount, boldt = TRUE,
-  w = NULL, h = NULL, rf = 300, newpage = "none", omi = c(1, 1, 1, 1))
+figbig(..., FIG = fig, rtf = doc, figc = GLFCenv$figcount,
+  boldt = TRUE, w = NULL, h = NULL, rf = 300, newpage = "none",
+  omi = c(1, 1, 1, 1))
 }
 \arguments{
 \item{...}{One or more character scalars (separated by commas) of text to use for
