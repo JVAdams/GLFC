@@ -1,6 +1,7 @@
-#' Determining Status and Trends
+#' Determine Status and Trend
 #'
-#' Determine the status and trends of a time series relative to a target.
+#' Determine the status, relative to a target, and the trend, adjusted for
+#' autocorrelation, of a time series.
 #'
 #' @param bydat
 #'   A vector of grouping variables.
@@ -33,13 +34,24 @@
 #'   time span, slope, P value, and response for the trend.
 #'   Column names: "bydat", "stspan", "stmean", "targdat", "status",
 #'   "trspan", "slope", "pv", "trnd".
+#' @details
+#'   Significant trends in the time series are tested after automatically
+#'   adjusting for first order autocorrelation using the iterative
+#'   Cochrane–Orcutt procedure.  Verbeek (2004) reports that the iterated
+#'   estimated generalized least squares (EGLS) typically performs somewhat
+#'   better than its two-step variant in small samples (pages 100-101).
+#' @seealso \code{\link{cochrane.orcutt.jva}}
+#' @references
+#'   Verbeek M.  2004.  A Guide to Modern Econometrics.
+#'     John Wiley & Sons Ltd, West Sussex.
+#' @importFrom orcutt summary.orcutt
 #' @export
 #' @examples
 #'  rawdat <- data.frame(year=1990+c(1:6, 1:6), group=rep(1:2, c(6, 6)),
-#'   x=(1:12)*10)
-#'  targetdat <- data.frame(group=1:2, targ=c(30, 140))
+#'   y=c(arima.sim(n=6, list(ar=0.2)), arima.sim(n=6, list(ar=0.8))))
+#'  targetdat <- data.frame(group=1:2, targ=c(0, -1))
 #'  SRstatus(bydat=rawdat$group, timedat=rawdat$year,
-#'   measdat=rawdat$x, targdat=targetdat$targ)
+#'   measdat=rawdat$y, targdat=targetdat$targ)
 
 SRstatus <- function(bydat, timedat, measdat, targdat,
 	bytar=sort(unique(bydat)), status.length=3, trend.length=5,
@@ -94,13 +106,23 @@ SRstatus <- function(bydat, timedat, measdat, targdat,
       paste(range(x), collapse="-"))
 		trnd <- merge(trnd, meas)
 		coefs <- vector("list", length(sub))
-		for(i in seq(sub)) coefs[[i]] <- summary(lm(measdat ~ timedat,
-      trnd[trnd$bydat==i, ]))$coef
-		out$slope <- sapply(coefs, "[", 2, 1)
-		out$pv <- sapply(coefs, "[", 2, 4)
+		for(i in seq(sub)) {
+		  lmfit <- lm(measdat ~ timedat, trnd[trnd$bydat==i, ])
+		  cofit <- cochrane.orcutt.jva(lmfit)
+		  if(sum(is.na(cofit$coefficients))>0) {
+		    coefs[[i]] <- c(NA, NA)
+	    } else {
+  		  coefs[[i]] <- summary(cofit)$coef[2, c(1, 4)]
+	    }
+		}
+		out$slope <- sapply(coefs, "[", 1)
+		out$pv <- sapply(coefs, "[", 2)
 		out$trend <- rep(response.trend[2], length(sub))
-		out$trend[out$pv < 0.05 & out$slope < 0] <- response.trend[1]
-		out$trend[out$pv < 0.05 & out$slope > 0] <- response.trend[3]
+		out$trend[!is.na(out$pv) & out$pv < 0.05 & out$slope < 0] <-
+		  response.trend[1]
+		out$trend[!is.na(out$pv) & out$pv < 0.05 & out$slope > 0] <-
+		  response.trend[3]
+		out$trend[is.na(out$pv)] <- "?"
 		keepvars <- unique(c(keepvars, "bydat", "trspan", "slope", "pv", "trend"))
 	}
 	out[, keepvars]

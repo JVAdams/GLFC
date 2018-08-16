@@ -88,6 +88,7 @@
 #'     of the sea lamprey Status Report.
 #'   }
 #' @seealso \code{\link{AIpresto}}
+#' @importFrom readxl read_excel
 #' @export
 #' @examples
 #' \dontrun{
@@ -203,31 +204,16 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
   heading(paste("= = = = = = =   Status Report Tables and Figures -", TODAY,
     "  = = = = = = ="))
 
-  para("This is an automatically generated document named ", docname,
-  	" stored in the directory ", FOLDER, ".",
-  	" It was created from the following input files: ",
-  	INDEX.LAKE, ", ", INDEX.STREAM, ", ", CONTROL, ", ", TROUTSUP, ", ",
-    TROUTMIC, ", ",
-  	TROUTHUR, ", ", TROUTERI, ", ", TROUTONT, ", and ", AXISRANGES,
-  	" using the SRpresto() function of the R package GLFC authored by",
-    " Jean V. Adams.")
+  para("This is an automatically generated document named ", docname, " stored in the directory ", FOLDER, ". It was created from the following input files: ", INDEX.LAKE, ", ", INDEX.STREAM, ", ", CONTROL, ", ", TROUTSUP, ", ", TROUTMIC, ", ", TROUTHUR, ", ", TROUTERI, ", ", TROUTONT, ", and ", AXISRANGES, " using the SRpresto() function of the R package GLFC authored by Jean V. Adams.")
 
-  para("To use the information, first select everything in the document",
-  	" (Ctrl-a) and change the text to the desired font and font size.",
-  	" Second, save the file as a Word document with the extension *.doc or",
-    " *.docx, because even though it looks like a Word document initially,",
-  	" it's really just an rtf (rich text format) file.",
-  	" Finally, insert descriptive text as needed, or cut and paste into the",
-    " primary document.")
+  para("To use the information, first select everything in the document (Ctrl-a) and change the text to the desired font and font size. Second, save the file as a Word document with the extension *.doc or *.docx, because even though it looks like a Word document initially, it's really just an rtf (rich text format) file. Finally, insert descriptive text as needed, or cut and paste into the primary document.")
 
 
 
   #### read in data ####
 
   # bring in the range data for the x-axis and all the y-axes
-  wb <- loadWorkbook(paste0(FOLDER, AXISRANGES))
-  sheet1 <- getSheets(wb)[1]
-  axisr <- readWorksheet(wb, sheet=sheet1, startRow=2)
+  axisr <- read_excel(paste0(FOLDER, AXISRANGES), skip=1)
 
   # store the tick mark info in an array of lists
   um <- unique(axisr$metric)
@@ -235,12 +221,11 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
     dimnames=list(um, 1:5, c("Indiv", "BigFig")))
   for(i in seq(um)) {
   for(j in 1:5) {
-  	sel <- axisr$metric==um[i] & axisr$order.1==j
-  	axisra[[i, j, 1]] <- seq(axisr$from[sel], axisr$to.[sel], axisr$by[sel])
-  	axisra[[i, j, 2]] <- seq(axisr$from.1[sel], axisr$to..1[sel],
-  	  axisr$by.1[sel])
+  	sel <- axisr$metric==um[i] & axisr$order__1==j
+  	axisra[[i, j, 1]] <- seq(axisr$from[sel], axisr$to[sel], axisr$by[sel])
+  	axisra[[i, j, 2]] <- seq(axisr$from__1[sel], axisr$to__1[sel],
+  	  axisr$by__1[sel])
   	}}
-#  rm(axisr, um)
 
 
 
@@ -249,7 +234,6 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
   names(adult)[names(adult)=="year"] <- "spawner.year"
   names(adult)[names(adult)=="ilo"] <- "index.lo"
   names(adult)[names(adult)=="ihi"] <- "index.hi"
-#  rm(INDEX.LAKE, wb, sheet1)
 
 
 
@@ -321,7 +305,6 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
   	if (i==3) TARGET[i, 4:6] <- 0.25*TARGET[i, 4:6]
   	}
   targyrz <- apply(sapply(sptargyrz, range), 2, paste, collapse="-")
-#  rm(pick5, sptargyrz)
   name.targ <- paste0("StatusTargets", TODAY, ".csv")
   write.csv(TARGET, paste0(FOLDER, name.targ), row.names=FALSE)
 
@@ -342,9 +325,7 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
   space.below.lat <- c(0.15, 0.19, 0.16, 0.09, 0.07)
 
   # max larval data
-  wb <- loadWorkbook(paste0(FOLDER, MAXLARVAE))
-  sheet1 <- getSheets(wb)[1]
-  maxlarvae <- readWorksheet(wb, sheet=sheet1)
+  maxlarvae <- read_excel(paste0(FOLDER, MAXLARVAE))
   names(maxlarvae) <- make.names(casefold(names(maxlarvae)), unique=TRUE,
     allow_=FALSE)
   maxlarvae$row <- 1:dim(maxlarvae)[1]
@@ -366,7 +347,6 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
   top50maxlarvae$textpaste <- paste(top50maxlarvae$stream.nam,
     format(signif(top50maxlarvae$estimate, 2), big.mark=",", trim=TRUE))
 
-#  rm(namesplit, nameend, suffixes)
 
 
 
@@ -398,7 +378,7 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
 
   name.dat <- paste0("StatusMetrics", TODAY, ".csv")
   write.csv(ALL, paste0(FOLDER, name.dat), row.names=FALSE)
-  rm(adult, control, a, trout, varz, look, wb, sheet1)
+  rm(adult, control, a, trout, varz, look)
 
 
   attach(ALL)
@@ -434,12 +414,7 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
   tab <- cbind(sp[, c("bydat", "stattrnd")], wo[, "stattrnd"], tr[, "trend"])
   tab$bydat <- Lakenames[tab$bydat]
   names(tab) <- c("Lake", "Sea Lamprey", "Marks", "Lake Trout")
-  tabl("Sea lamprey control program success is measured by index estimates",
-    " of adult sea lamprey abundance, sea lamprey marking rates on lake trout,",
-    " and lake trout relative abundance.  The overall status of these metrics",
-    " is presented in this table;",
-    " status is based on the mean over the last 3 years relative to target,",
-    " trends are based on the slope over the last 5 years.",
+  tabl("Sea lamprey control program success is measured by index estimates of adult sea lamprey abundance, sea lamprey marking rates on lake trout, and lake trout relative abundance.  The overall status of these metrics is presented in this table; status is based on the mean over the last 3 years relative to target, trends are based on the slope over the last 5 years (automatically adjusting for autocorrelation).",
     TAB=tab, row.names=FALSE)
 
   # REPORT CARD
@@ -519,13 +494,8 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
   	mtext("Relative to target", side=2, outer=TRUE)
   	}
 
-  figu("Status metrics, relative to target, for each of the Great Lakes, ",
-    paste(xr, collapse="-"), ".",
-  	"  For example, for Lake ", Lakenames[picklake], " in spawning year ", YEAR,
-    ", the adult sea lamprey index was ", round(picksp, 1),
-  	" times the target, and the wounding rate was ", round(pickwr, 1),
-    " times the target.", FIG=fig,
-  	h=3.29, w=6.5)
+  figu("Status metrics, relative to target, for each of the Great Lakes", paste(xr, collapse="-"), ".  For example, for Lake ", Lakenames[picklake], " in spawning year ", YEAR, ", the adult sea lamprey index was ", round(picksp, 1), " times the target, and the wounding rate was ", round(pickwr, 1), " times the target.",
+    FIG=fig, h=3.29, w=6.5)
 
 
 
@@ -760,24 +730,7 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
         " acceptable marking rates (")
       if(i==2) targphrase <- c("5/8.9 times the mean of indices (")
       if(i==3) targphrase <- c("0.25 times the mean of indices (")
-  		figu("Index estimates with 95% confidence intervals (vertical bars) of",
-        " adult sea lampreys, including historic pre-control abundance",
-        " (as a population estimate) and the three-year moving",
-        " average (line) with 95% CIs (shaded area).",
-        "  The population estimate scale (right vertical axis) is based on the",
-        " index-to-PE conversion factor of ", index2pe[i], ".",
-  			"  The adult index in ", YEAR, " was ",
-        format(signif(sp1$stmean[i], 2), big.mark=","),
-  			" with 95% confidence interval (",
-        format(signif(index.lo[spawner.year==sp1$stspan[i] & sel], 2),
-          big.mark=","), "-",
-        format(signif(index.hi[spawner.year==sp1$stspan[i] & sel], 2),
-          big.mark=","),
-  			").  The point estimate ",
-        c("met", "was above")[(sp1$stmean[i] > sp1$targdat[i]) + 1],
-        " the target of ",
-  			format(signif(sp1$targdat[i], 2), big.mark=","), ".",
-  			" The index target was estimated as ", targphrase, targyrz[i], ").",
+  		figu("Index estimates with 95% confidence intervals (vertical bars) of adult sea lampreys, including historic pre-control abundance (as a population estimate) and the three-year moving average (line) with 95% CIs (shaded area).  The population estimate scale (right vertical axis) is based on the index-to-PE conversion factor of ", index2pe[i], ".  The adult index in ", YEAR, " was ", format(signif(sp1$stmean[i], 2), big.mark=","), " with 95% confidence interval (", format(signif(index.lo[spawner.year==sp1$stspan[i] & sel], 2), big.mark=","), "-", format(signif(index.hi[spawner.year==sp1$stspan[i] & sel], 2), big.mark=","), ").  The point estimate ", c("met", "was above")[(sp1$stmean[i] > sp1$targdat[i]) + 1], " the target of ", format(signif(sp1$targdat[i], 2), big.mark=","), ".", " The index target was estimated as ", targphrase, targyrz[i], ").",
   		  FIG=fig, h=2.64, w=3.96)
   		}
 
@@ -800,18 +753,8 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
   			lab.dia=max.dia.lat[i], lab.space=space.below.lat[i], cr=c(0.04, 0.2),
         cols=blindcolz[3], textcols="black")
   		}
-  	figu("LEFT: Estimated index of adult sea lampreys during the",
-      " spring spawning migration, ", YEAR, ".",
-  		" Circle size corresponds to estimated number of adults from",
-      " mark-recapture studies (blue) and model predictions (orange).",
-  		" All index streams are identified.",
-  		" RIGHT: Maximum estimated number of larval sea lampreys in each stream",
-      " surveyed during 1995-2012.",
-  		" Tributaries composing over half of the lake-wide larval population",
-      " estimate are identified (",
-  		paste(top50maxlarvae$textpaste[top50maxlarvae$lake==i], collapse="; "),
-      ").", FIG=fig,
-  		h=ASPEX[i]*3.24, w=6.5)
+  	figu("LEFT: Estimated index of adult sea lampreys during the spring spawning migration, ", YEAR, ". Circle size corresponds to estimated number of adults from mark-recapture studies (blue) and model predictions (orange). All index streams are identified. RIGHT: Maximum estimated number of larval sea lampreys in each stream surveyed during 1995-2012. Tributaries composing over half of the lake-wide larval population estimate are identified (", paste(top50maxlarvae$textpaste[top50maxlarvae$lake==i], collapse="; "),").",
+  	  FIG=fig, h=ASPEX[i]*3.24, w=6.5)
 
   	para("* Sources of concern bullet points ...")
   	para(" ")
@@ -845,19 +788,7 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
   			  col.axis=blindcolz[col.wou], col.ticks=blindcolz[col.wou])
   			par(mgp=c(3, 1, 0))
   			}
-  		figu("Number of ", utarg, " marks per 100 lake trout > ", rep(c(532, 431),
-        c(4, 1))[i], " mm",
-  			" from standardized assessments ", mark.time[i],
-        "plotted against the sea lamprey spawning year,",
-  			" including the three-year moving average (line) with 95% CIs",
-        " (shaded area).",
-  			" The marking rate of ", signif(wo1$stmean[i], 2), " in spawning year ",
-        wo1$stspan[i],
-  			c(" met", " was above")[(wo1$stmean[i] > wo1$targdat[i]) + 1],
-  			" the target of ", wo1$targdat[i], " ", utarg,
-        " marks per 100 lake trout > ", rep(c(532, 431), c(4, 1))[i],
-        " mm (horizontal line).",
-  		  "  A second x-axis shows the year the lake trout were surveyed.",
+  		figu("Number of ", utarg, " marks per 100 lake trout > ", rep(c(532, 431), c(4, 1))[i], " mm from standardized assessments ", mark.time[i], " plotted against the sea lamprey spawning year, including the three-year moving average (line) with 95% CIs (shaded area). The marking rate of ", signif(wo1$stmean[i], 2), " in spawning year ", wo1$stspan[i], c(" met", " was above")[(wo1$stmean[i] > wo1$targdat[i]) + 1], " the target of ", wo1$targdat[i], " ", utarg, " marks per 100 lake trout > ", rep(c(532, 431), c(4, 1))[i], " mm (horizontal line). A second x-axis shows the year the lake trout were surveyed.",
   		  FIG=fig, h=2.64, w=3.96)
   		}
 
@@ -982,15 +913,7 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
   		mtext("Adult sea lamprey index  (thousands)", side=2, outer=TRUE,
         cex=1.2*mycex)
   		}
-  	figu("Index of adult sea lampreys (blue lines) and number",
-  		" of control field days (orange bars), TFM used (kg active ingredient;",
-      " yellow bars),",
-  		" and Bayluscide used (kg active ingredient; purple bars).",
-  		" Field days, TFM, and Bayluscide are offset by 2 years (e.g., field",
-      " days, TFM, and Bayluscide",
-  		" applied during 1985 is plotted on the 1987 spawning year, when the",
-      " treatment effect",
-  		" would first be observed in adult sea lamprey populations).",
+  	figu("Index of adult sea lampreys (blue lines) and number of control field days (orange bars), TFM used (kg active ingredient; yellow bars), and Bayluscide used (kg active ingredient; purple bars). Field days, TFM, and Bayluscide are offset by 2 years (e.g., field days, TFM, and Bayluscide applied during 1985 is plotted on the 1987 spawning year, when the treatment effect would first be observed in adult sea lamprey populations).",
   	  FIG=fig, h=6, w=3.24)
 
   	para("* Treatment bullet points ...")
@@ -1039,13 +962,6 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
 
   detach(ALL)
 
-
-#  rm(i, sul, name.dat, sel, days.tk, index.tk, tfm.tk, bayer.tk, trout.tk,
-  #   wound.tk,
-  # 	col.day, col.spa, col.tar, col.tfm, col.bay, col.trt, col.wou,
-  # 	utarg, stream, dfthis, mapp, suln, n, ci,
-  # 	axisra, sp, wo, tr, tab, year.tk, mark.time, trout.fig.captions,
-  # 	max.dia.lat, space.below.lat, j, bigfig1, bigfig2, fig)
 
   # return options to original settings
   options(scipen=oldsci, stringsAsFactors=oldsaf)

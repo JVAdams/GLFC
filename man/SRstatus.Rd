@@ -2,7 +2,7 @@
 % Please edit documentation in R/SRstatus.R
 \name{SRstatus}
 \alias{SRstatus}
-\title{Determining Status and Trends}
+\title{Determine Status and Trend}
 \usage{
 SRstatus(bydat, timedat, measdat, targdat, bytar = sort(unique(bydat)),
   status.length = 3, trend.length = 5, response.stat = c("Met",
@@ -42,12 +42,27 @@ A data frame with one row per bydat group, giving the
   "trspan", "slope", "pv", "trnd".
 }
 \description{
-Determine the status and trends of a time series relative to a target.
+Determine the status, relative to a target, and the trend, adjusted for
+autocorrelation, of a time series.
+}
+\details{
+Significant trends in the time series are tested after automatically
+  adjusting for first order autocorrelation using the iterative
+  Cochrane–Orcutt procedure.  Verbeek (2004) reports that the iterated
+  estimated generalized least squares (EGLS) typically performs somewhat
+  better than its two-step variant in small samples (pages 100-101).
 }
 \examples{
  rawdat <- data.frame(year=1990+c(1:6, 1:6), group=rep(1:2, c(6, 6)),
-  x=(1:12)*10)
- targetdat <- data.frame(group=1:2, targ=c(30, 140))
+  y=c(arima.sim(n=6, list(ar=0.2)), arima.sim(n=6, list(ar=0.8))))
+ targetdat <- data.frame(group=1:2, targ=c(0, -1))
  SRstatus(bydat=rawdat$group, timedat=rawdat$year,
-  measdat=rawdat$x, targdat=targetdat$targ)
+  measdat=rawdat$y, targdat=targetdat$targ)
+}
+\references{
+Verbeek M.  2004.  A Guide to Modern Econometrics.
+    John Wiley & Sons Ltd, West Sussex.
+}
+\seealso{
+\code{\link{cochrane.orcutt.jva}}
 }
