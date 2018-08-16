@@ -12,11 +12,14 @@
 #'   decimal value to reach for convergence, 8 as default
 #' @param max.iter
 #'   the maximum number of iterations to try before giving up on convergence,
-#'   100 as defaul
+#'   100 as default
 #' @return
-#'   An object of class "orcutt", basically a list including elements
+#'   An object of class "orcutt".  See \code{\link[orcutt]{cochrane.orcutt}}
 #' @details
-#'   This is a duplicate of the \code{\link[orcutt]{cochrane.orcutt}()} function from package version 2.2, with the addition of an upper limit on the number of iterations to avoid an infinite \code{\link{while}()} loop.
+#'   This is a duplicate of the \code{\link[orcutt]{cochrane.orcutt}()}
+#'   function from package \strong{orcutt} version 2.2, with the addition of an
+#'   upper limit on the number of iterations to avoid an infinite
+#'   \code{\link{while}()} loop.
 #' @seealso \code{\link[orcutt]{cochrane.orcutt}}
 #' @references
 #'   Verbeek M. (2004) A guide to modern econometrics, John Wiley & Sons Ltd,
@@ -24,14 +27,14 @@
 #' @importFrom lmtest dwtest
 #' @export
 #' @examples
-#'  # example from orcutt package that converges
-#'  data(icecream, package="orcutt")
-#'  lm <- lm(cons ~ price + income + temp, data=icecream)
-#'  cochrane.orcutt.jva(lm)
-#'  # another example that doesn't converge
-#'  mydat <- data.frame(year=2013:2017, meas=c(14.8, 10.7, 6.2, 4, 3.9))
-#'  lmfit <- lm(meas ~ year, data=mydat)
-#'  cochrane.orcutt.jva(lmfit)
+#' # example from orcutt package that converges
+#'   data(icecream, package="orcutt")
+#'   lm <- lm(cons ~ price + income + temp, data=icecream)
+#'   cochrane.orcutt.jva(lm)
+#' # another example that doesn't converge
+#'   mydat <- data.frame(year=2013:2017, meas=c(14.8, 10.7, 6.2, 4, 3.9))
+#'   lmfit <- lm(meas ~ year, data=mydat)
+#'   cochrane.orcutt.jva(lmfit)
 
 cochrane.orcutt.jva <- function(reg, convergence=8, max.iter=100) {
   X <- model.matrix(reg)

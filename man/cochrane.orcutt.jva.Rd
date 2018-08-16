@@ -12,10 +12,10 @@ cochrane.orcutt.jva(reg, convergence = 8, max.iter = 100)
 \item{convergence}{decimal value to reach for convergence, 8 as default}
 
 \item{max.iter}{the maximum number of iterations to try before giving up on convergence,
-100 as defaul}
+100 as default}
 }
 \value{
-An object of class "orcutt", basically a list including elements
+An object of class "orcutt".  See \code{\link[orcutt]{cochrane.orcutt}}
 }
 \description{
 Interactive method using to solve first order autocorrelation problems. This
@@ -25,17 +25,20 @@ after estimating Beta using EGLS approach and Rho is estimated using the
 previous residuals.
 }
 \details{
-This is a duplicate of the \code{\link[orcutt]{cochrane.orcutt}()} function from package version 2.2, with the addition of an upper limit on the number of iterations to avoid an infinite \code{\link{while}()} loop.
+This is a duplicate of the \code{\link[orcutt]{cochrane.orcutt}()}
+  function from package \strong{orcutt} version 2.2, with the addition of an
+  upper limit on the number of iterations to avoid an infinite
+  \code{\link{while}()} loop.
 }
 \examples{
- # example from orcutt package that converges
- data(icecream, package="orcutt")
- lm <- lm(cons ~ price + income + temp, data=icecream)
- cochrane.orcutt.jva(lm)
- # another example that doesn't converge
- mydat <- data.frame(year=2013:2017, meas=c(14.8, 10.7, 6.2, 4, 3.9))
- lmfit <- lm(meas ~ year, data=mydat)
- cochrane.orcutt.jva(lmfit)
+# example from orcutt package that converges
+  data(icecream, package="orcutt")
+  lm <- lm(cons ~ price + income + temp, data=icecream)
+  cochrane.orcutt.jva(lm)
+# another example that doesn't converge
+  mydat <- data.frame(year=2013:2017, meas=c(14.8, 10.7, 6.2, 4, 3.9))
+  lmfit <- lm(meas ~ year, data=mydat)
+  cochrane.orcutt.jva(lmfit)
 }
 \references{
 Verbeek M. (2004) A guide to modern econometrics, John Wiley & Sons Ltd,

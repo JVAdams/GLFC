@@ -47,10 +47,10 @@
 #' @importFrom orcutt summary.orcutt
 #' @export
 #' @examples
-#'  rawdat <- data.frame(year=1990+c(1:6, 1:6), group=rep(1:2, c(6, 6)),
+#' rawdat <- data.frame(year=1990+c(1:6, 1:6), group=rep(1:2, c(6, 6)),
 #'   y=c(arima.sim(n=6, list(ar=0.2)), arima.sim(n=6, list(ar=0.8))))
-#'  targetdat <- data.frame(group=1:2, targ=c(0, -1))
-#'  SRstatus(bydat=rawdat$group, timedat=rawdat$year,
+#' targetdat <- data.frame(group=1:2, targ=c(0, -1))
+#' SRstatus(bydat=rawdat$group, timedat=rawdat$year,
 #'   measdat=rawdat$y, targdat=targetdat$targ)
 
 SRstatus <- function(bydat, timedat, measdat, targdat,

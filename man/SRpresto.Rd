@@ -102,11 +102,12 @@ process in one fell swoop.
 }
 \examples{
 \dontrun{
- SRpresto(
+SRpresto(
   FOLDER="C:/JVA/GLFC/People/Siefkes/Status graphs/",
   INDEX.LAKE="AdultLakeThru2016.csv",
   INDEX.STREAM="AdultStreamThru2016.csv",
-  MAXLARVAE="MaxLarvalEstimatesSummary2013mod2016-08-25.xls")
+  MAXLARVAE="MaxLarvalEstimatesSummary2013mod2016-08-25.xls"
+)
 }
 }
 \seealso{
