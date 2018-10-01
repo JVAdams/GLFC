@@ -25,10 +25,11 @@ One overarching function, `AIpresto` can be used to carry out all the steps of t
 
 Install the latest version of **[R](https://www.r-project.org/)** from [CRAN](https://cran.r-project.org/bin/windows/base/).
 
-Install the latest version of the **GLFC** package following the instructions at [Readme](https://github.com/JVAdams/GLFC/blob/master/README.md).  The easiest way to do this, if you already have the package **devtools** installed, is:
+Install the latest version of the **GLFC** package:
 
 ```{r install_glfc, eval=FALSE}
-devtools::install_github("JVAdams/GLFC")
+install.packages("remotes")
+remotes::install_github("JVAdams/GLFC")
 ```
 
 
