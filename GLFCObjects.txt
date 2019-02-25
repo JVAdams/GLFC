@@ -36,8 +36,11 @@ lsKeep <- lapply(1:5, function(i) i + lsKeep[[i]]/1000)
 
 # scale up factor for each lake
 # calculated as the median PE/index ratio on data from 1985 to 2014
-# last updated Oct 2014
-index2pe <- c(3.95, 1.87, 2.87, 1.45, 2.37)
+# modified Schaefer version last updated Oct 2014
+index2pe.Schaefer <- c(3.95, 1.87, 2.87, 1.45, 2.37)
+names(index2pe) <- c("Superior", "Michigan", "Huron", "Erie", "Ontario")
+# pooled Petersen version last updated Feb 2019
+index2pe <- c(4.12, 1.80, 2.69, 1.04, 2.06)
 names(index2pe) <- c("Superior", "Michigan", "Huron", "Erie", "Ontario")
 
 # An environment local to the GLFC package

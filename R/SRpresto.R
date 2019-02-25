@@ -415,7 +415,7 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
   tab <- cbind(sp[, c("bydat", "stattrnd")], wo[, "stattrnd"], tr[, "trend"])
   tab$bydat <- Lakenames[tab$bydat]
   names(tab) <- c("Lake", "Sea Lamprey", "Marks", "Lake Trout")
-  tabl("Sea lamprey control program success is measured by index estimates of adult sea lamprey abundance, sea lamprey marking rates on lake trout, and lake trout relative abundance.  The overall status of these metrics is presented in this table; status is based on the mean over the last 3 years relative to target, trends are based on the slope over the last 5 years (automatically adjusting for autocorrelation).",
+  tabl("Sea lamprey control program success is measured by index estimates of adult sea lamprey abundance, sea lamprey marking rates on lake trout, and lake trout relative abundance.  The overall status of these metrics is presented in this table; status is based on the mean over the last 3 years relative to target, trends are based on the slope over the last 5 years.",
     TAB=tab, row.names=FALSE)
 
   # REPORT CARD
@@ -466,7 +466,7 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
       border=NA)
   	box()
   	for(i in 1:5) {
-  		sel <- ALL2$lake==i
+  		sel <- ALL2$lake==i & !is.na(ALL2$index)
   		lines(ALL2$spawner.year[sel], (ALL2$index/ALL2$index.target)[sel],
         col=blindcolz[c(2, 3, 4, 6, 8)[i]], lwd=lwid[i], lty=ltyp[i],
         lend="square")
@@ -482,7 +482,7 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
       border=NA)
   	box()
   	for(i in 1:5) {
-  		sel <- ALL2$lake==i
+  		sel <- ALL2$lake==i & !is.na(ALL2$index)
   		maxyr <- max(ALL2$spawner.year[sel & !is.na(ALL2$rate)])
   		lines(ALL2$spawner.year[sel], (ALL2$rate/ALL2$wound.target)[sel],
         col=blindcolz[c(2, 3, 4, 6, 8)[i]], lwd=lwid[i], lty=ltyp[i],
@@ -495,7 +495,7 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
   	mtext("Relative to target", side=2, outer=TRUE)
   	}
 
-  figu("Status metrics, relative to target, for each of the Great Lakes", paste(xr, collapse="-"), ".  For example, for Lake ", Lakenames[picklake], " in spawning year ", YEAR, ", the adult sea lamprey index was ", round(picksp, 1), " times the target, and the wounding rate was ", round(pickwr, 1), " times the target.",
+  figu("Status metrics, relative to target, for each of the Great Lakes ", paste(xr, collapse="-"), ".  For example, for Lake ", Lakenames[picklake], " in spawning year ", YEAR, ", the adult sea lamprey index was ", round(picksp, 1), " times the target, and the wounding rate was ", round(pickwr, 1), " times the target.",
     FIG=fig, h=3.29, w=6.5)
 
 
