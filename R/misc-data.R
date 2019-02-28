@@ -86,12 +86,33 @@ NULL
 #'   GLFC Trapping Task Force.
 NULL
 #' @name
+#'   index2pe.Schaefer
+#' @title
+#'   Old Factors to Scale Up the Adult Index to a Lake-Wide Population
+#' @description
+#'   Lake-specific conversion factors to scale up indices of adult sea
+#'   lamprey abundance in the Great Lakes to lake-wide population estimates,
+#'   when indices are based on modified Schaefer estimates from 
+#'   mark-recapture studies.
+#' @format
+#'   A named vector of length 5 (for the 5 Great Lakes)
+#'   with factors rounded to the nearest hundredth.
+#' @source
+#'   Great Lakes Fishery Commission (\href{http://www.glfc.org}{GLFC})
+#'   Sea Lamprey Control Board Meeting 19-01,
+#'   16-18 Apr 2019.
+#' @author
+#'   GLFC Trapping Task Force.
+NULL
+#' @name
 #'   index2pe
 #' @title
 #'   Factors to Scale Up the Adult Index to a Lake-Wide Population
 #' @description
 #'   Lake-specific conversion factors to scale up indices of adult sea
-#'   lamprey abundance in the Great Lakes to lake-wide population estimates.
+#'   lamprey abundance in the Great Lakes to lake-wide population estimates,
+#'   when indices are based on pooled Petersen estimates from 
+#'   mark-recapture studies.
 #' @format
 #'   A named vector of length 5 (for the 5 Great Lakes)
 #'   with factors rounded to the nearest hundredth.

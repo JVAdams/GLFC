@@ -72,7 +72,7 @@ For more details on the entire process and the steps involved,
  library(GLFC)
  AIpresto(
    DIRECTORY = "C:\\\\TrappingData\\\\2015",
-   NEWDATARAW = "TrapCatchSchaeferEstimate2015.csv",
+   NEWDATARAW = "TrapCatchEstimate2015.csv",
    STREAMDATAPREV = "AdultStreamThru2014.csv",
    LAKEDATAPREV = "AdultLakeThru2014.csv")
 }

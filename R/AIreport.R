@@ -343,7 +343,7 @@ names(prettyTAB.targs) <- c("> Target", "Target", "3-Yr Avg Index")
 
   TAB.lakewide2 <- with(lakeIPEs, tapply(pe, list(year, lake), mean))
   colnames(TAB.lakewide2) <- Lakenames
-  tabl("Lake-wide adult sea lamprey abundances, 1985-", YEAR, ", which are based on the adult index estimates multiplied by lake-specific conversion factors (", paste(names(index2pe), as.numeric(index2pe), collapse=", "), ").  Note that these conversion factors have not been updated since the switch from modified Schaefer to pooled Petersen stream mark-recapture estimates.",
+  tabl("Lake-wide adult sea lamprey abundances, 1985-", YEAR, ", which are based on the adult index estimates multiplied by lake-specific conversion factors (", paste(names(index2pe), as.numeric(index2pe), collapse=", "), ").",
     TAB=prettytable(TAB.lakewide2, -3), newpage="port")
 
   figu("Adult sea lamprey abundance estimates for index streams.  Targets are represented by the horizontal lines.", extraphrase,
