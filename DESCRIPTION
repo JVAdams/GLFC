@@ -1,27 +1,30 @@
 Package: GLFC
-Version: 1.4.0.9000
-Date: 2019-02-28
+Version: 1.4.1.9000
+Date: 2019-06-05
 Title: Great Lakes Fishery Commission
 Authors@R: person(given="Jean V.", family="Adams", email="jvadams@usgs.gov", 
   role=c("aut", "cre"))
 Author: Jean V. Adams [aut, cre]
 Maintainer: Jean V. Adams <jvadams@usgs.gov>
 Depends: 
-    R (>= 3.5.2),
+    R (>= 3.6.0),
     maps
 Imports: 
+    broom,
+	dplyr,
     geosphere,
-	lmtest,
-	lubridate,
-	orcutt,
+    lmtest,
+    lubridate,
+	magrittr,
+    orcutt,
     plotrix,
-	plyr,
+    plyr,
     RColorBrewer,
-	readxl,
+    readxl,
     rtf,
     survey,
-	tidyr,
-	zoo
+    tidyr,
+    zoo
 Suggests: 
     knitr,
     rmarkdown

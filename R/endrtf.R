@@ -7,12 +7,12 @@
 #'   Logical scalar indicating if session details should be added to
 #'   the end of the document, default FALSE.
 #' @param ...
-#'   Additional parameters to \code{\link[rtf]{addPageBreak}}.
+#'   Additional parameters to \code{\link[rtf]{addPageBreak.RTF}}.
 #' @seealso
 #'   \code{\link{startrtf}} for an example, \code{\link{heading}},
 #'   \code{\link{para}}, \code{\link{tabl}},
 #'   \code{\link{figu}}, \code{\link{figbig}},
-#'   \code{\link[rtf]{RTF}}, \code{\link[rtf]{addPageBreak}}.
+#'   \code{\link[rtf]{RTF}}, \code{\link[rtf]{addPageBreak.RTF}}.
 #' @import
 #'   rtf
 #' @export

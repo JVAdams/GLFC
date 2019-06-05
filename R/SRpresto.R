@@ -89,6 +89,8 @@
 #'   }
 #' @seealso \code{\link{AIpresto}}
 #' @importFrom readxl read_excel
+#' @import
+#'   rtf
 #' @export
 #' @examples
 #' \dontrun{
@@ -398,7 +400,7 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
   sp$stattrnd <- paste0(sp$status, ", ", sp$trend)
   sp1 <- SRstatus(bydat=lake, timedat=spawner.year,
   	measdat=index, targdat=TARGET$index.target[1:5],
-    status.length=1, trend.length=NULL)
+    status.length=3, trend.length=NULL)
 
   # wounding 3-year status and 5-year trend
   wo <- SRstatus(bydat=lake, timedat=trout.year,
@@ -406,7 +408,7 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
   wo$stattrnd <- paste(wo$status, wo$trend, sep=", ")
   wo1 <- SRstatus(bydat=lake, timedat=trout.year,
   	measdat=rate, targdat=TARGET$wound.target[1:5],
-    status.length=1, trend.length=NULL)
+    status.length=3, trend.length=NULL)
 
   # trout 5-year trend
   tr <- SRstatus(bydat=lake, timedat=trout.year,
@@ -687,6 +689,7 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
   for(i in 1:5) {
   	GLFCenv$figcount <- 1
   	sel <- lake==sul[i]
+  	sel.yr <- sel & spawner.year==YEAR
   	year.tk <- axisra[["Year", i, 1]]
   	index.tk <- axisra[["Spawners", i, 1]]
   	pe.lab <- pretty(index.tk * index2pe[i])/1000
@@ -731,7 +734,7 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
         " acceptable marking rates (")
       if(i==2) targphrase <- c("5/8.9 times the mean of indices (")
       if(i==3) targphrase <- c("0.25 times the mean of indices (")
-  		figu("Index estimates with 95% confidence intervals (vertical bars) of adult sea lampreys, including historic pre-control abundance (as a population estimate) and the three-year moving average (line) with 95% CIs (shaded area).  The population estimate scale (right vertical axis) is based on the index-to-PE conversion factor of ", index2pe[i], ".  The adult index in ", YEAR, " was ", format(signif(sp1$stmean[i], 2), big.mark=","), " with 95% confidence interval (", format(signif(index.lo[spawner.year==sp1$stspan[i] & sel], 2), big.mark=","), "-", format(signif(index.hi[spawner.year==sp1$stspan[i] & sel], 2), big.mark=","), ").  The point estimate ", c("met", "was above")[(sp1$stmean[i] > sp1$targdat[i]) + 1], " the target of ", format(signif(sp1$targdat[i], 2), big.mark=","), ".", " The index target was estimated as ", targphrase, targyrz[i], ").",
+  		figu("Index estimates with 95% confidence intervals (vertical bars) of adult sea lampreys, including historic pre-control abundance (as a population estimate) and the three-year moving average (line) with 95% CIs (shaded area).  The population estimate scale (right vertical axis) is based on the index-to-PE conversion factor of ", index2pe[i], ".  The adult index in ", YEAR, " was ", format(signif(index[sel.yr], 2), big.mark=","), " with 95% confidence interval (", format(signif(index.lo[sel.yr], 2), big.mark=","), "-", format(signif(index.hi[sel.yr], 2), big.mark=","), ").  The three-year average of ", format(signif(sp1$stmean[i], 2), big.mark=","), c(" met", " was above")[(sp1$stmean[i] > sp1$targdat[i]) + 1], " the target of ", format(signif(sp1$targdat[i], 2), big.mark=","), ".", " The index target was estimated as ", targphrase, targyrz[i], ").",
   		  FIG=fig, h=2.64, w=3.96)
   		}
 

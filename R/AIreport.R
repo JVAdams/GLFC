@@ -84,7 +84,7 @@ AIreport <- function(streamPEs, lakeIPEs, targets, csvDir, outFile=NULL,
   targ2 <- with(lakeIPEs,
     SRstatus(bydat=lake, timedat=year, measdat=index,
       targdat=targets$targInd[1:5],
-      status.length=3, response.stat=c("", "***"))[,
+      status.length=3)[,
         c("bydat", "stspan", "stmean", "targdat", "status")]
   )
   # targ2 <- merge(lakeIPEs[lakeIPEs$year==YEAR, ], targets, all=TRUE)

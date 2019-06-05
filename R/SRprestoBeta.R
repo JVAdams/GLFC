@@ -356,9 +356,7 @@ SRprestoBeta <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
   # adult 3-year status and 5-year trend
   # I changed these from spawner.year to wound.year
   sp <- SRstatus(bydat=lake, timedat=wound.year,
-  	measdat=index, targdat=TARGET$index.target[1:5],
-    response.stat = c("Target met", "Above target"),
-    response.trend = c("Decreasing", "No trend", "Increasing"))
+  	measdat=index, targdat=TARGET$index.target[1:5])
   sp$stattrnd <- paste0(sp$status, ", ", sp$trend)
   # sp1 <- SRstatus(bydat=lake, timedat=wound.year,
   # 	measdat=index, targdat=TARGET$index.target[1:5],
@@ -367,18 +365,14 @@ SRprestoBeta <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
   # wounding 3-year status and 5-year trend
   # I changed these from trout.year to wound.year
   wo <- SRstatus(bydat=lake, timedat=wound.year,
-  	measdat=rate, targdat=TARGET$wound.target[1:5],
-    response.stat = c("Target met", "Above target"),
-    response.trend = c("Decreasing", "No trend", "Increasing"))
+  	measdat=rate, targdat=TARGET$wound.target[1:5])
   wo$stattrnd <- paste(wo$status, wo$trend, sep=", ")
   # wo1 <- SRstatus(bydat=lake, timedat=wound.year,
   # 	measdat=rate, targdat=TARGET$wound.target[1:5],
   #   status.length=1, trend.length=NULL)
   # trout 5-year trend
   tr <- SRstatus(bydat=lake, timedat=wound.year,
-  	measdat=trout, targdat=NULL, status.length=NULL,
-    response.stat = c("Target met", "Above target"),
-    response.trend = c("Decreasing", "No trend", "Increasing"))
+  	measdat=trout, targdat=NULL, status.length=NULL)
 
   para("SUMMARY: Sea lamprey control program success is measured by index estimates of adult sea lamprey abundance, sea lamprey marking rates on lake trout, and lake trout relative abundance. The overall status of these metrics is presented in this table; status is based on the mean over the last 3 years relative to target, trends are based on the slope over the last 5 years. (See also the interactive status metrics, http://www.glfc.org:3838/slcp/.)")
 

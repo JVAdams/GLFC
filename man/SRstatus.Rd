@@ -5,8 +5,7 @@
 \title{Determining Status and Trends}
 \usage{
 SRstatus(bydat, timedat, measdat, targdat, bytar = sort(unique(bydat)),
-  status.length = 3, trend.length = 5, response.stat = c("Met",
-  "Above"), response.trend = c("Decr.", "Steady", "Incr."))
+  status.length = 3, trend.length = 5)
 }
 \arguments{
 \item{bydat}{A vector of grouping variables.}
@@ -26,13 +25,6 @@ status will not be evaluated.}
 \item{trend.length}{A numeric scalar, the number of time units (the length of time) over
 which the trend should be assessed, default 5.  If set to NULL,
 trend will not be evaluated.}
-
-\item{response.stat}{A character vector giving the responses for estimates below and at or
-above target, default c("Met", "Above")}
-
-\item{response.trend}{A character vector giving the responses for estimates with decreasing,
-steady, or increasing trends, default
-c("Decr.", "Steady", "Incr.")}
 }
 \value{
 A data frame with one row per bydat group, giving the
@@ -46,7 +38,7 @@ Determine the status and trends of a time series relative to a target.
 }
 \examples{
  rawdat <- data.frame(year=1990+c(1:6, 1:6), group=rep(1:2, c(6, 6)),
-  x=(1:12)*10)
+  x=c(1:10, 9, 7)*10)
  targetdat <- data.frame(group=1:2, targ=c(30, 140))
  SRstatus(bydat=rawdat$group, timedat=rawdat$year,
   measdat=rawdat$x, targdat=targetdat$targ)
