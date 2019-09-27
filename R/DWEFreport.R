@@ -48,10 +48,10 @@
 #' @return
 #'   Three csv files are written to \code{Dir}, with the final catch, lengths,
 #'   and plot data.
-#' @importFrom maps map
 #' @importFrom plotrix rescale
 #' @importFrom lubridate year mday month
 #' @import survey
+#' @import maps
 #' @export
 
 DWEFreport <- function(Dir, CatchClean, LengthsClean, Plots, Downstream,

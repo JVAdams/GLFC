@@ -89,8 +89,10 @@
 #'   }
 #' @seealso \code{\link{AIpresto}}
 #' @importFrom readxl read_excel
-#' @import
-#'   rtf
+#' @importFrom plotrix rescale
+#' @importFrom plyr ddply
+#' @import rtf
+#' @import maps
 #' @export
 #' @examples
 #' \dontrun{
@@ -108,12 +110,10 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
   TROUTERI="TroutErie.csv", TROUTONT="TroutOntario.csv",
   AXISRANGES="AxisRanges.xls") {
 
-  # @importFrom plyr rbind.fill
-
   # make sure all needed packages are installed
-  wantpkgs <- c("geosphere", "lubridate", "maps", "plotrix", "plyr", "rtf")
-  needpkgs <- setdiff(wantpkgs, row.names(installed.packages()))
-  if(length(needpkgs) > 0) install.packages(needpkgs)
+  # wantpkgs <- c("geosphere", "lubridate", "maps")
+  # needpkgs <- setdiff(wantpkgs, row.names(installed.packages()))
+  # if(length(needpkgs) > 0) install.packages(needpkgs)
 
 ####oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo####
 
@@ -124,8 +124,8 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
   HIST.SPAWN <- c(780, 600, 700, 40, 450)*1000
 
   # install necessary packages
-  getpkgs(c("rtf", "maps", "plotrix", "zoo", "plyr",
-    "devtools", "plotrix"))
+  # getpkgs(c("rtf", "maps", "plotrix", "zoo", "plyr",
+  #   "devtools", "plotrix"))
 
   #### Functions and vectors that will be used later ####
 
@@ -216,7 +216,9 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
   #### read in data ####
 
   # bring in the range data for the x-axis and all the y-axes
-  axisr <- read_excel(paste0(FOLDER, AXISRANGES), skip=1)
+  axisr <- read_excel(paste0(FOLDER, AXISRANGES), skip=2,
+    col_names=c("m.order", "metric", "l.order", "lake",
+      "ind.from", "ind.to", "ind.by", "big.from", "big.to", "big.by"))
 
   # store the tick mark info in an array of lists
   um <- unique(axisr$metric)
@@ -224,10 +226,11 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
     dimnames=list(um, 1:5, c("Indiv", "BigFig")))
   for(i in seq(um)) {
   for(j in 1:5) {
-  	sel <- axisr$metric==um[i] & axisr$order__1==j
-  	axisra[[i, j, 1]] <- seq(axisr$from[sel], axisr$to[sel], axisr$by[sel])
-  	axisra[[i, j, 2]] <- seq(axisr$from__1[sel], axisr$to__1[sel],
-  	  axisr$by__1[sel])
+  	sel <- axisr$metric==um[i] & axisr$l.order==j
+  	axisra[[i, j, 1]] <-
+  	  seq(axisr$ind.from[sel], axisr$ind.to[sel], axisr$ind.by[sel])
+  	axisra[[i, j, 2]] <-
+  	  seq(axisr$big.from[sel], axisr$big.to[sel], axisr$big.by[sel])
   	}}
 
 
@@ -373,8 +376,24 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
   # calculate three-year running mean for adults, marks, and trout
   ALL <- ALL[order(ALL$lake, ALL$spawner.year), ]
   varz <- c("index", "trout", "rate")
-  look <- ddply(.data=ALL[, c("lake", varz)], .variables=.(lake), .drop=FALSE,
-    .fun=rollapply, width=3, FUN=CI, fill=c(NA, NA, NA), align="right")
+
+  look <- plyr::ddply(.data=ALL[, c("lake", varz)], .variables=.(lake), .drop=FALSE,
+    .fun=zoo::rollapply, width=3, FUN=CI, fill=c(NA, NA, NA), align="right")
+
+  # roll3 <- function(x) {
+  #   zoo::rollapply(x, width=3, FUN=CI, fill=c(NA, NA, NA), align="right")
+  # }
+  #
+  # look <- ALL %>%
+  #   select(lake, spawner.year, index, trout, rate) %>%
+  #   gather(metric, value, index, trout, rate) %>%
+  #   filter(!is.na(spawner.year)) %>%
+  #   group_by(lake, metric) %>%
+  #   complete(spawner.year = full_seq(spawner.year, 1)) %>%
+  #   mutate(
+  #     rollmean = roll_mean(value, 3, fill=NA, na.rm=FALSE)
+  #   )
+
   names(look)[-(1:4)] <- paste(rep(varz, rep(3, length(varz))),
     rep(c("3mn", "3lo", "3hi"), length(varz)), sep=".")
   ALL <- cbind(ALL, look[, -(1:4)])
@@ -384,35 +403,42 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
   rm(adult, control, a, trout, varz, look)
 
 
-  attach(ALL)
-
   #### status and trends ####
   addPageBreak(this=doc, width=8.5, height=11, omi=c(1, 1, 1, 1))
   heading("SEA LAMPREY STATUS IN THE GREAT LAKES")
 
 
   # adult 3-year status and 5-year trend
-  sp <- SRstatus(bydat=lake, timedat=spawner.year,
-  	measdat=index, targdat=TARGET$index.target[1:5])
+  sp <- with(ALL, SRstatus(bydat=lake, timedat=spawner.year,
+  	measdat=index, targdat=TARGET$index.target[1:5]))
+
+    # bydat=ALL$lake
+    # timedat=ALL$spawner.year
+    # measdat=ALL$index
+    # targdat=TARGET$index.target[1:5]
+    # bytar=sort(unique(bydat))
+    # status.length=3
+    # trend.length=5
+
   # categ <- ifelse(sp$status=="Met", "Satisfactory", "Unsatisfactory")
   # categ[sp$status=="Above" & sp$trend=="Decr."] <- "Improving"
   # sp$stattrnd <- paste0(categ, ":  ", sp$status, ", ", sp$trend)
   sp$stattrnd <- paste0(sp$status, ", ", sp$trend)
-  sp1 <- SRstatus(bydat=lake, timedat=spawner.year,
+  sp1 <- with(ALL, SRstatus(bydat=lake, timedat=spawner.year,
   	measdat=index, targdat=TARGET$index.target[1:5],
-    status.length=3, trend.length=NULL)
+    status.length=3, trend.length=NULL))
 
   # wounding 3-year status and 5-year trend
-  wo <- SRstatus(bydat=lake, timedat=trout.year,
-  	measdat=rate, targdat=TARGET$wound.target[1:5])
+  wo <- with(ALL, SRstatus(bydat=lake, timedat=trout.year,
+  	measdat=rate, targdat=TARGET$wound.target[1:5]))
   wo$stattrnd <- paste(wo$status, wo$trend, sep=", ")
-  wo1 <- SRstatus(bydat=lake, timedat=trout.year,
+  wo1 <- with(ALL, SRstatus(bydat=lake, timedat=trout.year,
   	measdat=rate, targdat=TARGET$wound.target[1:5],
-    status.length=3, trend.length=NULL)
+    status.length=3, trend.length=NULL))
 
   # trout 5-year trend
-  tr <- SRstatus(bydat=lake, timedat=trout.year,
-  	measdat=trout, targdat=NULL, status.length=NULL)
+  tr <- with(ALL, SRstatus(bydat=lake, timedat=trout.year,
+  	measdat=trout, targdat=NULL, status.length=NULL))
 
   tab <- cbind(sp[, c("bydat", "stattrnd")], wo[, "stattrnd"], tr[, "trend"])
   tab$bydat <- Lakenames[tab$bydat]
@@ -429,67 +455,66 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
   # 1 means 1*target (both metrics met target),
   # 2 means 2*target (average of both metrics are double the target), etc.
 
-  inr <- with(ALL2, index/index.target)
+  attach(ALL)
+
+  inr <- with(ALL2, index.3mn/index.target)
   inr[is.na(inr)] <- 0
 
-  wrr <- with(ALL2, rate/wound.target)
+  wrr <- with(ALL2, rate.3mn/wound.target)
   wrr[is.na(wrr)] <- 0
 
   score <- (inr + wrr)/((inr>0) + (wrr>0))
   ALL2$above.score <- score
+
   # base line width and type on status average for last 5 years
   last5 <- (YEAR - ALL2$spawner.year) < 4.5
   mean3 <- tapply(ALL2$above.score[last5], ALL2$lake[last5], mean, na.rm=TRUE)
   lwid <- round(rescale(mean3, c(1, 5)))
-  ltyp <- recode(lwid, 5:1, c(1, 5, 4, 2, 3))
+  ltyp <- GLFC::recode(lwid, 5:1, c(1, 5, 4, 2, 3))
   last1 <- ALL2$spawner.year == YEAR
   # picklake <- which.max(ALL2$above.score[last1])
   picklake <- 4
   selpick <- ALL2$spawner.year == YEAR & ALL2$lake == picklake
-  picksp <- (ALL2$index/ALL2$index.target)[selpick]
-  pickwr <- (ALL2$rate/ALL2$wound.target)[selpick]
+  picksp <- (ALL2$index.3mn/ALL2$index.target)[selpick]
+  pickwr <- (ALL2$rate.3mn/ALL2$wound.target)[selpick]
   picksa <- ALL2$above.score[selpick]
 
-
-
-
-
   xr <- range(ALL2$spawner.year[(YEAR - ALL2$spawner.year) < 4.5 &
-      (!is.na(ALL2$index) | !is.na(ALL2$rate))])
-  yr <- range((ALL2$index/ALL2$index.target)[last5 & !is.na(ALL2$index)],
-    (ALL2$rate/ALL2$wound.target)[last5 & !is.na(ALL2$rate)], na.rm=TRUE)
+      (!is.na(ALL2$index.3mn) | !is.na(ALL2$rate.3mn))])
+  yr <- range((ALL2$index.3mn/ALL2$index.target)[last5 & !is.na(ALL2$index.3mn)],
+    (ALL2$rate.3mn/ALL2$wound.target)[last5 & !is.na(ALL2$rate.3mn)], na.rm=TRUE)
   fig <- function() {
   	par(mfrow=c(1, 2), mar=c(2, 3, 2, 4), oma=c(1, 1, 0, 0))
-  	plot(ALL2$spawner.year, ALL2$index/ALL2$index.target, type="n", las=1,
+  	plot(ALL2$spawner.year, ALL2$index.3mn/ALL2$index.target, type="n", las=1,
       xlim=xr, ylim=yr, xlab="", ylab="")
-  	mtext("Adult sea lamprey index", side=3, line=0.5)
+  	mtext("Adult sea lamprey index (3-year average)", side=3, line=0.5)
   	pusr <- par("usr")
   	polygon(pusr[c(1, 2, 2, 1)], c(pusr[c(3, 3)], 1, 1), col="lightgray",
       border=NA)
   	box()
   	for(i in 1:5) {
-  		sel <- ALL2$lake==i & !is.na(ALL2$index)
-  		lines(ALL2$spawner.year[sel], (ALL2$index/ALL2$index.target)[sel],
+  		sel <- ALL2$lake==i & !is.na(ALL2$index.3mn)
+  		lines(ALL2$spawner.year[sel], (ALL2$index.3mn/ALL2$index.target)[sel],
         col=blindcolz[c(2, 3, 4, 6, 8)[i]], lwd=lwid[i], lty=ltyp[i],
         lend="square")
-  		mtext(Lakenames[i], at=(ALL2$index/ALL2$index.target)[sel &
+  		mtext(Lakenames[i], at=(ALL2$index.3mn/ALL2$index.target)[sel &
           ALL2$spawner.year==YEAR], col=blindcolz[c(2, 3, 4, 6, 8)[i]], side=4,
         las=2, line=0.5)
   		}
-  	plot(ALL2$spawner.year, ALL2$rate/ALL2$wound.target, type="n", las=1,
+  	plot(ALL2$spawner.year, ALL2$rate.3mn/ALL2$wound.target, type="n", las=1,
   	  xlim=xr, ylim=yr, xlab="", ylab="")
-  	mtext("Lake trout marking rate", side=3, line=0.5)
+  	mtext("Lake trout marking rate (3-year average)", side=3, line=0.5)
   	pusr <- par("usr")
   	polygon(pusr[c(1, 2, 2, 1)], c(pusr[c(3, 3)], 1, 1), col="lightgray",
       border=NA)
   	box()
   	for(i in 1:5) {
-  		sel <- ALL2$lake==i & !is.na(ALL2$index)
-  		maxyr <- max(ALL2$spawner.year[sel & !is.na(ALL2$rate)])
-  		lines(ALL2$spawner.year[sel], (ALL2$rate/ALL2$wound.target)[sel],
+  		sel <- ALL2$lake==i & !is.na(ALL2$index.3mn)
+  		maxyr <- max(ALL2$spawner.year[sel & !is.na(ALL2$rate.3mn)])
+  		lines(ALL2$spawner.year[sel], (ALL2$rate.3mn/ALL2$wound.target)[sel],
         col=blindcolz[c(2, 3, 4, 6, 8)[i]], lwd=lwid[i], lty=ltyp[i],
         lend="square")
-  		mtext(Lakenames[i], at=(ALL2$rate/ALL2$wound.target)[sel &
+  		mtext(Lakenames[i], at=(ALL2$rate.3mn/ALL2$wound.target)[sel &
           ALL2$spawner.year==maxyr], col=blindcolz[c(2, 3, 4, 6, 8)[i]], side=4,
         las=2, line=0.5)
   		}
@@ -497,7 +522,7 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
   	mtext("Relative to target", side=2, outer=TRUE)
   	}
 
-  figu("Status metrics, relative to target, for each of the Great Lakes ", paste(xr, collapse="-"), ".  For example, for Lake ", Lakenames[picklake], " in spawning year ", YEAR, ", the adult sea lamprey index was ", round(picksp, 1), " times the target, and the wounding rate was ", round(pickwr, 1), " times the target.",
+  figu("Status metrics, relative to target, for each of the Great Lakes ", paste(xr, collapse="-"), ".  For example, for Lake ", Lakenames[picklake], " in spawning year ", YEAR, ", the 3-year-average adult sea lamprey index was ", round(picksp, 1), " times the target, and the 3-year-average wounding rate was ", round(pickwr, 1), " times the target.",
     FIG=fig, h=3.29, w=6.5)
 
 
@@ -507,8 +532,19 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
 
   sul <- sort(unique(lake))
 
-  # adults, wounding, trout, all lakes
+  # figure out max ylim for each spawner index plot
+  # so that the plots all have the target at the same level
+  maxindex <- ALL %>%
+    group_by(lake) %>%
+    summarise(maxi=max(index, na.rm=TRUE)) %>%
+    mutate(
+      targ = TARGET$index.target,
+      relmaxi = maxi/targ,
+      mrm = max(relmaxi), # maximum relative max.
+      ylimmax = 1.05*mrm*targ
+    )
 
+  # adults, wounding, trout, all lakes
   bigfig1 <- function() {
   	par(mfcol=c(3, 5), mar=c(3, 3, 0, 0), oma=c(2, 3, 2, 1), xaxs="i", yaxs="i",
       cex=1)
@@ -516,14 +552,15 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
   	for(i in 1:5) {
   		sel <- lake==sul[i]
   		year.tk <- axisra[["Year", i, 2]]
-  		index.tk <- axisra[["Spawners", i, 2]]
+#  		index.tk <- axisra[["Spawners", i, 2]]
   		trout.tk <- axisra[["Trout", i, 2]]
   		wound.tk <- axisra[["Wounds", i, 2]]
 
   		if (sum(!is.na(index[sel]))>0) {
   			plot(spawner.year[sel], index[sel]/1000, type="n", axes=FALSE,
           xlim=range(year.tk),
-  				ylim=range(index.tk)/1000, xlab="", ylab="")
+  				ylim=c(0, maxindex$ylimmax[i])/1000, xlab="", ylab="")
+#  				ylim=range(index.tk)/1000, xlab="", ylab="")
   			shadepoly(x=spawner.year, ymd=index.3mn/1000,
   			  ylo=index.3lo/1000,
           yhi=index.3hi/1000, subsel=sel, kol=blindcolz[col.spa], smooth=0)
@@ -595,7 +632,7 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
   	for(i in 1:5) {
   		sel <- lake==sul[i]
   		year.tk <- axisra[["Year", i, 2]]
-  		index.tk <- axisra[["Spawners", i, 2]]
+#  		index.tk <- axisra[["Spawners", i, 2]]
   		days.tk <- axisra[["Staff Days", i, 2]]
   		tfm.tk <- axisra[["TFM", i, 2]]
   		bayer.tk <- axisra[["Bayer", i, 2]]
@@ -620,7 +657,8 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
   			par(new=TRUE)
   			plot(spawner.year[sel], index[sel]/1000, type="n", axes=FALSE, xlab="",
           ylab="",
-  				xlim=range(year.tk), ylim=range(index.tk)/1000)
+  				xlim=range(year.tk), ylim=c(0, maxindex$ylimmax[i])/1000)
+#  				xlim=range(year.tk), ylim=range(index.tk)/1000)
   			points(spawner.year[sel], index[sel]/1000, type="o", pch=18, lwd=2,
           cex=mycex, col=blindcolz[col.spa])
   			axis(2, las=2, adj=1)
@@ -644,7 +682,8 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
   			par(new=TRUE)
   			plot(spawner.year[sel], index[sel]/1000, type="n", axes=FALSE, xlab="",
           ylab="",
-  				xlim=range(year.tk), ylim=range(index.tk)/1000)
+  				xlim=range(year.tk), ylim=c(0, maxindex$ylimmax[i])/1000)
+#  				xlim=range(year.tk), ylim=range(index.tk)/1000)
   			points(spawner.year[sel], index[sel]/1000, type="o", pch=18, lwd=2,
           cex=mycex, col=blindcolz[col.spa])
   			axis(2, las=2, adj=1)
@@ -668,7 +707,8 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
   			par(new=TRUE)
   			plot(spawner.year[sel], index[sel]/1000, type="n", axes=FALSE, xlab="",
           ylab="",
-  				xlim=range(year.tk), ylim=range(index.tk)/1000)
+  				xlim=range(year.tk), ylim=c(0, maxindex$ylimmax[i])/1000)
+#  				xlim=range(year.tk), ylim=range(index.tk)/1000)
   			points(spawner.year[sel], index[sel]/1000, type="o", pch=18, lwd=2,
           cex=mycex, col=blindcolz[col.spa])
   			axis(2, las=2, adj=1)

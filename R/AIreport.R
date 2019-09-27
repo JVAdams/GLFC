@@ -48,10 +48,10 @@
 #' @return
 #'   A draft report document as an rtf file (with the file type *.doc,
 #'   so that MS Word will open it automatically).
-#' @importFrom maps map
 #' @importFrom zoo rollapply
 #' @importFrom plyr ddply .
 #' @importFrom tidyr complete
+#' @import maps
 #' @export
 #'
 AIreport <- function(streamPEs, lakeIPEs, targets, csvDir, outFile=NULL,

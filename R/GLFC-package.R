@@ -18,7 +18,7 @@
 #' Or use \code{\link{AIpresto}} to do it all in one fell swoop.
 #'
 #' \emph{U.S. Geological Survey} (USGS) Computer Program \pkg{GLFC}
-#'   version 1.4.1.9000
+#'   version 1.4.2.9000
 #' Written by Jean V. Adams, USGS - Great Lakes Science Center
 #' \href{http://www.glsc.usgs.gov/}{glsc.usgs.gov}, Ann Arbor, Michigan, USA.
 #' Written in programming language R (R Core Team, 2019, www.R-project.org),

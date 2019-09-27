@@ -28,7 +28,9 @@
 #'   "trspan", "slope", "pv", "trnd".
 #' @importFrom magrittr %>%
 #' @importFrom broom tidy
-#' @import dplyr tidyr
+#' @importFrom tidyr nest unnest
+#' @importFrom purrr map
+#' @import dplyr
 #' @export
 #' @examples
 #'  rawdat <- data.frame(year=1990+c(1:6, 1:6), group=rep(1:2, c(6, 6)),
@@ -47,13 +49,15 @@ SRstatus <- function(bydat, timedat, measdat, targdat,
   		stop("trend.length must be an integer > 2")
 	}
 
+  looky <<- list(bydat, timedat, measdat)
+
 	# set up data
 	meas <- data.frame(bydat, timedat, measdat, stringsAsFactors=FALSE)
 
 	# latest year of data available
 	out <- meas %>%
 	  filter(!is.na(measdat)) %>%
-	  group_by(bydat) %>%
+	  dplyr::group_by(bydat) %>%
  	  top_n(1, timedat)
 
 	keepvars <- "bydat"
@@ -67,12 +71,12 @@ SRstatus <- function(bydat, timedat, measdat, targdat,
   	targ <- data.frame(bydat=bytar, targdat, stringsAsFactors=FALSE)
   	out <- 	meas %>%
   	  filter(!is.na(measdat)) %>%
-  	  group_by(bydat) %>%
+  	  dplyr::group_by(bydat) %>%
   	  top_n(status.length, timedat) %>%
   	  mutate(
   	    stspan=rangechar(timedat)
   	  ) %>%
-  	  group_by(bydat, stspan) %>%
+  	  dplyr::group_by(bydat, stspan) %>%
   	  summarise(stmean=mean(measdat)) %>%
   	  full_join(targ, by="bydat") %>%
   	  mutate(
@@ -85,18 +89,17 @@ SRstatus <- function(bydat, timedat, measdat, targdat,
 	if (!is.null(trend.length)) {
   	trnd <- meas %>%
   	  filter(!is.na(measdat)) %>%
-  	  group_by(bydat) %>%
+  	  dplyr::group_by(bydat) %>%
   	  top_n(trend.length, timedat) %>%
   	  mutate(
   	    trspan=rangechar(timedat)
   	  ) %>%
   	  ungroup() %>%
-  	  nest(-bydat, -trspan) %>%
+  	  tidyr::nest(data=c(timedat, measdat)) %>%
   	  mutate(
-  	    fit = purrr::map(data, ~ lm(measdat ~ timedat, data = .)),
-        results = purrr::map(fit, tidy)
+  	    fit = purrr::map(data, ~ broom::tidy(lm(measdat ~ timedat, data = .)))
   	  ) %>%
-  	  unnest(results) %>%
+  	  tidyr::unnest(fit) %>%
   	  filter(term=="timedat") %>%
   	  rename(slope=estimate, pv=p.value) %>%
   	  mutate(

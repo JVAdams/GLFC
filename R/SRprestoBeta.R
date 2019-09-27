@@ -81,6 +81,7 @@
 #' @seealso \code{\link{AIpresto}}
 #' @importFrom plyr ddply
 #' @import zoo rtf
+#' @import maps
 #' @export
 #' @examples
 #' \dontrun{
