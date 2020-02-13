@@ -4,9 +4,19 @@
 \alias{circles}
 \title{Draw Circles on a Plot}
 \usage{
-circles(x, y, z, data.range = range(z, na.rm = TRUE),
-  circle.size.range = c(0.1, 1), outx = NA, outy = NA, add = FALSE,
-  xlim = NULL, ylim = NULL, ...)
+circles(
+  x,
+  y,
+  z,
+  data.range = range(z, na.rm = TRUE),
+  circle.size.range = c(0.1, 1),
+  outx = NA,
+  outy = NA,
+  add = FALSE,
+  xlim = NULL,
+  ylim = NULL,
+  ...
+)
 }
 \arguments{
 \item{x}{Numeric vector of x coordinates.}

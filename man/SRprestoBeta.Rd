@@ -4,10 +4,18 @@
 \alias{SRprestoBeta}
 \title{Sea Lamprey Status Report Generation}
 \usage{
-SRprestoBeta(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
-  CONTROL = "ControlTable.csv", TROUTSUP = "TroutSuperior.csv",
-  TROUTMIC = "TroutMichigan.csv", TROUTHUR = "TroutHuron.csv",
-  TROUTERI = "TroutErie.csv", TROUTONT = "TroutOntario.csv")
+SRprestoBeta(
+  FOLDER,
+  INDEX.LAKE,
+  INDEX.STREAM,
+  MAXLARVAE,
+  CONTROL = "ControlTable.csv",
+  TROUTSUP = "TroutSuperior.csv",
+  TROUTMIC = "TroutMichigan.csv",
+  TROUTHUR = "TroutHuron.csv",
+  TROUTERI = "TroutErie.csv",
+  TROUTONT = "TroutOntario.csv"
+)
 }
 \arguments{
 \item{FOLDER}{A character scalar identifying the path where all the files are

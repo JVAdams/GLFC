@@ -4,8 +4,17 @@
 \alias{DWEFreport}
 \title{Generate Estimates from the Deepwater Electrofishing Data}
 \usage{
-DWEFreport(Dir, CatchClean, LengthsClean, Plots, Downstream, Errors,
-  Outfiles, StratArea = SMRStratArea, bkill = 0.75)
+DWEFreport(
+  Dir,
+  CatchClean,
+  LengthsClean,
+  Plots,
+  Downstream,
+  Errors,
+  Outfiles,
+  StratArea = SMRStratArea,
+  bkill = 0.75
+)
 }
 \arguments{
 \item{Dir}{A character scalar identifying the path where output files will be

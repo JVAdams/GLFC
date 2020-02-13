@@ -4,9 +4,16 @@
 \alias{SRstatusbeta}
 \title{Determine Status and Trend}
 \usage{
-SRstatusbeta(bydat, timedat, measdat, targdat, status.length = 3,
-  trend.length = 5, response.stat = c("Met", "Above"),
-  response.trend = c("Decr.", "Steady", "Incr."))
+SRstatusbeta(
+  bydat,
+  timedat,
+  measdat,
+  targdat,
+  status.length = 3,
+  trend.length = 5,
+  response.stat = c("Met", "Above"),
+  response.trend = c("Decr.", "Steady", "Incr.")
+)
 }
 \arguments{
 \item{bydat}{A vector of grouping variables.}

@@ -4,8 +4,14 @@
 \alias{AIprep}
 \title{Prepare the Adult Index Data}
 \usage{
-AIprep(csvDir, csvNew, csvOld = NULL, streamInfo = trappedStreams,
-  indexStreams = lsIndex, keepStreams = lsKeep)
+AIprep(
+  csvDir,
+  csvNew,
+  csvOld = NULL,
+  streamInfo = trappedStreams,
+  indexStreams = lsIndex,
+  keepStreams = lsKeep
+)
 }
 \arguments{
 \item{csvDir}{A character scalar identifying the path where the csv files are

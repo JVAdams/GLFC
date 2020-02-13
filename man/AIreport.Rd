@@ -4,8 +4,14 @@
 \alias{AIreport}
 \title{Adult Index Report}
 \usage{
-AIreport(streamPEs, lakeIPEs, targets, csvDir, outFile = NULL,
-  proptargets = NULL)
+AIreport(
+  streamPEs,
+  lakeIPEs,
+  targets,
+  csvDir,
+  outFile = NULL,
+  proptargets = NULL
+)
 }
 \arguments{
 \item{streamPEs}{A data frame of "complete" stream mark-recapture estimates

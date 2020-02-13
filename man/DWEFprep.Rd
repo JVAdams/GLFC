@@ -4,8 +4,14 @@
 \alias{DWEFprep}
 \title{Prepare the Deepwater Electrofishing Data}
 \usage{
-DWEFprep(Dir, CatchFile, LengthsFile, PlotsFile, TRTtiming = "AFTER",
-  b4plots = NULL)
+DWEFprep(
+  Dir,
+  CatchFile,
+  LengthsFile,
+  PlotsFile,
+  TRTtiming = "AFTER",
+  b4plots = NULL
+)
 }
 \arguments{
 \item{Dir}{A character scalar identifying the path where the data files are

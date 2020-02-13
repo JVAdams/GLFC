@@ -4,8 +4,17 @@
 \alias{shadepoly}
 \title{Add Shaded Polygon to Plot}
 \usage{
-shadepoly(x, ymd, ylo, yhi, subsel = NULL, kol = "#000000",
-  opq = c(20, 50), addline = TRUE, smooth = 100)
+shadepoly(
+  x,
+  ymd,
+  ylo,
+  yhi,
+  subsel = NULL,
+  kol = "#000000",
+  opq = c(20, 50),
+  addline = TRUE,
+  smooth = 100
+)
 }
 \arguments{
 \item{x}{A numeric vector, the metric to plot in the x direction (e.g., time).}

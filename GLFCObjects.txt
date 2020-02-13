@@ -39,8 +39,9 @@ lsKeep <- lapply(1:5, function(i) i + lsKeep[[i]]/1000)
 # modified Schaefer version last updated Oct 2014
 index2pe.Schaefer <- c(3.95, 1.87, 2.87, 1.45, 2.37)
 names(index2pe.Schaefer) <- c("Superior", "Michigan", "Huron", "Erie", "Ontario")
-# pooled Petersen version last updated Feb 2019
-index2pe <- c(4.12, 1.80, 2.69, 1.04, 2.06)
+# pooled Petersen version last updated 13 Feb 2020
+# previous Feb 2019 c(4.12, 1.80, 2.69, 1.04, 2.06)
+index2pe <- c(4.64, 1.89, 2.86, 1.2, 2.24)
 names(index2pe) <- c("Superior", "Michigan", "Huron", "Erie", "Ontario")
 
 # An environment local to the GLFC package

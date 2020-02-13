@@ -4,8 +4,15 @@
 \alias{SRstatus}
 \title{Determining Status and Trends}
 \usage{
-SRstatus(bydat, timedat, measdat, targdat, bytar = sort(unique(bydat)),
-  status.length = 3, trend.length = 5)
+SRstatus(
+  bydat,
+  timedat,
+  measdat,
+  targdat,
+  bytar = sort(unique(bydat)),
+  status.length = 3,
+  trend.length = 5
+)
 }
 \arguments{
 \item{bydat}{A vector of grouping variables.}
