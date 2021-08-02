@@ -62,7 +62,7 @@ DWEFerror <- function(Dir, Catch, Lengths, Continue, Source=NULL) {
   printvars <- c("sampid", "date", "region", "new.numb", "depth", "hab.type",
     "sl.total", "commentwrap")
 
-  TODAY <- format(Sys.time(), "%d-%b-%Y")
+  TODAY <- Sys.Date()
 
 
   # create rtf document
@@ -85,14 +85,21 @@ DWEFerror <- function(Dir, Catch, Lengths, Continue, Source=NULL) {
 
 
   # table of output files
-  catchout.file.name <- paste0(YEAR, "CatchesSMR.csv")
-  lengthout.file.name <- paste0(YEAR, "LengthsSMR.csv")
-  bpestout.file.name <- paste0(YEAR, "BPlotEstsSMR.csv")
-  outfilenames <- c(catchout.file.name, lengthout.file.name, bpestout.file.name)
+  catchout.file.name <- paste0(YEAR, "-CatchesSMR.csv")
+  lengthout.file.name <- paste0(YEAR, "-LengthsSMR.csv")
+  bpestout.file.name <- paste0(YEAR, "-BPlotEstsSMR.csv")
+  catch.all.name <- paste0(YEAR, "-CatchALL-", Sys.Date(), ".csv")
+  length.all.name <- paste0(YEAR, "-LengthALL-", Sys.Date(), ".csv")
+  plot.all.name <- paste0(YEAR, "-BPlotEstsALL-", Sys.Date(), ".csv")
+  pe.all.name <- paste0(YEAR, "-WholeRiverEsts-", Sys.Date(), ".csv")
+  outfilenames <- c(catchout.file.name, lengthout.file.name, bpestout.file.name,
+    catch.all.name, length.all.name, plot.all.name, pe.all.name)
   if(Continue) {
     tab <- cbind(
       c(docname, outfilenames),
-      c("This Document", "Catches", "Lengths", "Hotspot Estimates"))
+      c("This Document", "Catches", "Lengths", "Hotspot Estimates",
+        "Updated Historic Catches", "Updated Historic Lengths",
+        "Updated Plot Estimates", "Updated Whole River PEs"))
   } else {
     tab <- cbind(docname, "This Document")
   }

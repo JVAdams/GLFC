@@ -3,8 +3,10 @@
 \name{index2pe}
 \alias{index2pe}
 \title{Factors to Scale Up the Adult Index to a Lake-Wide Population}
-\format{A named vector of length 5 (for the 5 Great Lakes)
-  with factors rounded to the nearest hundredth.}
+\format{
+A named vector of length 5 (for the 5 Great Lakes)
+  with factors rounded to the nearest hundredth.
+}
 \source{
 Great Lakes Fishery Commission (\href{http://www.glfc.org}{GLFC})
   Sea Lamprey Control Board Meeting 14-02,

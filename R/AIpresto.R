@@ -20,7 +20,7 @@
 #'   with stream mark-recapture estimates for which Adult Indices
 #'   have already been estimated (typically from previous years),
 #'   with the same variables as in \code{NEWDATARAW} plus the
-#'   previously estimated contribution \code{indexContrib} and 
+#'   previously estimated contribution \code{indexContrib} and
 #'   \code{indexContribCV}.
 #' @param LAKEDATAPREV
 #'   A character scalar identifying the name of the csv file
@@ -79,12 +79,7 @@ AIpresto <- function(DIRECTORY, NEWDATARAW, STREAMDATAPREV, LAKEDATAPREV) {
   needpkgs <- setdiff(wantpkgs, row.names(installed.packages()))
   if(length(needpkgs) > 0) install.packages(needpkgs)
 
-  message("\n\nDo you have the latest version of GLFC installed?",
-    "\n\nIf not, download this zip file,",
-    "\n  https://github.com/JVAdams/GLFC/raw/master/GLFC.zip",
-    "\nand install it from the R menu:",
-    "\n  Packages,\n  Install package(s) from local zip files...\n\n")
-
+  githubver()
 
   #### Data Preparation ####
 

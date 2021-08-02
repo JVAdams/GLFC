@@ -48,8 +48,6 @@
 #' @return
 #'   A draft report document as an rtf file (with the file type *.doc,
 #'   so that MS Word will open it automatically).
-#' @importFrom zoo rollapply
-#' @importFrom plyr ddply .
 #' @importFrom tidyr complete
 #' @import maps
 #' @export
@@ -59,6 +57,8 @@ AIreport <- function(streamPEs, lakeIPEs, targets, csvDir, outFile=NULL,
 
 # library(GLFC)
 # library(maps)
+# library(tidyr)
+# library(dplyr)
 # streamPEs=streamPE
 # lakeIPEs=lakeIndPE
 # targets=oldtarg
@@ -73,30 +73,29 @@ AIreport <- function(streamPEs, lakeIPEs, targets, csvDir, outFile=NULL,
   }
 
   # calculate three-year running mean (moving average) for adult index
-  lakeIPEs <- tidyr::complete(lakeIPEs, lake, year)
-#  lakeIPEs <- lakeIPEs[order(lakeIPEs$lake, lakeIPEs$year), ]
-  look <- plyr::ddply(.data=lakeIPEs[, c("lake", "index")],
-    .variables=plyr::.(lake), .drop=FALSE, .fun=zoo::rollapply, width=3,
-    FUN=mean, fill=c(NA, NA, NA), align="right")
-  lakeIPEs <- cbind(lakeIPEs, index.3mn=look[, 2])
+  look <- tidyr::complete(lakeIPEs, lake, year) %>%
+    group_by(lake) %>%
+    arrange(lake, year) %>%
+    mutate(
+      lag1=lag(index, 1),
+      lag2=lag(index, 2),
+      nrun= (!is.na(index)) + (!is.na(lag1)) + (!is.na(lag2))
+    )
+  fullrun3 <- rowMeans(look[, c("index", "lag1", "lag2")], na.rm=TRUE)
+  look$index.3mn <- ifelse(look$nrun<2, NA, fullrun3)
+  lakeIPEs <- look
 
   # create nice looking table with latest year of estimates and targets
-  targ2 <- with(lakeIPEs,
-    SRstatus(bydat=lake, timedat=year, measdat=index,
-      targdat=targets$targInd[1:5],
-      status.length=3)[,
-        c("bydat", "stspan", "stmean", "targdat", "status")]
-  )
-  # targ2 <- merge(lakeIPEs[lakeIPEs$year==YEAR, ], targets, all=TRUE)
-  row.names(targ2) <- Lakenames
-  # targ2$above <- with(targ2,
-  #   ifelse(!is.na(index) & !is.na(targInd) & index > targInd, "***", ""))
-  targ2$above <- targ2$status
-  targ2$targInd <- targ2$targdat
-  targ2$index <- targ2$stmean
-  targ2$above[with(targ2, is.na(index) | is.na(targInd))] <- " ? "
-  targ2 <- targ2[, c("above", "targInd", "index")]
-  TAB.targs <- prettytable(targ2, c(0, 0, 0))
+  targ2 <- lakeIPEs %>%
+    filter(year==YEAR) %>%
+    full_join(targets) %>%
+    mutate(
+      Lake = Lakenames[lake],
+      Status = ifelse(index.3mn <= targInd, "Less than", "Greater than")
+    ) %>%
+    ungroup() %>%
+    select(Lake, index, index.3mn, Target=targInd, Status)
+  TAB.targs <- prettytable(as.data.frame(targ2), 0)
 
   # plot lake-wide totals w/ confidence intervals on different scales
   FIG.lakeCI <- function(lakeids=1:5, k=index2pe) {
@@ -243,7 +242,7 @@ AIreport <- function(streamPEs, lakeIPEs, targets, csvDir, outFile=NULL,
         }
       }
     mtext("Year", outer=TRUE, side=1, cex=outcex)
-    mtext("Adults  (thousands)", outer=TRUE, side=2, cex=outcex)
+    mtext("Adult Index  (thousands)", outer=TRUE, side=2, cex=outcex)
     }
 
 
@@ -274,18 +273,18 @@ AIreport <- function(streamPEs, lakeIPEs, targets, csvDir, outFile=NULL,
     paste0(delta[!is.na(hier) & hier], "% higher than")
   phrase[!is.na(hier) & loer] <-
     paste0(delta[!is.na(hier) & loer], "% lower than")
-  abta <- sum(TAB.targs$above=="***")
-  beta <- sum(TAB.targs$above=="")
+  abta <- sum(targ2$Status=="Greater than")
+  beta <- sum(targ2$Status=="Less than")
 
   insert1 <- ""
   insert2 <- ""
   if (abta>0) {
     insert1 <-
-      paste(rownames(TAB.targs)[TAB.targs$above=="***"], collapse=", ")
+      paste(targ2$Lake[targ2$Status=="Greater than"], collapse=", ")
   }
   if (beta>0) {
     insert2 <-
-      paste(rownames(TAB.targs)[TAB.targs$above==""], collapse=", ")
+      paste(targ2$Lake[targ2$Status=="Less than"], collapse=", ")
   }
   para("The index of adult sea lamprey abundance is estimated annually for each Great Lake. Based on the mean over the last 3 years (", YEAR-2, "-", YEAR, "), lakes ", insert2, " were less than the targets and lakes ", insert1, " were greater than the targets (Table 1, Figure 1).  Index targets were determined for each lake as average abundance observed during a 5-year period when wounding rates were at an acceptable level. Adult sea lamprey indices and lake-wide abundances from 1985 to ", YEAR, " are reported in Tables 2 and 3.")
 
@@ -322,8 +321,13 @@ AIreport <- function(streamPEs, lakeIPEs, targets, csvDir, outFile=NULL,
   allstr <- sum(with(streamPEs, index==TRUE & year==YEAR))
   para("The distribution of the ", YEAR, " stream estimates around the Great Lakes is shown in Figure 3.  Mark-recapture estimates of adult sea lamprey abundance were available for ", allstr-misspe, " of the ", allstr, " index streams.")
 
-prettyTAB.targs <- TAB.targs[, 1:3]
-names(prettyTAB.targs) <- c("> Target", "Target", "3-Yr Avg Index")
+prettyTAB.targs <- TAB.targs
+names(prettyTAB.targs) <- c(
+  "Lake",
+  paste0(YEAR, "\nindex"),
+  paste0(YEAR-2, "-", YEAR, "\n mean index"),
+  "Target",
+  "Status")
 
   tabl("The judgement of whether a lake is above target is based on the mean adult index over the last 3 years.",
     TAB=prettyTAB.targs)

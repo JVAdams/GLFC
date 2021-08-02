@@ -13,8 +13,20 @@
 #'   larvae only (no metamorphosing juveniles), typically the \code{LEN2}
 #'   output from \code{\link{DWEFerror}}.
 #' @param Plots
-#'   A vector data frame with the plot data, typically the \code{PLT} output
+#'   A data frame with the plot data, typically the \code{PLT} output
 #'   from \code{\link{DWEFerror}}.
+#' @param CatHist
+#'   A data frame with the historic catch data, typically the \code{CAThist}
+#'   output from \code{\link{DWEFerror}}.
+#' @param LenHist
+#'   A data frame with the historic lengths data, typically the \code{LENhist}
+#'   output from \code{\link{DWEFerror}}.
+#' @param PlotHist
+#'   A data frame with the historic plot-specific estimates, typically
+#'   the \code{Plothist} output from \code{\link{DWEFerror}}.
+#' @param PEHist
+#'   A data frame with the historic whole river population estimates, typically
+#'   the \code{PEhist} output from \code{\link{DWEFerror}}.
 #' @param Downstream
 #'   Logical scalar indicating whether the downstream portion of the St. Marys
 #'   River was surveyed (TRUE) or if just the upstream portion of the river was
@@ -25,8 +37,11 @@
 #'   remaining the DWEF data, typically the \code{ERR} output from
 #'   \code{\link{DWEFerror}}.
 #' @param Outfiles
-#'   A character vector of length three with names for the catch, lengths,
-#'   and plot output csv files.
+#'   A character vector of length seven with names for the new catch, lengths,
+#'   and plot output csv files, and the updated catch, lengths, plot, and
+#'   whole river population output csv files.  Note that updates to the whole
+#'   river population files assume post-treatment sampling only, other
+#'   situations will yield missing values for estimates.
 #' @param StratArea
 #'   Data frame with three variables: \code{inbplot} indicating whether the
 #'   stratum is in (=1) a high larval density area or not (=0), \code{region}
@@ -46,16 +61,18 @@
 #'   \code{\link{DWEFerror}} will be continued and completed by
 #'   \code{DWEFreport}.
 #' @return
-#'   Three csv files are written to \code{Dir}, with the final catch, lengths,
-#'   and plot data.
+#'   Six csv files are written to \code{Dir}, with the final catch, lengths,
+#'   and plot data for the latest year as well as the updated historic catch,
+#'   lengths, and PE files.
 #' @importFrom plotrix rescale
 #' @importFrom lubridate year mday month
 #' @import survey
 #' @import maps
 #' @export
 
-DWEFreport <- function(Dir, CatchClean, LengthsClean, Plots, Downstream,
-  Errors, Outfiles, StratArea=SMRStratArea, bkill=0.75) {
+DWEFreport <- function(Dir, CatchClean, LengthsClean, Plots, CatHist, LenHist,
+  PlotHist, PEHist, Downstream, Errors, Outfiles, StratArea=SMRStratArea,
+  bkill=0.75) {
 
 # Dir <- mydat$SOURCE["Dir"]
 # CatchClean <- myclean$CAT2
@@ -91,7 +108,7 @@ DWEFreport <- function(Dir, CatchClean, LengthsClean, Plots, Downstream,
 
   if(length(unique(CatchClean$period))!=1) stop("There should be just one",
     " value for the variable period in the Catch file.")
-  WHEN <- recode(CatchClean$period[1], c(0, 1, -1, NA), c("No treatment",
+  WHEN <- GLFC::recode(CatchClean$period[1], c(0, 1, -1, NA), c("No treatment",
     "Post-treatment", "Pre-treatment", "Pre- and post-treatment"))
 
   TODAY <- format(Sys.time(), "%d-%b-%Y")
@@ -301,8 +318,8 @@ DWEFreport <- function(Dir, CatchClean, LengthsClean, Plots, Downstream,
   pre.ests <- doit(df.pre.est)
   post.ests <- doit(df.post.est)
 
-  cat("\n\n\n*** Send these estimates to Jean.\n")
-  cat("*** She will use them to update the SMR Assessment Plan metrics.\n")
+  # cat("\n\n\n*** Send these estimates to Jean.\n")
+  # cat("*** She will use them to update the SMR Assessment Plan metrics.\n")
 
   cat("\n    Pre-treatment whole-river estimate\n\n")
   print(lapply(pre.ests[-(1:2)], format, big.mark=","))
@@ -336,7 +353,49 @@ DWEFreport <- function(Dir, CatchClean, LengthsClean, Plots, Downstream,
     cat(paste0("\n     Post-trt muhat = ", peup$muhat.f, ", sigmahat = ",
       peup$sigmahat.f, "\n\n"))
     rm(smr2up, smr3up, dpe, peup)
-    }
+  }
+
+
+
+
+  # new data frame for new pre and post-trt PEs based on historic PE frame
+  # these are set up assuming post-trt sampling only
+  # other situations will yield missing values for estimates
+  Date.Range <- range(smr3$date, na.rm=TRUE)
+  BlankPE <- PEHist %>%
+    slice(1) %>%
+    mutate_all(function(x) NA)
+  NewPE1 <- BlankPE %>%
+    mutate(
+      Year = YEAR,
+      Design = "none",
+      Type = "none",
+      Period = -1,
+      Trt = "pre"
+    )
+  NewPE2 <- BlankPE %>%
+    mutate(
+      Year = YEAR,
+      Design = "strat",
+      Type = ifelse(Downstream, "whole", "upper"),
+      Period = 1,
+      Trt = "post",
+      Dates = paste(month(Date.Range), mday(Date.Range), sep="/",
+        collapse=" - "),
+      Samples = dim(smr3)[1],
+      Catch = sum(smr3$sl.larv.n) + sum(smr3$sl.meta.n),
+      Area_ha = sum(areas3$haStrat)
+    )
+
+  if(smr3$period[1]==1) {
+    # survey conducted post-treatment
+    NewPE1[, c("PE", "SD", "CV", "LO", "HI")] <-
+      unname(unlist(pre.ests[-(1:2)]))
+    NewPE2[, c("PE", "SD", "CV", "LO", "HI")] <-
+      unname(unlist(post.ests[-(1:2)]))
+  }
+
+  NewPE <- rbind(NewPE1, NewPE2)
 
   rm(CatchClean, areas3, nsamples.in.plots, surveyed.plots, surveyed.plots.area,
     nsamples.out.upper, surveyed.strats, surveyed.strats.area,
@@ -457,7 +516,6 @@ DWEFreport <- function(Dir, CatchClean, LengthsClean, Plots, Downstream,
   rm(int.in, int.out.up, phrase)
 
 
-
   # tables
 
   # summary of larval survey overall
@@ -540,7 +598,7 @@ DWEFreport <- function(Dir, CatchClean, LengthsClean, Plots, Downstream,
     " density of all larvae.",
     "  Metrics include hotspot number (hotspot), area of hotspot (area.ha in",
     " ha), cumulative area of hotspots (cum.area), number of times the hotspot",
-    " was treated in ", YEAR,  "(trtd), number of samples (n.samp), total sea",
+    " was treated in ", YEAR, " (trtd), number of samples (n.samp), total sea",
     " lamprey catch (catch), and estimates of larval density (meannperha in",
     " no./ha) with standard deviation (sd.dens), and total number of larvae",
     " (larvpe), as well as the proportion (pbig), number (bigpe), and density",
@@ -689,20 +747,30 @@ DWEFreport <- function(Dir, CatchClean, LengthsClean, Plots, Downstream,
     "inbplot", "plot.num", "new.numb", "sample", "cluster", "depth", "hab.type",
     "sub.major", "sub.minor1", "sub.minor2", "ab.total", "i.total", "sl.larv.n",
     "sl.larv.adj", "comment")
-  write.csv(smr3[, outcolumns], paste(Dir, Outfiles[1], sep="/"),
+  newcat <- smr3[, outcolumns]
+  write.csv(newcat, paste(Dir, Outfiles[1], sep="/"),
     row.names=FALSE, na="")
+  catcom <- rbind(CatHist, newcat)
+  write.csv(catcom, paste(Dir, Outfiles[4], sep="/"), row.names=FALSE, na="")
 
   LengthsClean$year <- rep(YEAR, dim(LengthsClean)[1])
-  write.csv(LengthsClean[LengthsClean$class=="A",
-    c("year", "sampid", "length", "sl.larv.adj")],
-    paste(Dir, Outfiles[2], sep="/"),
-    row.names=FALSE, na="")
+  newlens <- LengthsClean[LengthsClean$class=="A",
+    c("year", "sampid", "length", "sl.larv.adj")]
+  write.csv(newlens, paste(Dir, Outfiles[2], sep="/"), row.names=FALSE, na="")
+  lencom <- rbind(LenHist, newlens)
+  write.csv(lencom, paste(Dir, Outfiles[5], sep="/"), row.names=FALSE, na="")
 
   # save plot-specific estimates
-  write.csv(pid3[, c("year", "period", "new.numb", "meanlat", "meanlong",
+  newplots <- pid3[, c("year", "period", "new.numb", "meanlat", "meanlong",
     "area.ha", "n.samp", "catch", "meannperha", "sd.dens", "larvpe", "ptran",
-    "tranpe", "pbig", "bigpe")],
-    paste(Dir, Outfiles[3], sep="/"), row.names=FALSE)
+    "tranpe", "pbig", "bigpe")]
+  write.csv(newplots, paste(Dir, Outfiles[3], sep="/"), row.names=FALSE)
+  plotcom <- rbind(PlotHist, newplots)
+  write.csv(plotcom, paste(Dir, Outfiles[6], sep="/"), row.names=FALSE, na="")
+
+  # save whole river estimates
+  pecom <- rbind(PEHist, NewPE)
+  write.csv(pecom, paste(Dir, Outfiles[7], sep="/"), row.names=FALSE, na="")
 
   rm(allmiss, outcolumns)
 

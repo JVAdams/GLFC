@@ -1,5 +1,5 @@
 ---
-title: "DWEF Larval Estimation"
+title: "Estimation of Larval Sea Lamprey Abundance from Deepwater Electrofisher Surveys"
 author: "Jean V. Adams"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
@@ -15,7 +15,7 @@ opts_chunk$set(echo=TRUE, warning=FALSE, message=FALSE, width=80)
 # , autodep=TRUE, cache=TRUE, cache.lazy=FALSE)
 ```
 
-The R package **GLFC** includes functions to estimate larval sea lamprey abundance in the St. Marys River using DWEFES, the Deep-Water ElectroFisher Estimation System.
+The R package **GLFC** includes functions to estimate larval sea lamprey abundance in the St. Marys River using the Deep-Water ElectroFisher Estimation System (DWEFES).
 
 
 
@@ -36,14 +36,14 @@ remotes::install_github("JVAdams/GLFC")
 
 ```{r, echo=FALSE}
 directory   <- "C:/temp"
-catch.file.name <- "2016_Base_Data.xlsx"
-length.file.name <- c("LENGTHS_4.xlsx", "LENGTHS_7.xlsx")
-plots.file.name <- "2016_Treat_Plots.xlsx"
+catch.file.name <- "2019_Base_Data.xlsx"
+length.file.name <- c("2019_LENGTHS_4.xlsx", "2019_LENGTHS_7.xlsx")
+plots.file.name <- "2019_Treat_Plots.xlsx"
 ```
 
-Three *.xl* files are needed to generate larval sea lamprey estimates, one with catch data, one with length data, and one with plot data.
+Three \*.xlsx files with data on larval sea lamprey catches, lengths, and plot treatments in the most recent year are needed to generate larval sea lamprey estimates.
 
-**(1) Catch** - An *.xl* file with the catch data.  The catch file should have at least the following 19 columns, named in the header row:
+**(1) Catch** - An * \*.xl\* * file with the catch data.  The catch file should have at least the following 19 columns, named in the header row:
 
 * `SAMPID` = Sample identification number.
 * `LATITUDE` = Latitude in decimal degrees.
@@ -57,9 +57,9 @@ Three *.xl* files are needed to generate larval sea lamprey estimates, one with 
 * `SUB_MINOR2` = The third most dominant type of bottom substrate (1-8).
 * `GPSDATE` = Date the sample was collected, e.g., `14/06/2016`.
 * `HAB_TYPE` = Habitat type in terms of larval sea lamprey preference (1=preferred, 2=acceptable, 3=unacceptable).
-* `SL_TOTAL` = Total catch of larval sea lampreys.
-* `AB_TOTAL` = Total catch of American brook lampreys.
-* `I_TOTAL` = Total catch of Ichthyomyzon lampreys.
+* `SL_TOTAL` = Total catch of larval sea lampreys (*Petromyzon marinus*).
+* `AB_TOTAL` = Total catch of American brook lampreys (*Lethenteron appendix*).
+* `I_TOTAL` = Total catch of *Ichthyomyzon* spp. lampreys.
 * `COMMENT` = Comments on sampling.
 * `NEW_NUMB` = Plot identification number.
 * `INBPLOT` = Indicator variable equal to 1 if the sample is inside of a hotspot and equal to 0 if the sample is outside of a hotspot.
@@ -73,7 +73,7 @@ fin <- readxl::read_excel(paste(directory, catch.file.name, sep="/"), sheet=1)
 knitr::kable(fin[8:12, ], row.names=FALSE)
 ```
 
-**(2) Lengths** - One or more *.xl* files with lengths data.  The files should have at least the following 2 columns named in the header row: 
+**(2) Lengths** - One or more *\*.xl\** files with lengths data.  The files should have at least the following 2 columns named in the header row: 
 
 * `SAMPID` - Sample identification number (corresponding to the same column in the catch file).
 * `LENGTH` - Length of larva, in mm.
@@ -83,7 +83,7 @@ len <- readxl::read_excel(paste(directory, length.file.name[1], sep="/"), sheet=
 knitr::kable(head(len), row.names=FALSE)
 ```
 
-**(3) Plots** - An *.xl* file with information on each plot.  The files should have at least the following 3 columns, named in the header row:
+**(3) Plots** - An *\*.xl\** file with information on each plot.  The files should have at least the following 3 columns, named in the header row:
 
 * `AREA` - Area of plot, in ha.
 * `Plot_09` - Plot identification number (corresponding to the `NEW_NUMB` column in the catch file for recent years or old ID numbers for past years).
@@ -101,8 +101,70 @@ For all 3 files,
 * the order of the columns is unimportant, and
 * additional columns may be included (but will be ignored).
 
-All 3 files should all be stored in a single directory, `directory`.
+All 3 files should be stored in a single directory, `directory`.
 
+
+
+## Historic data
+
+```{r, echo=FALSE}
+catch.all <- "2018-CatchALL.csv"
+length.all <- "2018-LengthALL.csv"
+plot.all <- "2018-BPlotEstsALL.csv"
+whole.river.pe <- "2018-WholeRiverEsts.csv"
+```
+
+Four \*.csv files with data on historic catches, lengths, plot treatments, and population estimates will be updated with new information.
+
+**(1) Catch** - A \*.csv file with historic catch data. The required fields are the same as for the catch \*.xlsx file, with the following exceptions:
+
+- all field names are lower case
+- `gpsdate` is replaced by four-digit `year` and two-digit `mm` and `dd`
+- `sl.total` is replaced by `sl.larv.n`
+- new variable `period`, timing of sampling relative to treatment (-1 before, 0 no plots treated, 1 after)
+- new variable `sl.larv.adj` is the number of sea lampreys adjusted for gear efficiency
+
+**(2) Lengths** - A \*.csv file with historic lengths data. The required fields are the same as for the lengths \*.xlsx file, with the following exceptions:
+
+- new variable four-digit `year`
+- new variable `sl.larv.adj`, the number of sea lampreys adjusted for gear efficiency
+
+**(3) Plots** - A \*.csv file with historic plot-specific abundance estimates with the following 15 columns, named in the header row:
+
+* `year` = four-digit year
+* `period` = timing of sampling relative to treatment (-1 before, 0 no plots treated, 1 after)
+* `new.numb` = plot identification number
+* `meanlat` = average latitude of plot polygon vertices
+* `meanlong` = average longitude of plot polygon vertices
+* `area.ha` = plot area in hectares
+* `n.samp` = number of DWEF samples taken
+* `catch` = number of larval sea lampreys collected
+* `meannperha` = mean number of larvae per ha
+* `sd.dens` = standard deviation of larvae per ha
+* `larvpe` = estimated larval abundance
+* `ptran` = observed proportion of transformers
+* `tranpe` = estimated transformer abundance
+* `pbig` = observed proportion of large larvae (> 100 mm)
+* `bigpe` = estimated abundance of large larvae
+
+**(4) PEs** - A \*.csv file with historic population estimates with the following 14 columns, named in the header row:
+
+* `Year` = four-digit year
+* `Design` = survey design used
+* `Type` = extent of estimates (whole)
+* `Period` = timing of sampling relative to treatment (-1 before, 0 no plots treated, 1 after)
+* `Trt` = timing of sampling relative to treatment (pre =before, post = after)
+* `Dates` = range of survey dates
+* `Samples` = total number of DWEF samples taken
+* `Catch` = total number of larval sea lampreys collected
+* `Area_ha` = total river area that estimate is expanded to, in hectares
+* `PE` = larval sea lamprey population estimate
+* `SD` = standard deviation associated with `PE`
+* `LO` = lower 95% confidence level of `PE`
+* `HI` = upper 95% confidence level of `PE`
+* `CV` = coefficient of variation of `PE`
+
+All 4 files should be stored in the same directory as the other files, `directory`.
 
 
 
@@ -114,13 +176,17 @@ Load the **GLFC** package to have access to the DWEFES functions.
 library(GLFC)
 ```
 
-Assign the name of the directory (using forward slashes, /, in the file path) and the names of the three files.  For example:
+Assign the name of the directory (using forward slashes, /, in the file path) and the names of the three new and four historic data files.  For example:
 
 ```{r, eval=FALSE}
 directory   <- "C:/temp"
-catch.file.name <- "2016_Base_Data.xlsx"
-length.file.name <- c("LENGTHS_4.xlsx", "LENGTHS_7.xlsx")
-plots.file.name <- "2016_Treat_Plots.xlsx"
+catch.file.name <- "2019_Base_Data.xlsx"
+length.file.name <- c("2019_LENGTHS_4.xlsx", "2019_LENGTHS_7.xlsx")
+plots.file.name <- "2019_Treat_Plots.xlsx"
+catch.all <- "2018-CatchALL.csv"
+length.all <- "2018-LengthALL.csv"
+plot.all <- "2018-BPlotEstsALL.csv"
+whole.river.pe <- "2018-WholeRiverEsts.csv"
 ```
 
 Use the `DWEFprep()` function to read in the deep-water electrofishing data (including information on the lamprey catch, the lamprey lengths, and the identification of plots that were treated) and prepare them for estimation.  In addition to providing the directory and file names as arguments to this function, you also need to provide information on treatment and survey timing.  
@@ -134,12 +200,13 @@ Argument `TRTtiming` is a character scalar identifying the timing of the assessm
 
 Argument `b4plots` is a numeric vector identifying the plots that were surveyed *before* they were treated.  This is **rarely** needed (default NULL).  A value for this should only be provided if `TRTtiming` is set to "MIXED".  For example, if there were three plots surveyed before treatment, `b4plots = c(18, 39, 112)`.
 
-The output from the `DWEFprep()` function is a list with catch, length, and plot data in three data frames (`CAT`, `LEN`, `PLT`) and a character vector of the directory and file names (`SOURCE`).  The plot data is reorganized to have only one row per plot, with the treated variable indicating the number of treatments each plot received that year.
+The output from the `DWEFprep()` function is a list with recent catch, length, and plot data in three data frames (`CAT`, `LEN`, `PLT`), historic catch, length, plot, and population estimate data in four data frames (`CAThist`, `LENhist`, `Plothist`, `PEhist`), and a character vector of the directory and file names (`SOURCE`).  The recent plot data is reorganized to have only one row per plot, with the treated variable indicating the number of treatments each plot received that year.
 
 ```{r}
-mydat <- DWEFprep(Dir=directory, Catch=catch.file.name,
-  Lengths=length.file.name, Plots=plots.file.name,
-  TRTtiming="AFTER", b4plots=NULL)
+mydat <- DWEFprep(Dir=directory, CatchFile=catch.file.name,
+  LengthsFile=length.file.name, PlotsFile=plots.file.name,
+  TRTtiming="AFTER", CatchHist=catch.all, LengthHist=length.all,
+  PlotHist=plot.all, PEHist=whole.river.pe, b4plots=NULL)
 lapply(mydat, head, 2)
 ```
 
@@ -154,7 +221,7 @@ The output from the `DWEFerror()` function is a list with cleaned (errors remove
 
 If `Continue=FALSE`, a rich text file will be saved to `directory` with error checking text, tables, and figures.  If `Continue=TRUE`, the same rich text file will be started, but left open, typically to add in more text, tables, and figures generated by the `DWEFreport()` function. 
 
-The generated report is an *rtf* (rich text format) file but it has a *\*.doc* extension so that it will be automatically opened by Microsoft Word. The report is named `YYYY DWEFES Report dd-Mon-YYYY.doc`, where *YYYY* is the latest year represented in the input data, and placed in  `directory`.
+The generated report is an *\*.rtf* (rich text format) file but it has a *\*.doc* extension so that it will be automatically opened by Microsoft Word. The report is named `YYYY DWEFES Report dd-Mon-YYYY.doc`, where *YYYY* is the latest year represented in the input data, and placed in  `directory`.
 
 The following conditions and graphs are used to highlight potential errors in the data:
 
@@ -190,9 +257,9 @@ SMRStratArea
 ```
 
 
-It is assumed that this function will be run immediately after the `DWEFerror()` function, in which case the rtf file created by `DWEFerror()` will be continued and completed by `DWEFreport()`.
+It is assumed that this function will be run immediately after the `DWEFerror()` function, in which case the *\*.rtf* file created by `DWEFerror()` will be continued and completed by `DWEFreport()`.
 
-The report has few paragraphs summarizing the latest estimates, along with 3 tables:
+The report has a few paragraphs summarizing the latest estimates, along with 3 tables:
 
 * sampling effort and catch of larval sea lampreys for each stratum,
 * pre- and post-treatment population estimates of larval sea lampreys, and
@@ -204,13 +271,14 @@ and 3 figures:
 * length frequency distribution of the post-treatment larval sea lamprey population,
 * map of estimated post-treatment larval sea lamprey density in St. Marys River hotspots.
 
-In addition pre- and post-treatment whole-river estimates are printed to the screen (along with any relevant messages regarding the estimation process). And three csv files are written to `directory`, with the final catch (`YYYYCatchesSMR.csv`), lengths (`YYYYLengthsSMR.csv`), and plot data (`YYYYBPlotEstsSMR.csv`).
+In addition pre- and post-treatment whole-river estimates are printed to the screen (along with any relevant messages regarding the estimation process). And three *\*.csv* files are written to `directory`, with the final catch (`YYYYCatchesSMR.csv`), lengths (`YYYYLengthsSMR.csv`), and plot data (`YYYYBPlotEstsSMR.csv`).
 
 ```{r}
-DWEFreport(Dir=mydat$SOURCE["Dir"], Plots=mydat$PLT, 
-  CatchClean=myclean$CAT2, LengthsClean=myclean$LEN2, 
-  Errors=myclean$ERR, Outfiles=myclean$OUT, 
-  Downstream=FALSE, StratArea=SMRStratArea)
+DWEFreport(Dir=mydat$SOURCE["Dir"], CatchClean=myclean$CAT2,
+  LengthsClean=myclean$LEN2, Plots=mydat$PLT, CatHist=mydat$CAThist,
+  LenHist=mydat$LENhist, PlotHist=mydat$Plothist, PEHist=mydat$PEhist,
+  Downstream=FALSE, Errors=myclean$ERR, Outfiles=myclean$OUT, 
+  StratArea=SMRStratArea)
 ```
 
 
@@ -222,22 +290,30 @@ Below is the pared down version of the R code above needed to estimate larval se
 ```{r, eval=FALSE}
 library(GLFC)
 
-# read in the data
+# read in the new data
 directory   <- "C:/temp"
-catch.file.name <- "2016_Base_Data.xlsx"
-length.file.name <- c("LENGTHS_4.xlsx", "LENGTHS_7.xlsx")
-plots.file.name <- "2016_Treat_Plots.xlsx"
+catch.file.name <- "2019_Base_Data.xlsx"
+length.file.name <- c("2019_LENGTHS_4.xlsx", "2019_LENGTHS_7.xlsx")
+plots.file.name <- "2019_Treat_Plots.xlsx"
 
-mydat <- DWEFprep(Dir=directory, Catch=catch.file.name,
-  Lengths=length.file.name, Plots=plots.file.name)
+# read in the historic data
+catch.all <- "2018-CatchALL.csv"
+length.all <- "2018-LengthALL.csv"
+plot.all <- "2018-BPlotEstsALL.csv"
+whole.river.pe <- "2018-WholeRiverEsts.csv"
+
+mydat <- DWEFprep(Dir=directory, CatchFile=catch.file.name,
+  LengthsFile=length.file.name, PlotsFile=plots.file.name,
+  CatchHist=catch.all, LengthHist=length.all,
+  PlotHist=plot.all, PEHist=whole.river.pe)
 
 # error check the data
 myclean <- DWEFerror(Dir=mydat$SOURCE["Dir"], Catch=mydat$CAT,
   Lengths=mydat$LEN, Source=mydat$SOURCE, Continue=TRUE)
 
 # estimate larval abundance
-DWEFreport(Dir=mydat$SOURCE["Dir"], Plots=mydat$PLT, 
-  CatchClean=myclean$CAT2, LengthsClean=myclean$LEN2, 
-  Errors=myclean$ERR, Outfiles=myclean$OUT, 
-  Downstream=FALSE)
+DWEFreport(Dir=mydat$SOURCE["Dir"], CatchClean=myclean$CAT2,
+  LengthsClean=myclean$LEN2, Plots=mydat$PLT, CatHist=mydat$CAThist,
+  LenHist=mydat$LENhist, PlotHist=mydat$Plothist, PEHist=mydat$PEhist,
+  Downstream=FALSE, Errors=myclean$ERR, Outfiles=myclean$OUT)
 ```

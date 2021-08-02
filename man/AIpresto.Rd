@@ -22,7 +22,7 @@ coefficient of variation \code{CVmr}
 with stream mark-recapture estimates for which Adult Indices
 have already been estimated (typically from previous years),
 with the same variables as in \code{NEWDATARAW} plus the
-previously estimated contribution \code{indexContrib} and 
+previously estimated contribution \code{indexContrib} and
 \code{indexContribCV}.}
 
 \item{LAKEDATAPREV}{A character scalar identifying the name of the csv file

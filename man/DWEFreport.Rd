@@ -9,6 +9,10 @@ DWEFreport(
   CatchClean,
   LengthsClean,
   Plots,
+  CatHist,
+  LenHist,
+  PlotHist,
+  PEHist,
   Downstream,
   Errors,
   Outfiles,
@@ -27,8 +31,20 @@ output from \code{\link{DWEFerror}}.}
 larvae only (no metamorphosing juveniles), typically the \code{LEN2}
 output from \code{\link{DWEFerror}}.}
 
-\item{Plots}{A vector data frame with the plot data, typically the \code{PLT} output
+\item{Plots}{A data frame with the plot data, typically the \code{PLT} output
 from \code{\link{DWEFerror}}.}
+
+\item{CatHist}{A data frame with the historic catch data, typically the \code{CAThist}
+output from \code{\link{DWEFerror}}.}
+
+\item{LenHist}{A data frame with the historic lengths data, typically the \code{LENhist}
+output from \code{\link{DWEFerror}}.}
+
+\item{PlotHist}{A data frame with the historic plot-specific estimates, typically
+the \code{Plothist} output from \code{\link{DWEFerror}}.}
+
+\item{PEHist}{A data frame with the historic whole river population estimates, typically
+the \code{PEhist} output from \code{\link{DWEFerror}}.}
 
 \item{Downstream}{Logical scalar indicating whether the downstream portion of the St. Marys
 River was surveyed (TRUE) or if just the upstream portion of the river was
@@ -39,8 +55,11 @@ produced by \code{\link{DWEFerror}}, indicating unresolved errors
 remaining the DWEF data, typically the \code{ERR} output from
 \code{\link{DWEFerror}}.}
 
-\item{Outfiles}{A character vector of length three with names for the catch, lengths,
-and plot output csv files.}
+\item{Outfiles}{A character vector of length seven with names for the new catch, lengths,
+and plot output csv files, and the updated catch, lengths, plot, and
+whole river population output csv files.  Note that updates to the whole
+river population files assume post-treatment sampling only, other
+situations will yield missing values for estimates.}
 
 \item{StratArea}{Data frame with three variables: \code{inbplot} indicating whether the
 stratum is in (=1) a high larval density area or not (=0), \code{region}
@@ -56,8 +75,9 @@ treated plots, expressed as the proportion of larval sea lampreys killed,
 default 0.75.}
 }
 \value{
-Three csv files are written to \code{Dir}, with the final catch, lengths,
-  and plot data.
+Six csv files are written to \code{Dir}, with the final catch, lengths,
+  and plot data for the latest year as well as the updated historic catch,
+  lengths, and PE files.
 }
 \description{
 Generate Estimates of larval sea lamprey abundance from

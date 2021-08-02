@@ -1,18 +1,21 @@
 Package: GLFC
-Version: 1.5.1.9000
-Date: 2020-02-13
+Version: 1.5.2.9000
+Date: 2021-08-02
 Title: Great Lakes Fishery Commission
 Authors@R: person(given="Jean V.", family="Adams", email="jvadams@usgs.gov", 
   role=c("aut", "cre"))
 Author: Jean V. Adams [aut, cre]
 Maintainer: Jean V. Adams <jvadams@usgs.gov>
 Depends: 
-    R (>= 3.6.2),
+    R (>= 4.1.0),
     maps
 Imports: 
     broom,
+	curl,
 	dplyr,
+	egg,
     geosphere,
+	ggmap,
     lmtest,
     lubridate,
 	magrittr,
@@ -24,13 +27,14 @@ Imports:
     readxl,
     rtf,
     survey,
+	tibble,
     tidyr,
     zoo
 Suggests: 
     knitr,
     rmarkdown
 Description: Functions developed for the Great Lakes Fishery Commission's
-    sea lamprey control program, including estimation of the index
+   sea lamprey control program, including estimation of the index
    of adult sea lamprey abundance (functions starting with "AI"), estimation
    of larval sea lamprey abundance from deepwater electofishing surveys in the
    St. Marys River (functions starting with "DWEF"), and creation of the annual 
@@ -40,5 +44,5 @@ URL: https://github.com/JVAdams/GLFC
 BugReports: https://github.com/JVAdams/GLFC/issues
 LazyData: TRUE
 VignetteBuilder: knitr
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.1
 Encoding: UTF-8

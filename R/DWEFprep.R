@@ -35,6 +35,28 @@
 #'   (the default), "BEFORE" if all plots were survey BEFORE they were treated,
 #'   "NONE" if no plots were treated, and "MIXED" if some plots were surveyed
 #'   before and some plots were surveyed after treatment.
+#' @param CatchHist
+#'   A character scalar identifying the name of the *.csv file with
+#'   historic catch data. The file should have these 29 columns, named in the
+#'   header row: year, mm, dd, stime, period, sampid, transamp, transect, site,
+#'   boat, latitude, longitude, region, label, inbplot, plot.num, new.numb,
+#'   sample, cluster, depth, hab.type, sub.major, sub.minor1, sub.minor2,
+#'   ab.total, i.total, sl.larv.n, sl.larv.adj, comment.
+#' @param LengthHist
+#'   A character scalar identifying the name of the *.csv file with
+#'   historic lengths data. The file should have these 4 columns, named in the
+#'   header row: year, sampid, length, sl.larv.adj.
+#' @param PlotHist
+#'   A character scalar identifying the name of the *.csv file with
+#'   historic plot-specific estimates. The file should have these 15
+#'   columns, named in the header row: year, period, new.numb, meanlat,
+#'   meanlong, area.ha, n.samp, catch, meannperha, sd.dens, larvpe, ptran,
+#'   tranpe, pbig, bigpe.
+#' @param PEHist
+#'   A character scalar identifying the name of the *.csv file with
+#'   historic whole-river population estimates. The file should have these 14
+#'   columns, named in the header row: Year, Design, Type, Period, Trt, Dates,
+#'   Samples, Catch, Area_ha, PE, SD, LO, HI, CV.
 #' @param b4plots
 #'   A numeric vector identifying the plots that were surveyed BEFORE they
 #'   were treated.  A value for this should only be provided if
@@ -55,7 +77,7 @@
 #' @export
 
 DWEFprep <- function(Dir, CatchFile, LengthsFile, PlotsFile, TRTtiming="AFTER",
-  b4plots=NULL) {
+  CatchHist, LengthHist, PlotHist, PEHist, b4plots=NULL) {
 
   # treatment timing
   tt <- casefold(substring(TRTtiming, 1, 1))
@@ -65,7 +87,7 @@ DWEFprep <- function(Dir, CatchFile, LengthsFile, PlotsFile, TRTtiming="AFTER",
     ' surveyed BEFORE they were treated, e.g., b4plots=c(18, 39, 112).')
   if(tt!="m" & !is.null(b4plots)) stop('No plot numbers should be provided',
     ' for b4plots unless TRTtiming="MIXED".')
-  PERIOD <- recode(tt, c("n", "a", "b", "m"), c(0, 1, -1, NA))
+  PERIOD <- GLFC::recode(tt, c("n", "a", "b", "m"), c(0, 1, -1, NA))
 
   # bring in lengths data
   lens <- vector("list", length(LengthsFile))
@@ -206,7 +228,29 @@ DWEFprep <- function(Dir, CatchFile, LengthsFile, PlotsFile, TRTtiming="AFTER",
   smr <- smr[order(smr$boat, smr$date, smr$dec.time), ]
   rm(list.time, sel, i)
 
-  list(CAT=smr, LEN=lens, PLT=plotinfo2,
-    SOURCE=c(Dir=Dir, CatchFile=CatchFile,
-      LengthsFile=paste(LengthsFile, collapse=", "), PlotsFile=PlotsFile))
+  # read in historic data
+  ch <- read.csv(paste(Dir, CatchHist, sep="/"))
+  lh <- read.csv(paste(Dir, LengthHist, sep="/"))
+  ph <- read.csv(paste(Dir, PlotHist, sep="/"))
+  rh <- read.csv(paste(Dir, PEHist, sep="/"))
+
+  list(
+    CAT=smr,
+    LEN=lens,
+    PLT=plotinfo2,
+    CAThist=ch,
+    LENhist=lh,
+    Plothist=ph,
+    PEhist=rh,
+    SOURCE=c(
+      Dir=Dir,
+      CatchFile=CatchFile,
+      LengthsFile=paste(LengthsFile, collapse=", "),
+      PlotsFile=PlotsFile,
+      CatchHist=CatchHist,
+      LengthHist=LengthHist,
+      PlotHist=PlotHist,
+      PEHist=PEHist
+    )
+  )
 }

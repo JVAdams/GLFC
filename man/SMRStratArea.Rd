@@ -3,8 +3,10 @@
 \name{SMRStratArea}
 \alias{SMRStratArea}
 \title{St. Marys River Strata Areas}
-\format{A data frame with 9 rows and 3 columns.  Areas are rounded to the 
-  nearest hundredth hectare.}
+\format{
+A data frame with 9 rows and 3 columns.  Areas are rounded to the 
+  nearest hundredth hectare.
+}
 \source{
 Great Lakes Fishery Commission (\href{http://www.glfc.org}{GLFC})
   Sea Lamprey Control Board Meeting 14-02,

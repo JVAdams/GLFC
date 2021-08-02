@@ -39,8 +39,8 @@ cbind(catch, lenmm, adjcatch)
 }
 \references{
 Robinson, JM, MJ Wilberg, JV Adams, and ML Jones. 2014.
- Comparing methods for estimating larval sea lamprey (Petromyzon marinus)
+ Comparing methods for estimating larval sea lamprey (*Petromyzon marinus*)
  density in the St. Marys River for the purposes of control.
  Journal of Great Lakes Research 40(3):739-747.
- \href{http://www.sciencedirect.com/science/article/pii/S0380133014001385}{[link]}
+ \href{https://doi.org/10.1016/j.jglr.2014.05.012}{[link]}
 }

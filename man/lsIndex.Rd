@@ -3,8 +3,10 @@
 \name{lsIndex}
 \alias{lsIndex}
 \title{Great Lakes Streams used in the Index of Adult Sea Lampreys}
-\format{A list of 5 numeric vectors of lake-stream IDs for the 5
-  Great Lakes, e.g., 1.064 = (lake ID) + (stream ID)/1000.}
+\format{
+A list of 5 numeric vectors of lake-stream IDs for the 5
+  Great Lakes, e.g., 1.064 = (lake ID) + (stream ID)/1000.
+}
 \source{
 Great Lakes Fishery Commission (\href{http://www.glfc.org}{GLFC})
   Sea Lamprey Control Board Meeting 14-02,

@@ -13,7 +13,7 @@
 #'   identifying the index streams; \code{maintain} a logical identifying the
 #'   streams that will continue to have ongoing trapping even if not part of
 #'   the Adult Index; \code{indexContrib} a numeric, the stream population
-#'   estimate that will be used in the Adult Index (NA for new); 
+#'   estimate that will be used in the Adult Index (NA for new);
 #'   \code{indexContribCV} a numeric, the stream CV that will be used to
 #'   generate 95\% confidence intervals for the Adult Index (NA for new); and
 #'   \code{complete} a logical identifying streams and years for which the
@@ -65,8 +65,6 @@ AIestimate <- function(streamDat, minNMR=2) {
     indfit <- with(sub,
       aov(log(PEmr) ~ as.factor(lscode) + as.factor(year), weights=1/CVmr^2)
       )
-    cvfit <- aov(CVmr ~ as.factor(lscode) + as.factor(year), data=sub)
-    # figure out estimable years (those with at least minNMR m-r estimate)
     n.mr <- tapply(!is.na(sub$PEmr), sub$year, sum)
     eyrs <- as.numeric(names(n.mr)[n.mr > (minNMR - 0.5)])
     estimable <- streamDat$year %in% eyrs
@@ -74,8 +72,8 @@ AIestimate <- function(streamDat, minNMR=2) {
     CVmr <- Pmr
     Pmr[estimable & streamDat$index] <- predAntilog(aovfit=indfit,
       xdata=streamDat[estimable & streamDat$index, ])
-    CVmr[estimable & streamDat$index] <- predict(object=cvfit,
-      newdata=streamDat[estimable & streamDat$index, ])
+    # CVmr[estimable & streamDat$index] <- predict(object=cvfit,
+    #   newdata=streamDat[estimable & streamDat$index, ])
     streamDat$indexContrib[incompiMiss] <- Pmr[incompiMiss]
     streamDat$indexContribCV[incompiMiss] <- CVmr[incompiMiss]
   }
@@ -101,7 +99,8 @@ AIestimate <- function(streamDat, minNMR=2) {
   # calculate index with 95% confidence interval
   sumpe <- apply(pe3, 1, sum)
   sumvar <- apply(vr, 1, sum)
-  int <- qt((1-0.05/2), dim(pe3)[2])*sqrt(sumvar)
+  n <- dim(pe3)[2]
+  int <- qt(1-0.05/2, n-1)*sqrt(sumvar)/sqrt(n)
   ilo <- sumpe - int
   ihi <- sumpe + int
   lakesum <- data.frame(lake=streamDat$lake[1], year=as.numeric(row.names(pe3)),
