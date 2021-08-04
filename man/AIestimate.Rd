@@ -10,19 +10,25 @@ AIestimate(streamDat, minNMR = 2)
 \item{streamDat}{A data frame of old and new stream mark-recapture estimates
 used to estimate the lake-wide Adult Indices,
 typically the output from \code{\link{AIprep}}.  The data frame must
-include: \code{year},
-\code{lake}, lake-stream ID \code{lscode}
-(see details), population estimate
-\code{PEmr}, coefficient of variation \code{CVmr}
-(100\% * sqrt(variance(PEmr)) / PEmr), \code{index}, a logical
-identifying the index streams; \code{maintain} a logical identifying the
-streams that will continue to have ongoing trapping even if not part of
-the Adult Index; \code{indexContrib} a numeric, the stream population
+include these 10 columns:
+\itemize{
+  \item \code{year};
+  \item \code{lake};
+  \item \code{lscode}, the lake-stream ID (see details);
+  \item \code{PEmr}, the population estimate;
+  \item \code{CVmr}, the coefficient of variation
+(100\% * sqrt(variance(PEmr)) / PEmr);
+  \item \code{index}, a logical identifying the index streams (TRUE for
+index);
+  \item \code{maintain}, a logical identifying the streams that will
+continue to have ongoing trapping even if not part of the Adult Index;
+  \item \code{indexContrib} the stream population
 estimate that will be used in the Adult Index (NA for new);
-\code{indexContribCV} a numeric, the stream CV that will be used to
+  \item \code{indexContribCV} the stream CV that will be used to
 generate 95\% confidence intervals for the Adult Index (NA for new); and
-\code{complete} a logical identifying streams and years for which the
-Adult Index has already been estimated (FALSE for new).}
+  \item \code{complete} a logical identifying streams and years for which
+the Adult Index has already been estimated (FALSE for new).
+}}
 
 \item{minNMR}{An integer scalar greater than or equal to 2,
 the minimum number of mark-recapture estimates
@@ -48,4 +54,10 @@ The annual Adult Index is simply the sum of stream population estimates for
   each year.  Missing stream estimates are estimated by a lake-specific
   ANOVA model relating the log of the stream estimates to the main effects
   of each stream and each year, weighted by the inverse of the CV squared.
+}
+\references{
+Adams, JV, JM Barber, GA Bravener, SA Lewandoski. 2021.
+Quantifying Great Lakes sea lamprey populations using an index of adults.
+Journal of Great Lakes Research.
+ \href{https://doi.org/10.1016/j.jglr.2021.04.009}{[link]}
 }

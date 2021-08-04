@@ -89,7 +89,6 @@ AIpresto <- function(DIRECTORY, NEWDATARAW, STREAMDATAPREV, LAKEDATAPREV) {
 
   YEAR <- max(new$year)
   STREAMDATANEW <- paste0("AdultStream", YEAR, ".csv")
-  write.csv(new, paste(DIRECTORY, STREAMDATANEW, sep="\\"))
 
   # create some information tables for inclusion in error report
 
@@ -159,7 +158,8 @@ AIpresto <- function(DIRECTORY, NEWDATARAW, STREAMDATAPREV, LAKEDATAPREV) {
   #### Draft Report ####
 
   # combine estimates with initially provided data
-  streamPE <- plyr::rbind.fill(stream1[stream1$complete==TRUE, ], streamcomp)
+  streamPE <- plyr::rbind.fill(stream1[stream1$complete==TRUE, ], streamcomp) %>%
+    arrange(lake, lscode, year)
   AIreport(streamPEs=streamPE, lakeIPEs=lakeIndPE, targets=targ,
     csvDir=DIRECTORY, outFile=NULL, proptargets=NULL)
 

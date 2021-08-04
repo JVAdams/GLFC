@@ -5,24 +5,29 @@
 #'   A data frame of old and new stream mark-recapture estimates
 #'   used to estimate the lake-wide Adult Indices,
 #'   typically the output from \code{\link{AIprep}}.  The data frame must
-#'   include: \code{year},
-#'   \code{lake}, lake-stream ID \code{lscode}
-#'   (see details), population estimate
-#'   \code{PEmr}, coefficient of variation \code{CVmr}
-#'   (100\% * sqrt(variance(PEmr)) / PEmr), \code{index}, a logical
-#'   identifying the index streams; \code{maintain} a logical identifying the
-#'   streams that will continue to have ongoing trapping even if not part of
-#'   the Adult Index; \code{indexContrib} a numeric, the stream population
+#'   include these 10 columns:
+#'   \itemize{
+#'     \item \code{year};
+#'     \item \code{lake};
+#'     \item \code{lscode}, the lake-stream ID (see details);
+#'     \item \code{PEmr}, the population estimate;
+#'     \item \code{CVmr}, the coefficient of variation
+#'   (100\% * sqrt(variance(PEmr)) / PEmr);
+#'     \item \code{index}, a logical identifying the index streams (TRUE for
+#'   index);
+#'     \item \code{maintain}, a logical identifying the streams that will
+#'   continue to have ongoing trapping even if not part of the Adult Index;
+#'     \item \code{indexContrib} the stream population
 #'   estimate that will be used in the Adult Index (NA for new);
-#'   \code{indexContribCV} a numeric, the stream CV that will be used to
+#'     \item \code{indexContribCV} the stream CV that will be used to
 #'   generate 95\% confidence intervals for the Adult Index (NA for new); and
-#'   \code{complete} a logical identifying streams and years for which the
-#'   Adult Index has already been estimated (FALSE for new).
+#'     \item \code{complete} a logical identifying streams and years for which
+#'   the Adult Index has already been estimated (FALSE for new).
+#'   }
 #' @param minNMR
 #'   An integer scalar greater than or equal to 2,
 #'   the minimum number of mark-recapture estimates
 #'   needed in a year to generate an index, default 2.
-#'
 #' @return
 #'   A list with 2 data frames:
 #'   \itemize{
@@ -40,14 +45,13 @@
 #'   each year.  Missing stream estimates are estimated by a lake-specific
 #'   ANOVA model relating the log of the stream estimates to the main effects
 #'   of each stream and each year, weighted by the inverse of the CV squared.
+#' @references
+#' Adams, JV, JM Barber, GA Bravener, SA Lewandoski. 2021.
+#' Quantifying Great Lakes sea lamprey populations using an index of adults.
+#' Journal of Great Lakes Research.
+#'  \href{https://doi.org/10.1016/j.jglr.2021.04.009}{[link]}
 
 AIestimate <- function(streamDat, minNMR=2) {
-
-#   library(GLFC)
-#   library(plyr)
-#   streamDat=streamIncomp[streamIncomp$lake==1, ]
-#   streamDat=streamall[streamall$lake==1, ]
-#   minNMR=2
 
   # keep track of who started off as incomplete
   incomp <- with(streamDat, !complete)
@@ -70,10 +74,10 @@ AIestimate <- function(streamDat, minNMR=2) {
     estimable <- streamDat$year %in% eyrs
     Pmr <- rep(NA, length(estimable))
     CVmr <- Pmr
-    Pmr[estimable & streamDat$index] <- predAntilog(aovfit=indfit,
+    p.sd <- predAntilognorm(modfit=indfit,
       xdata=streamDat[estimable & streamDat$index, ])
-    # CVmr[estimable & streamDat$index] <- predict(object=cvfit,
-    #   newdata=streamDat[estimable & streamDat$index, ])
+    Pmr[estimable & streamDat$index] <- p.sd$pred
+    CVmr[estimable & streamDat$index] <- 100*p.sd$sdpred/p.sd$pred
     streamDat$indexContrib[incompiMiss] <- Pmr[incompiMiss]
     streamDat$indexContribCV[incompiMiss] <- CVmr[incompiMiss]
   }
@@ -106,7 +110,7 @@ AIestimate <- function(streamDat, minNMR=2) {
   lakesum <- data.frame(lake=streamDat$lake[1], year=as.numeric(row.names(pe3)),
     index=sumpe, ilo=ilo, ihi=ihi)
 
-  # subset the output to only include the years in streamDatCurr
+  # subset the output to only include the years that needed new estimates
   streamDatOut <- streamDat[streamDat$year %in% uy, ]
   lakeIndexOut <- lakesum[lakesum$year %in% uy, ]
   list(streamPE=streamDatOut, lakeIndex=lakeIndexOut)

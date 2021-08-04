@@ -1,5 +1,5 @@
 Package: GLFC
-Version: 1.5.3.9000
+Version: 1.6.0.9000
 Date: 2021-08-04
 Title: Great Lakes Fishery Commission
 Authors@R: person(given="Jean V.", family="Adams", email="jvadams@usgs.gov", 
@@ -18,10 +18,7 @@ Imports:
 	ggmap,
 	ggplot2,
 	ggrepel,
-    lmtest,
     lubridate,
-	magrittr,
-    orcutt,
     plotrix,
     plyr,
 	purrr,
@@ -30,8 +27,7 @@ Imports:
     rtf,
     survey,
 	tibble,
-    tidyr,
-    zoo
+    tidyr
 Suggests: 
     knitr,
     rmarkdown
