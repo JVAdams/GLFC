@@ -26,21 +26,22 @@
 #' @importFrom tibble tibble
 #' @export
 #' @references
+#'
 #' Haeseker, SL, ML Jones, and JR Bence. 2003.
 #'  Estimating uncertainty in the stock-recruitment relationship for St. Marys
 #'  River sea lampreys.
-#'  Journal of Great Lakes Research 29(Suppl. 1):728–741.
+#'  Journal of Great Lakes Research 29(Suppl. 1):728-741.
 #'  \href{https://doi.org/10.1016/S0380-1330(03)70527-9}{[link]}
+#'
 #' Hoenig, JM and DM Heisey. 1987.
 #'  Use of a log-linear model with the EM algorithm to correct estimates of
 #'  stock composition and to convert length to age.
-#'  Transactions of the American Fisheries Society 116(2):232–243.
-#'  \href{https://doi.org/10.1577/1548-8659(1987)116%3C232:UOALMW%3E2.0.CO;27}{[link]}
+#'  Transactions of the American Fisheries Society 116(2):232-243.
+#'
 #' @examples
 #' DWEFage(c(120, 76, 39))
 
 DWEFage <- function(JustLens, LenFreq=rep(1, length(JustLens)), AgeLenKey=NULL) {
-
 
   #### 0 - definition of variables ####
 
