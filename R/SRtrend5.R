@@ -21,6 +21,7 @@
 #' @return
 #'   A data frame with one row per group and last time, giving the intercept
 #'   (Y.5nt), slope (Y.5sl), and P value (Y.5pv) for the five-year linear trend.
+#' @importFrom broom tidy
 #' @import tidyr
 #' @import dplyr
 #' @export
@@ -51,7 +52,7 @@ SRtrend5 <- function(df, x, group, time, lasttime=NULL) {
     nest(data = -Fgroup) %>%
     mutate(
       fit = purrr::map(data, ~ lm(Fx ~ Ftime, data=.x)),
-      tidied =purrr::map(fit, tidy)
+      tidied = purrr::map(fit, broom::tidy)
     ) %>%
     unnest(tidied)
   part1 <- sub %>%

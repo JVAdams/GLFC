@@ -91,6 +91,8 @@
 #' @importFrom readxl read_excel
 #' @importFrom plotrix rescale
 #' @importFrom plyr ddply
+#' @import ggrepel
+#' @import ggplot2
 #' @import rtf
 #' @import maps
 #' @export
@@ -167,9 +169,10 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
   #### read in data ####
 
   # bring in the range data for the x-axis and all the y-axes
-  axisr <- read_excel(paste0(FOLDER, AXISRANGES), skip=2,
+  axisr <- read_excel(paste0(FOLDER, AXISRANGES), skip=2, na="NA",
     col_names=c("m.order", "metric", "l.order", "lake",
-      "ind.from", "ind.to", "ind.by", "big.from", "big.to", "big.by"))
+      "ind.from", "ind.to", "ind.by", "big.from", "big.to", "big.by")) %>%
+    replace_na(list(big.from=0, big.to=0, big.by=0))
 
   # store the tick mark info in an array of lists
   um <- unique(axisr$metric)
@@ -356,9 +359,9 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
 
 
 
-  a1 <- SRtrn5(ALL, "index", "lake", "spawner.year", lasttime=YEAR)
-  a2 <- SRtrn5(ALL, "trout", "lake", "spawner.year", lasttime=YEAR)
-  a3 <- SRtrn5(ALL, "rate", "lake", "spawner.year", lasttime=YEAR)
+  a1 <- SRtrend5(ALL, "index", "lake", "spawner.year", lasttime=YEAR)
+  a2 <- SRtrend5(ALL, "trout", "lake", "spawner.year", lasttime=YEAR)
+  a3 <- SRtrend5(ALL, "rate", "lake", "spawner.year", lasttime=YEAR)
 
   allsmry <- ALL %>%
     filter(spawner.year==YEAR) %>%
@@ -393,7 +396,7 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
 
   para("Summary: Sea lamprey control program success is measured by index estimates of adult sea lamprey abundance, sea lamprey marking rates on lake trout, and lake trout relative abundance. The overall status of these metrics in each lake is presented in the table below. The status of sea lamprey abundance and marking rates on lake trout are based on the mean over the last 3 years relative to target and trends are based on the slope over the last 5 years. Lake trout abundance is also reported using a 3-year average and 5-year trend, but there are no targets for lake trout abundance in the context of the sea lamprey control program. Single year point estimates can fluctuate and can have wide error bars, thus the focus on 3-year averages and 5-year trends.")
 
-  tabl("", TAB=status.table, row.names=FALSE)
+  tabl(" ", TAB=status.table, row.names=FALSE)
 
   # REPORT CARD
   # 3 year mean of adult index and wounding rates relative to target
