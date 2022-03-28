@@ -126,6 +126,7 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
   col.bay <- 8 # reddish purple
   col.trt <- 3 # sky blue
   col.wou <- 4 # bluish green
+  col.fg <- "white" # color of bar plot outlines
 
   # aspect ratios for lake maps, height/width
   ASPEX <- c(5/7, 7/5, 8/7, 4/7, 4/7)
@@ -329,25 +330,31 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
   a1 <- SRrun3(ALL, "index", "lake", "spawner.year")
   a2 <- SRrun3(a1, "trout", "lake", "spawner.year")
   a3 <- SRrun3(a2, "rate", "lake", "spawner.year")
+  a4 <- SRrun3(a3, "staff.days", "lake", "spawner.year")
+  a5 <- SRrun3(a4, "tfmkgai", "lake", "spawner.year")
+  a6 <- SRrun3(a5, "bayerkgai", "lake", "spawner.year")
 
-  maxtrtyrz <- a3 %>%
+  maxtrtyrz <- a6 %>%
     filter(!is.na(rate) | !is.na(trout)) %>%
     group_by(season) %>%
     summarise(mty=max(spawner.year))
 
-  ALL <- a3 %>%
+  ALL <- a6 %>%
     full_join(maxtrtyrz, by="season") %>%
     mutate(
       # make sure moving averages don't push into the future
       index.3mn = ifelse(spawner.year>YEAR, NA, index.3mn),
       trout.3mn = ifelse(spawner.year>mty, NA, trout.3mn),
-      rate.3mn = ifelse(spawner.year>mty, NA, rate.3mn)
+      rate.3mn = ifelse(spawner.year>mty, NA, rate.3mn),
+      staff.days.3mn = ifelse(treat.year>YEAR, NA, staff.days.3mn),
+      tfmkgai.3mn = ifelse(treat.year>YEAR, NA, tfmkgai.3mn),
+      bayerkgai.3mn = ifelse(treat.year>YEAR, NA, bayerkgai.3mn)
     ) %>%
     select(-mty)
 
   name.dat <- paste0("StatusMetrics", TODAY, ".csv")
   write.csv(ALL, paste0(FOLDER, name.dat), row.names=FALSE)
-  rm(adult, control, a, a1, a2, a3, trout)
+  rm(adult, control, a, a1, a2, a3, a4, a5, a6, trout)
 
 
   #### status and trends ####
@@ -359,40 +366,80 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
 
 
 
-  a1 <- SRtrend5(ALL, "index", "lake", "spawner.year", lasttime=YEAR)
-  a2 <- SRtrend5(ALL, "trout", "lake", "spawner.year", lasttime=YEAR)
-  a3 <- SRtrend5(ALL, "rate", "lake", "spawner.year", lasttime=YEAR)
 
-  allsmry <- ALL %>%
-    filter(spawner.year==YEAR) %>%
-    select(lake, spawner.year, index, trout, rate, index.3mn, trout.3mn,
-      rate.3mn) %>%
-    full_join(a1, by=c("lake", "spawner.year")) %>%
-    full_join(a2, by=c("lake", "spawner.year")) %>%
-    full_join(a3, by=c("lake", "spawner.year")) %>%
-    full_join(TARGET, by="lake")
+
+
+
+  trendlist <- vector("list")
+  count <- 0
+  for(metricj in c("index", "rate", "trout")) {
+  for(lakei in 1:5) {
+    count <- count + 1
+    aa <- SRtrend5(filter(ALL, lake==lakei), metricj, "lake", "spawner.year")
+    names(aa) <- c("lake", "spawner.year", "int5", "slope5", "pval5")
+    trendlist[[count]] <- aa %>%
+      mutate(metric=metricj)
+  }}
+
+  ALLlong <- ALL %>%
+    select(lake, spawner.year,
+      index=index.3mn, rate=rate.3mn, trout=trout.3mn) %>%
+    pivot_longer(cols=c(index, rate, trout), names_to="metric",
+      values_to="mean3") %>%
+    filter(!is.na(mean3))
+
+  TARGlong <- TARGET %>%
+    select(lake, rate=wound.target, index=index.target) %>%
+    pivot_longer(cols=c(index, rate), names_to="metric", values_to="target")
+
+  allsmry <- bind_rows(trendlist) %>%
+    left_join(ALLlong, by=c("lake", "spawner.year", "metric")) %>%
+    full_join(TARGlong, by=c("lake", "metric"))
+
+  myf <- function(x, digits) {
+    trimws(format(signif(x, digits), big.mark=","))
+  }
+
+  indexsmry <- allsmry %>%
+    filter(metric=="index") %>%
+    left_join(ALL, by=c("lake", "spawner.year")) %>%
+    select(lake, spawner.year, mean3, target, index, index.lo, index.hi) %>%
+    mutate(
+      yrz = paste(spawner.year-2, spawner.year, sep="-"),
+      fmean3 = myf(mean3, 2),
+      ftarget = myf(target, 2),
+      findex = myf(index, 2),
+      findex.lo = myf(index.lo, 2),
+      findex.hi = myf(index.hi, 2)
+    )
+
+  ratesmry <- allsmry %>%
+    filter(metric=="rate") %>%
+    select(lake, spawner.year, mean3, target) %>%
+    mutate(
+      yrz = paste(spawner.year-2, spawner.year, sep="-"),
+      fmean3 = myf(mean3, 2),
+      ftarget = myf(target, 2)
+    )
 
   status.table <- allsmry %>%
     mutate(
-      Lake = Lakenames,
-      sltarg = ifelse(index.3mn<=index.target, "Met", "Above"),
-      sltrnd = case_when(
-        index.5pv >= 0.05 ~ "Steady",
-        index.5sl > 0 ~ "Increasing",
+      stat.targ = ifelse(mean3<=target, "Met", "Above"),
+      stat.trnd = case_when(
+        pval5 >= 0.05 ~ "Steady",
+        slope5 > 0 ~ "Increasing",
         TRUE ~ "Decreasing"),
-      mxtarg = ifelse(rate.3mn<=wound.target, "Met", "Above"),
-      mxtrnd = case_when(
-        rate.5pv >= 0.05 ~ "Steady",
-        rate.5sl > 0 ~ "Increasing",
-        TRUE ~ "Decreasing"),
-      `Lake Trout` = case_when(
-        trout.5pv >= 0.05 ~ "Steady",
-        trout.5sl > 0 ~ "Increasing",
-        TRUE ~ "Decreasing"),
-      `Sea Lamprey` = paste(sltarg, sltrnd, sep=", "),
-      Marks = paste(mxtarg, mxtrnd, sep=", ")
+      status = ifelse(is.na(target), stat.trnd,
+        paste(stat.targ, stat.trnd, sep=", ")),
+      group = GLFC::recode(metric, c("index", "rate", "trout"),
+        c("Sea lamprey", "Marks", "Lake trout"))
     ) %>%
-    select(Lake, `Sea Lamprey`, Marks, `Lake Trout`)
+    select(lake, group, status) %>%
+    pivot_wider(names_from=group, values_from=status) %>%
+    mutate(
+      Lake = Lakenames
+    ) %>%
+    select(Lake, `Sea lamprey`, Marks, `Lake trout`)
 
   para("Summary: Sea lamprey control program success is measured by index estimates of adult sea lamprey abundance, sea lamprey marking rates on lake trout, and lake trout relative abundance. The overall status of these metrics in each lake is presented in the table below. The status of sea lamprey abundance and marking rates on lake trout are based on the mean over the last 3 years relative to target and trends are based on the slope over the last 5 years. Lake trout abundance is also reported using a 3-year average and 5-year trend, but there are no targets for lake trout abundance in the context of the sea lamprey control program. Single year point estimates can fluctuate and can have wide error bars, thus the focus on 3-year averages and 5-year trends.")
 
@@ -400,28 +447,32 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
 
   # REPORT CARD
   # 3 year mean of adult index and wounding rates relative to target
-  # merge metrics data with targets
-  ALL2 <- merge(ALL, TARGET[, c("lake", "wound.target", "index.target")],
-    all.x=TRUE) %>%
+
+
+  REPCARD <- allsmry %>%
+    filter(metric %in% c("index", "rate")) %>%
+    select(lake, last.year=spawner.year, metric) %>%
+    left_join(ALLlong, by = c("lake", "metric")) %>%
+    filter(last.year - spawner.year < 5) %>%
+    left_join(TARGlong, by = c("lake", "metric")) %>%
     mutate(
-      index.rat = index.3mn/index.target,
-      wound.rat = rate.3mn/wound.target,
-      Lake = factor(Lakenames[lake], levels=Lakenames)
-    ) %>%
-    select(Lake, spawner.year, index.rat, wound.rat) %>%
-    pivot_longer(cols=index.rat:wound.rat, names_to="metric",
-      values_to="ratio") %>%
-    mutate(
-      metric = ifelse(metric=="index.rat", "Adult index (3-yr mean)",
+      ratio = mean3/target,
+      Lake = factor(Lakenames[lake], levels=Lakenames),
+      metric = ifelse(metric=="index", "Adult index (3-yr mean)",
         "Marking rate (3-yr mean)")
-    ) %>%
-    filter(
-      !is.na(ratio),
-      spawner.year %in% (YEAR - (4:0))
-      )
+    )
+
+  ggplot(REPCARD, aes(spawner.year, ratio, color=Lake)) +
+      annotate("rect", xmin=-Inf, xmax=Inf, ymin=-Inf, ymax=1,
+        fill="lightgray", color = NA) +
+      geom_line(size=1) +
+      facet_wrap(~ metric) +
+      labs(x="Spawning year", y="Relative to target") +
+      theme_bw(base_size = 12)
+
 
   fig <- function() {
-    p <- ggplot(ALL2, aes(spawner.year, ratio, color=Lake)) +
+    p <- ggplot(REPCARD, aes(spawner.year, ratio, color=Lake)) +
       annotate("rect", xmin=-Inf, xmax=Inf, ymin=-Inf, ymax=1,
         fill="lightgray", color = NA) +
       geom_line(size=1) +
@@ -434,8 +485,7 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
 
   attach(ALL)
 
-  figu("Status metrics, relative to target, for each of the Great Lakes ",
-    paste(range(ALL2$spawner.year), collapse="-"), ".",
+  figu("Status metrics, relative to target, for each of the Great Lakes. The last five years of available data.",
     FIG=fig, h=3.29, w=6.5)
 
 
@@ -495,7 +545,7 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
   		  lines(spawner.year[sel], rate.3mn[sel], col=blindcolz[col.wou])
   			arrows(spawner.year[sel], rate.lo[sel], spawner.year[sel], rate.hi[sel],
   				angle=90, length=0.02, code=3, col=blindcolz[col.wou])
-  			abline(h=allsmry$wound.target[i], col=blindcolz[col.tar])
+  			abline(h=ratesmry$ftarget[i], col=blindcolz[col.tar])
   			points(spawner.year[sel], rate[sel], pch=16, col=blindcolz[col.wou])
   			if (i==1) mtext("Lake trout\nmarking rate", side=2, line=3,
   			  cex=1.5*mycex)
@@ -547,7 +597,7 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
   				xlim=range(year.tk), ylim=range(days.tk)/100)
   			symbols(spawner.year[sel], staff.days[sel]/200,
           rectangle=cbind(0.6, staff.days[sel]/100),
-  				add=TRUE, inches=FALSE, fg="black", bg=blindcolz[col.day])
+  				add=TRUE, inches=FALSE, fg=col.fg, bg=blindcolz[col.day])
   			if (i==5) mtext("Control field days\n(hundreds)", side=4, line=4,
           cex=1.5*mycex)
   			axis(1, at=year.tk)
@@ -562,7 +612,7 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
   			plot(spawner.year[sel], index[sel]/1000, type="n", axes=FALSE, xlab="",
           ylab="",
   				xlim=range(year.tk), ylim=c(0, maxindex$ylimmax[i])/1000)
-  			points(spawner.year[sel], index[sel]/1000, type="o", pch=18, lwd=2,
+  			points(spawner.year[sel], index[sel]/1000, type="o", pch=18, lwd=1,
           cex=mycex, col=blindcolz[col.spa])
   			axis(2, las=2, adj=1)
   			}
@@ -573,7 +623,7 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
   				xlim=range(year.tk), ylim=range(tfm.tk)/1000)
   			symbols(spawner.year[sel], tfmkgai[sel]/2000,
           rectangle=cbind(0.6, tfmkgai[sel]/1000),
-  				add=TRUE, inches=FALSE, fg="black", bg=blindcolz[col.tfm])
+  				add=TRUE, inches=FALSE, fg=col.fg, bg=blindcolz[col.tfm])
   			if (i==5) mtext("TFM kg AI\n(thousands)", side=4, line=4, cex=1.5*mycex)
   			axis(1, at=year.tk)
   			axis(4, las=2, adj=1, at=tfm.tk/1000)
@@ -586,7 +636,7 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
   			plot(spawner.year[sel], index[sel]/1000, type="n", axes=FALSE, xlab="",
           ylab="",
   				xlim=range(year.tk), ylim=c(0, maxindex$ylimmax[i])/1000)
-  			points(spawner.year[sel], index[sel]/1000, type="o", pch=18, lwd=2,
+  			points(spawner.year[sel], index[sel]/1000, type="o", pch=18, lwd=1,
           cex=mycex, col=blindcolz[col.spa])
   			axis(2, las=2, adj=1)
   			}
@@ -597,7 +647,7 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
   				xlim=range(year.tk), ylim=range(bayer.tk))
   			symbols(spawner.year[sel], bayerkgai[sel]/2,
           rectangle=cbind(0.6, bayerkgai[sel]),
-  				add=TRUE, inches=FALSE, fg="black", bg=blindcolz[col.bay])
+  				add=TRUE, inches=FALSE, fg=col.fg, bg=blindcolz[col.bay])
   			if (i==5) mtext("Bayer kg AI", side=4, line=4, cex=1.5*mycex)
   			axis(1, at=year.tk)
   			axis(4, las=2, adj=1, at=bayer.tk)
@@ -610,7 +660,7 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
   			plot(spawner.year[sel], index[sel]/1000, type="n", axes=FALSE, xlab="",
           ylab="",
   				xlim=range(year.tk), ylim=c(0, maxindex$ylimmax[i])/1000)
-  			points(spawner.year[sel], index[sel]/1000, type="o", pch=18, lwd=2,
+  			points(spawner.year[sel], index[sel]/1000, type="o", pch=18, lwd=1,
           cex=mycex, col=blindcolz[col.spa])
   			axis(2, las=2, adj=1)
   			}
@@ -673,7 +723,7 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
         " acceptable marking rates (")
       if(i==2) targphrase <- c("5/8.9 times the mean of indices (")
       if(i==3) targphrase <- c("0.25 times the mean of indices (")
-  		figu("Index estimates with 95% confidence intervals (vertical bars) of adult sea lampreys, including historic pre-control abundance (as a population estimate) and the three-year moving average (line). The population estimate scale (right vertical axis) is based on the index-to-PE conversion factor of ", index2pe[i], ". The adult index in ", YEAR, " was ", format(signif(index[sel.yr], 2), big.mark=","), " with 95% confidence interval (", format(signif(index.lo[sel.yr], 2), big.mark=","), "-", format(signif(index.hi[sel.yr], 2), big.mark=","), "). The three-year (", YEAR-2, "-", YEAR, ") average of ", format(signif(allsmry$index.3mn[i], 2), big.mark=","), c(" met", " was above")[(allsmry$index.3mn[i] > allsmry$index.target[i]) + 1], " the target of ", format(signif(allsmry$index.target[i], 2), big.mark=","), ".", " The index target was estimated as ", targphrase, targyrz[i], ").",
+  		figu("Index estimates with 95% confidence intervals (vertical bars) of adult sea lampreys, including historic pre-control abundance (as a population estimate) and the three-year moving average (line). The population estimate scale (right vertical axis) is based on the index-to-PE conversion factor of ", index2pe[i], ". The adult index in ", indexsmry$spawner.year[i], " was ", indexsmry$findex[i], " with 95% confidence interval (", indexsmry$findex.lo[i], "-", indexsmry$findex.hi[i], "). The three-year (", indexsmry$yrz[i], ") average of ", indexsmry$fmean3[i], c(" met", " was above")[(indexsmry$fmean3[i] > indexsmry$ftarget[i]) + 1], " the target of ", indexsmry$ftarget[i], ".", " The index target was estimated as ", targphrase, targyrz[i], ").",
   		  FIG=fig, h=2.64, w=3.96)
   		}
 
@@ -697,7 +747,7 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
     	  geom_point(aes(size=indexContrib, color=selbig), shape=1, stroke=2,
     	    na.rm=TRUE) +
     	  scale_size_continuous(range=c(1, 10)) +
-    	  scale_color_manual(values=unname(blindcolz[c(2, 6)])) +
+    	  scale_color_manual(values=c("FALSE"=unname(blindcolz)[2], "TRUE"=unname(blindcolz)[6])) +
     	  geom_label_repel(aes(label=strname), label.size=NA, segment.color=NA,
     	    fill=alpha(c("white"), 0.7), label.padding=0.01, point.padding=0.1) +
     	  ggmap::theme_nothing()
@@ -736,7 +786,7 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
   			lines(spawner.year[sel], rate.3mn[sel], col=blindcolz[col.wou])
   			arrows(spawner.year[sel], rate.lo[sel], spawner.year[sel], rate.hi[sel],
   				angle=90, length=0.02, code=3, col=blindcolz[col.wou])
-  			abline(h=allsmry$wound.target[i], col=blindcolz[col.tar])
+  			abline(h=ratesmry$ftarget[i], col=blindcolz[col.tar])
   			points(spawner.year[sel], rate[sel], pch=16, col=blindcolz[col.wou])
   			axis(1, at=year.tk)
   			axis(2, las=2, adj=1, at=wound.tk)
@@ -751,7 +801,7 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
   			  col.axis=blindcolz[col.wou], col.ticks=blindcolz[col.wou])
   			par(mgp=c(3, 1, 0))
   			}
-  		figu("Number of ", utarg, " marks per 100 lake trout > ", rep(c(532, 431), c(4, 1))[i], " mm from standardized assessments ", mark.time[i], " plotted against the sea lamprey spawning year, including the three-year moving average (line). The three-year (", YEAR-2, "-", YEAR, ") average marking rate of ", signif(allsmry$rate.3mn[i], 2), c(" met", " was above")[(allsmry$rate.3mn[i] > allsmry$wound.target[i]) + 1], " the target of ", allsmry$wound.target[i], " ", utarg, " marks per 100 lake trout > ", rep(c(532, 431), c(4, 1))[i], " mm (horizontal line). A second x-axis shows the year the lake trout were surveyed.",
+  		figu("Number of ", utarg, " marks per 100 lake trout > ", rep(c(532, 431), c(4, 1))[i], " mm from standardized assessments ", mark.time[i], "plotted against the sea lamprey spawning year, including the three-year moving average (line). The three-year (spawning years ", ratesmry$yrz[i], ") average marking rate of ", ratesmry$fmean3[i], c(" met", " was above")[(ratesmry$mean3[i] > ratesmry$target[i]) + 1], " the target of ", ratesmry$ftarget[i], " ", utarg, " marks per 100 lake trout > ", rep(c(532, 431), c(4, 1))[i], " mm (horizontal line). A second x-axis shows the year the lake trout were surveyed.",
   		  FIG=fig, h=2.64, w=3.96)
   		}
 
@@ -812,7 +862,7 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
   				ylim=range(days.tk)/100, xlab="", ylab="")
   			symbols(spawner.year[sel], staff.days[sel]/200,
           rectangle=cbind(0.6, staff.days[sel]/100),
-  				add=TRUE, inches=FALSE, fg="black", bg=blindcolz[col.day])
+  				add=TRUE, inches=FALSE, fg=col.fg, bg=blindcolz[col.day])
   			mtext("Control field days\n(hundreds)", side=4, line=3.5, cex=1.2*mycex)
   			axis(1, at=year.tk)
   			axis(4, las=2, adj=1, at=days.tk/100)
@@ -824,7 +874,9 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
   			par(new=TRUE)
   			plot(spawner.year[sel], index[sel]/1000, type="n", axes=FALSE,
   				xlim=range(year.tk), ylim=range(index.tk)/1000, xlab="", ylab="")
-  			lines(spawner.year[sel], index[sel]/1000, lwd=2, col=blindcolz[col.spa])
+  			points(spawner.year[sel], index[sel]/1000, pch=18,
+  			  col=blindcolz[col.spa])
+  			lines(spawner.year[sel], index[sel]/1000, lwd=1, col=blindcolz[col.spa])
   			axis(2, las=2, adj=1)
   			}
   		if (sum(!is.na(tfmkgai[sel]))>0) {
@@ -833,7 +885,7 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
   				ylim=range(tfm.tk)/1000, xlab="", ylab="")
   			symbols(spawner.year[sel], tfmkgai[sel]/2000,
           rectangle=cbind(0.6, tfmkgai[sel]/1000),
-  				add=TRUE, inches=FALSE, fg="black", bg=blindcolz[col.tfm])
+  				add=TRUE, inches=FALSE, fg=col.fg, bg=blindcolz[col.tfm])
   			mtext("TFM kg AI\n(thousands)", side=4, line=3.5, cex=1.2*mycex)
   			axis(1, at=year.tk)
   			axis(4, las=2, adj=1, at=tfm.tk/1000)
@@ -845,7 +897,9 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
   			par(new=TRUE)
   			plot(spawner.year[sel], index[sel]/1000, type="n", axes=FALSE,
   				xlim=range(year.tk), ylim=range(index.tk)/1000, xlab="", ylab="")
-  			lines(spawner.year[sel], index[sel]/1000, lwd=2, col=blindcolz[col.spa])
+  			points(spawner.year[sel], index[sel]/1000, pch=18,
+  			  col=blindcolz[col.spa])
+  			lines(spawner.year[sel], index[sel]/1000, lwd=1, col=blindcolz[col.spa])
   			axis(2, las=2, adj=1)
   			}
   		if (sum(!is.na(bayerkgai[sel]))>0) {
@@ -854,7 +908,7 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
   				ylim=range(bayer.tk), xlab="", ylab="")
   			symbols(spawner.year[sel], bayerkgai[sel]/2,
           rectangle=cbind(0.6, bayerkgai[sel]),
-  				add=TRUE, inches=FALSE, fg="black", bg=blindcolz[col.bay])
+  				add=TRUE, inches=FALSE, fg=col.fg, bg=blindcolz[col.bay])
   			mtext("Bayer kg AI", side=4, line=3.5, cex=1.2*mycex)
   			axis(1, at=year.tk)
   			axis(4, las=2, adj=1, at=bayer.tk)
@@ -866,7 +920,9 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
   			par(new=TRUE)
   			plot(spawner.year[sel], index[sel]/1000, type="n", axes=FALSE,
   				xlim=range(year.tk), ylim=range(index.tk)/1000, xlab="", ylab="")
-  			lines(spawner.year[sel], index[sel]/1000, lwd=2, col=blindcolz[col.spa])
+  			points(spawner.year[sel], index[sel]/1000, pch=18,
+  			  col=blindcolz[col.spa])
+  			lines(spawner.year[sel], index[sel]/1000, lwd=1, col=blindcolz[col.spa])
   			axis(2, las=2, adj=1)
   			}
   		mtext("Spawning year", side=1, outer=TRUE, cex=1.2*mycex)
@@ -874,7 +930,7 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
         cex=1.2*mycex)
   		}
   	figu("Index of adult sea lampreys (blue lines) and number of control field days (orange bars), TFM used (kg active ingredient; yellow bars), and Bayluscide used (kg active ingredient; purple bars). Field days, TFM, and Bayluscide are offset by 2 years (e.g., field days, TFM, and Bayluscide applied during 1985 is plotted on the 1987 spawning year, when the treatment effect would first be observed in adult sea lamprey populations).",
-  	  FIG=fig, h=6, w=3.24)
+  	  FIG=fig, h=6, w=3.96)
 
   	para("* Treatment bullet points ...")
   	para(" ")

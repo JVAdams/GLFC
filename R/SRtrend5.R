@@ -41,7 +41,7 @@ SRtrend5 <- function(df, x, group, time, lasttime=NULL) {
   df2$Ftime <- df[[time]]
   look <- tidyr::complete(df2, Fgroup, Ftime=full_seq(Ftime, 1))
   if(is.null(lasttime)) {
-    lasttime <- max(look$Ftime)
+    lasttime <- max(look$Ftime[!is.na(look$Fx)])
   }
   sub <- look %>%
     filter(

@@ -79,7 +79,8 @@ DWEFerror <- function(Dir, Catch, Lengths, Continue, Source=NULL) {
 
   # table of input files
   tab <- cbind(Source[c("CatchFile", "LengthsFile", "PlotsFile")],
-    c("Catches", "Lengths", "Treated Hotspots"))
+    c("Current year catches", "Current year lengths",
+      "Current year treated hotspots"))
   dimnames(tab) <- list(NULL, c("File", "Information"))
   tabl("Input files used.", row.names=FALSE, TAB=tab)
 
@@ -88,18 +89,21 @@ DWEFerror <- function(Dir, Catch, Lengths, Continue, Source=NULL) {
   catchout.file.name <- paste0(YEAR, "-CatchesSMR.csv")
   lengthout.file.name <- paste0(YEAR, "-LengthsSMR.csv")
   bpestout.file.name <- paste0(YEAR, "-BPlotEstsSMR.csv")
-  catch.all.name <- paste0(YEAR, "-CatchALL-", Sys.Date(), ".csv")
-  length.all.name <- paste0(YEAR, "-LengthALL-", Sys.Date(), ".csv")
-  plot.all.name <- paste0(YEAR, "-BPlotEstsALL-", Sys.Date(), ".csv")
-  pe.all.name <- paste0(YEAR, "-WholeRiverEsts-", Sys.Date(), ".csv")
+  catch.all.name <- paste0(Sys.Date(), "-CatchALL.csv")
+  length.all.name <- paste0(Sys.Date(), "-LengthALL.csv")
+  plot.all.name <- paste0(Sys.Date(), "-BPlotEstsALL.csv")
+  pe.all.name <- paste0(Sys.Date(), "-RiverEstsALL.csv")
   outfilenames <- c(catchout.file.name, lengthout.file.name, bpestout.file.name,
     catch.all.name, length.all.name, plot.all.name, pe.all.name)
   if(Continue) {
     tab <- cbind(
       c(docname, outfilenames),
-      c("This Document", "Catches", "Lengths", "Hotspot Estimates",
-        "Updated Historic Catches", "Updated Historic Lengths",
-        "Updated Plot Estimates", "Updated Whole River PEs"))
+      c("Current year report, this document",
+        "Current year catches used in estimation",
+        "Current year lengths used in estimation",
+        "Current year hotspot estimates",
+        "Updated historic catches", "Updated historic lengths",
+        "Updated historic plot estimates", "Updated historic river estimates"))
   } else {
     tab <- cbind(docname, "This Document")
   }

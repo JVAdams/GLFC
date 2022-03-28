@@ -15,9 +15,9 @@ You can access the functions by installing the package from within R.
 
 - - -
 
-_U.S. Geological Survey_ (USGS) Computer Program **GLFC** version 1.6.0.9000. 
+_U.S. Geological Survey_ (USGS) Computer Program **GLFC** version 1.6.1.9000. 
 Written by Jean V. Adams, [USGS - Great Lakes Science Center](http://www.glsc.usgs.gov/), Ann Arbor, Michigan, USA. 
-Written in programming language R (R Core Team, 2021, www.R-project.org), version 4.1.0. 
+Written in programming language R (R Core Team, 2022, www.R-project.org), version 4.1.3. 
 Run on a PC with Intel(R) Core(TM) i7-7600U CPU, 2.80 GHz processor, 16.0 GB RAM, and Microsoft Windows 10 Enterprise operating system. 
 Source code is available from Jean V. Adams on [GitHub](https://github.com/JVAdams/GLFC), _jvadams (at) usgs (dot) gov_.
 

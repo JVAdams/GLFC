@@ -3,7 +3,6 @@
 #' Carry out a series of steps in the Adult Index estimation process in one
 #' fell swoop.  This function prepares and error checks the data, estimates
 #' the Adult Index, calculates the targets, and generates a draft report.
-#'
 #' @param DIRECTORY
 #'   A character scalar identifying the path where the csv files are
 #'   stored, e.g., \code{DIRECTORY = "C:\\\\temp\\\\mydir"}.
@@ -88,7 +87,6 @@ AIpresto <- function(DIRECTORY, NEWDATARAW, STREAMDATAPREV, LAKEDATAPREV) {
   new <- read.csv(paste(DIRECTORY, NEWDATARAW, sep="\\"), as.is=TRUE)
 
   YEAR <- max(new$year)
-  STREAMDATANEW <- paste0("AdultStream", YEAR, ".csv")
 
   # create some information tables for inclusion in error report
 
@@ -97,7 +95,7 @@ AIpresto <- function(DIRECTORY, NEWDATARAW, STREAMDATAPREV, LAKEDATAPREV) {
   dins <- paste(DIRECTORY, ins, sep="\\")
   finfo <- lapply(dins, function(x) file.info(x)$mtime)
   tabinfiles <- as.matrix(data.frame(
-    inputs=c("LAKEDATAPREV", "STREAMDATAPREV", "STREAMDATANEW"),
+    inputs=c("LAKEDATAPREV", "STREAMDATAPREV", "NEWDATARAW"),
     files=ins, date.modified=do.call(c, finfo)))
   tabinfiles <- apply(tabinfiles, 2, format)
 
@@ -112,7 +110,7 @@ AIpresto <- function(DIRECTORY, NEWDATARAW, STREAMDATAPREV, LAKEDATAPREV) {
     "Index and maintained trapping streams for adult sea lamprey."=tabstreams)
 
   # prepare the data for error checking & estimation
-  stream1 <- AIprep(csvDir=DIRECTORY, csvNew=STREAMDATANEW,
+  stream1 <- AIprep(csvDir=DIRECTORY, csvNew=NEWDATARAW,
     csvOld=STREAMDATAPREV)
   lake1 <- read.csv(paste(DIRECTORY, LAKEDATAPREV, sep="\\"), as.is=TRUE,
     header=TRUE)
@@ -166,6 +164,7 @@ AIpresto <- function(DIRECTORY, NEWDATARAW, STREAMDATAPREV, LAKEDATAPREV) {
 
 
   #### Export Data ####
+  STREAMDATANEW <- paste0("AdultStream", YEAR, ".csv")
   OUTSTREAM <- paste0("AdultStreamThru", YEAR, ".csv")
   OUTLAKE <- paste0("AdultLakeThru", YEAR, ".csv")
   OUTTARG <- paste0("AdultTarget", YEAR, ".csv")
