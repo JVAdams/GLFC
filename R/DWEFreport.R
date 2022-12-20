@@ -42,6 +42,20 @@
 #'   whole river population output csv files.  Note that updates to the whole
 #'   river population files assume post-treatment sampling only, other
 #'   situations will yield missing values for estimates.
+#' @param yrz.f
+#'   A character scalar listing the years on which the parameters \code{mu.f}
+#'   and \code{sigma.f} (upper river to whole river expansion factors) are
+#'   based.
+#' @param mu.f
+#'   A numeric scalar representing the upper-to-whole river expansion factor
+#'   based on the average ratio of mean larval densities from the whole river to
+#'   the upper river from all the years that the lower St. Marys River was
+#'   sampled.
+#' @param sigma.f
+#'   A numeric scalar representing the upper-to-whole river expansion factor
+#'   based on the average ratio of the standard deviation of the larval
+#'   densities from the whole river to the upper river from all the years that
+#'   the lower St. Marys River was sampled.
 #' @param StratArea
 #'   Data frame with three variables: \code{inbplot} indicating whether the
 #'   stratum is in (=1) a high larval density area or not (=0), \code{region}
@@ -71,8 +85,10 @@
 #' @export
 
 DWEFreport <- function(Dir, CatchClean, LengthsClean, Plots, CatHist, LenHist,
-  PlotHist, PEHist, Downstream, Errors, Outfiles, StratArea=SMRStratArea,
-  bkill=0.75) {
+  PlotHist, PEHist, Downstream, Errors, Outfiles,
+  yrz.f="2002, 2003, 2008, 2012, 2017, and 2022",
+  mu.f=0.560772823, sigma.f=0.492926007,
+  StratArea=SMRStratArea, bkill=0.75) {
 
 # Dir <- mydat$SOURCE["Dir"]
 # CatchClean <- myclean$CAT2
@@ -121,8 +137,7 @@ DWEFreport <- function(Dir, CatchClean, LengthsClean, Plots, CatHist, LenHist,
 
   heading(paste0("TITLE:  Draft Results of St. Marys River Larval Assessment ",
     YEAR), 2)
-  para("AUTHORS:  (Your name here), Adams, and (any others you think should be",
-    " included)")
+  para("AUTHORS:  (List names here)")
   para("DATE:  ", TODAY)
 
   # reset table and figure counts
@@ -167,9 +182,9 @@ DWEFreport <- function(Dir, CatchClean, LengthsClean, Plots, CatHist, LenHist,
   } else {
     uponly <- TRUE
     # these expansion factors are based on means from source.years
-    source.years <- "2002, 2003, 2008, 2012, and 2017"
-    muf <- 0.570202977
-    sigf <- 0.517269331
+    source.years <- yrz.f
+    muf <- mu.f
+    sigf <- sigma.f
     last.year <- rev(strsplit(source.years, " ")[[1]])[1]
     para("The larval sea lamprey survey in ", YEAR,
       " included only the upper river (", nupper,

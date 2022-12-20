@@ -110,12 +110,12 @@ AIreport <- function(streamPEs, lakeIPEs, targets, csvDir, outFile=NULL,
         abline(h=targets$targInd[j]/1000, lty=2)
         if(!is.null(proptargets)) {
           abline(h=proptargets$targInd[proptargets$lake==j]/1000,
-            col="gray", lwd=2, lty=2)
+            col="darkgray", lwd=2, lty=2)
         }
         lines(year[sel], index.3mn[sel]/1000, col="#fb8072", lwd=2)
         arrows(year[sel], ilo[sel]/1000, year[sel], ihi[sel]/1000, length=0.03,
-          angle=90, code=3, col="lightgray")
-        points(year[sel], index[sel]/1000, col="darkgray")
+          angle=90, code=3, col="darkgray")
+        points(year[sel], index[sel]/1000)
         p4 <- pretty(k[i]*c(0, mymax))
         axis(4, at=p4/k[i], labels=p4, las=1)
         if (i==1) {
@@ -177,7 +177,7 @@ AIreport <- function(streamPEs, lakeIPEs, targets, csvDir, outFile=NULL,
     par(mar=c(0, 0, 0, 0))
     maps::map("world", type="n", xlim=xr + c(-1, 1)*bufx,
       ylim=yr + c(-magic, 1)*bufy, mar=c(0, 0, 0, 0))
-    maps::map("lakes", col="gray", lwd=0.5, add=TRUE)
+    maps::map("lakes", col="cyan", add=TRUE)
     pusr <- par("usr")
     with(df, {
       textx <- rep(NA, dim(df)[1])

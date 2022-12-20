@@ -16,6 +16,9 @@ DWEFreport(
   Downstream,
   Errors,
   Outfiles,
+  yrz.f = "2002, 2003, 2008, 2012, 2017, and 2022",
+  mu.f = 0.560772823,
+  sigma.f = 0.492926007,
   StratArea = SMRStratArea,
   bkill = 0.75
 )
@@ -60,6 +63,20 @@ and plot output csv files, and the updated catch, lengths, plot, and
 whole river population output csv files.  Note that updates to the whole
 river population files assume post-treatment sampling only, other
 situations will yield missing values for estimates.}
+
+\item{yrz.f}{A character scalar listing the years on which the parameters \code{mu.f}
+and \code{sigma.f} (upper river to whole river expansion factors) are
+based.}
+
+\item{mu.f}{A numeric scalar representing the upper-to-whole river expansion factor
+based on the average ratio of mean larval densities from the whole river to
+the upper river from all the years that the lower St. Marys River was
+sampled.}
+
+\item{sigma.f}{A numeric scalar representing the upper-to-whole river expansion factor
+based on the average ratio of the standard deviation of the larval
+densities from the whole river to the upper river from all the years that
+the lower St. Marys River was sampled.}
 
 \item{StratArea}{Data frame with three variables: \code{inbplot} indicating whether the
 stratum is in (=1) a high larval density area or not (=0), \code{region}

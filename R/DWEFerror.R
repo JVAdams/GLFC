@@ -217,20 +217,27 @@ DWEFerror <- function(Dir, Catch, Lengths, Continue, Source=NULL) {
       keep <- rbind(keep, c(i, j))
       }
     }}
+  lessthan30=0
   if(dim(keep)[1] > 0) {
     for(i in 1:dim(keep)[1]) {
       tab <- smr2[keep[i, ], printvars]
       dist.in.m <- geosphere::geodesic_inverse(smr2[keep[i, 1],
         c("longitude", "latitude")],
         smr2[keep[i, 2], c("longitude", "latitude")])[, "distance"]
-      errors <- append(errors, paste("Table", GLFCenv$tabcount))
-      tabl(paste0("These two samples are very close together (",
-        round(dist.in.m),
-        " m).  Check to see if the same site was sampled twice."),
-        row.names=FALSE, TAB=tab)
+      if(dist.in.m < 30) {
+        lessthan30 <- lessthan30 + 1
+        errors <- append(errors, paste("Table", GLFCenv$tabcount))
+        tabl(paste0("These two samples are very close together (",
+          round(dist.in.m),
+          " m).  Check to see if the same site was sampled twice."),
+          row.names=FALSE, TAB=tab)
+        }
       }
-    }
-  rm(n, keep, i, j)
+  }
+  if((dim(keep)[1] <= 0) | (lessthan30<1)) {
+    para("A test of proximity was applied to all the sample locations. None were within 30 m of each other.")
+  }
+  rm(n, keep, i, j, lessthan30)
 
   tab <- with(smr2, smr2[depth>50 | depth<1, printvars])
   if(dim(tab)[1]>0) {
