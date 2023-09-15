@@ -177,7 +177,7 @@ AIreport <- function(streamPEs, lakeIPEs, targets, csvDir, outFile=NULL,
     par(mar=c(0, 0, 0, 0))
     maps::map("world", type="n", xlim=xr + c(-1, 1)*bufx,
       ylim=yr + c(-magic, 1)*bufy, mar=c(0, 0, 0, 0))
-    maps::map("lakes", col="cyan", add=TRUE)
+    maps::map("lakes", col="blue2", add=TRUE, fill=TRUE)
     pusr <- par("usr")
     with(df, {
       textx <- rep(NA, dim(df)[1])
