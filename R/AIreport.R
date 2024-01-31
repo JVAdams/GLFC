@@ -85,7 +85,7 @@ AIreport <- function(streamPEs, lakeIPEs, targets, csvDir, outFile=NULL,
   look$index.3mn <- ifelse(look$nrun<2, NA, fullrun3)
   lakeIPEs <- look
 
-  # create nice looking table with latest year of estimates and targets
+  # Table 1: create nice looking table with latest year of estimates and targets
   targ2 <- lakeIPEs %>%
     filter(year==YEAR) %>%
     full_join(targets) %>%
@@ -97,7 +97,7 @@ AIreport <- function(streamPEs, lakeIPEs, targets, csvDir, outFile=NULL,
     select(Lake, index, index.3mn, Target=targInd, Status)
   TAB.targs <- prettytable(as.data.frame(targ2), 0)
 
-  # plot lake-wide totals w/ confidence intervals on different scales
+  # Figure 1: plot lake-wide totals w/ confidence intervals on different scales
   FIG.lakeCI <- function(lakeids=1:5, k=index2pe) {
     with(lakeIPEs, {
       par(mfrow=c(3, 2), mar=c(3, 3, 2, 3), oma=c(2, 2, 0, 2), cex=1)
@@ -134,7 +134,7 @@ AIreport <- function(streamPEs, lakeIPEs, targets, csvDir, outFile=NULL,
   streamPEs$categ[with(streamPEs, index & !is.na(PEmr))] <-
     "Index w/ mark-recap"
   streamPEs$categ[with(streamPEs, index & is.na(PEmr))] <-
-    "Index w/o mark-recap"
+    "Modeled - Index w/o mark-recap"
 
   streamPEs$cle <- with(streamPEs,
     paste(casefold(substring(country, 1, 2), upper=TRUE),
@@ -148,7 +148,7 @@ AIreport <- function(streamPEs, lakeIPEs, targets, csvDir, outFile=NULL,
 #     group="categ"
 #     var="indexContrib"
 #     lab="cleplus"
-#     sug=c("Index w/ mark-recap", "Index w/o mark-recap", "Non-index")
+#     sug=c("Index w/ mark-recap", "Modeled - Index w/o mark-recap", "Non-index")
 #     cols=blindcolz[1+(1:length(sug))]
 #     legat="topright"
 #     leginset=c(0, 0)
@@ -177,7 +177,7 @@ AIreport <- function(streamPEs, lakeIPEs, targets, csvDir, outFile=NULL,
     par(mar=c(0, 0, 0, 0))
     maps::map("world", type="n", xlim=xr + c(-1, 1)*bufx,
       ylim=yr + c(-magic, 1)*bufy, mar=c(0, 0, 0, 0))
-    maps::map("lakes", col="cyan", add=TRUE)
+    maps::map("lakes", col="deepskyblue", add=TRUE, fill=TRUE)
     pusr <- par("usr")
     with(df, {
       textx <- rep(NA, dim(df)[1])
@@ -205,10 +205,10 @@ AIreport <- function(streamPEs, lakeIPEs, targets, csvDir, outFile=NULL,
     FIG.bubble1(
       df=streamPEs[streamPEs$year==YEAR & streamPEs$categ!="Non-index", ],
       group="categ", var="indexContrib", lab="cleplus",
-      sug=c("Index w/ mark-recap", "Index w/o mark-recap"))
+      sug=c("Index w/ mark-recap", "Modeled - Index w/o mark-recap"))
   }
 
-  ### bar plot of individual index stream PEs
+  ### Figure 2: bar plot of individual index stream PEs
   outcex <- 1.2
   YEARb <- 1995
   col7 <- c("#8dd3c7", "#ffffb3", "#bebada", "#fb8072", "#80b1d3", "#fdb462",
@@ -329,7 +329,7 @@ names(prettyTAB.targs) <- c(
   "Target",
   "Status")
 
-  tabl("The judgement of whether a lake is above target is based on the mean adult index over the last 3 years.",
+  tabl("The Status of whether a lake is above target is based on the mean adult index over the last 3 years.",
     TAB=prettyTAB.targs)
 
   extraphrase <- ""
@@ -337,23 +337,28 @@ names(prettyTAB.targs) <- c(
     extraphrase <- "  Dashed horizontal lines represent proposed targets."
   }
 
-  figu("Adult index values for each Great Lake through ", YEAR, ", with 3-year averages shown as red lines.  Individual estimates with 95% confidence intervals are shown in gray.  Targets are represented by the horizontal lines.", extraphrase,
+  #Figure 1 caption
+  figu("Adult index values for each Great Lake through ", YEAR, ", with 3-year averages shown as red lines.  Individual estimates with 95% confidence intervals are shown in gray.  Targets are represented by the dashed horizontal lines.", extraphrase,
     FIG=FIG.lakeCI, newpage="port")#, w=6.5, h=7.5)
 
   TAB.lakewide1 <- with(lakeIPEs, tapply(index, list(year, lake), mean))
   colnames(TAB.lakewide1) <- Lakenames
-  tabl("Adult Indices, 1985-", YEAR, ".",
+  #Table 2 caption
+  tabl("Adult Indices, 1985-", YEAR, ". NA indicates that an index was not available due to insufficient recaptures of marked sea lamprey.",
     TAB=prettytable(TAB.lakewide1, 0))
 
   TAB.lakewide2 <- with(lakeIPEs, tapply(pe, list(year, lake), mean))
   colnames(TAB.lakewide2) <- Lakenames
-  tabl("Lake-wide adult sea lamprey abundances, 1985-", YEAR, ", which are based on the adult index estimates multiplied by lake-specific conversion factors (", paste(names(index2pe), as.numeric(index2pe), collapse=", "), ").",
+  #Table 3 caption
+  tabl("Lake-wide adult sea lamprey abundances, 1985-", YEAR, ", which are based on the adult index estimates multiplied by lake-specific conversion factors (", paste(names(index2pe), as.numeric(index2pe), collapse=", "), ").  NA indicates that an index was not available due to insufficient recaptures of marked sea lamprey.",
     TAB=prettytable(TAB.lakewide2, -3), newpage="port")
 
-  figu("Adult sea lamprey abundance estimates for index streams.  Targets are represented by the horizontal lines.", extraphrase,
+  #Figure 2 caption
+  figu("Adult sea lamprey abundance estimates for index streams.  Targets are represented by the horizontal black lines. Streams may not always have an estimate in all years due to insufficient recaptures of marked sea lamprey.", extraphrase,
     FIG=FIG.bar, newpage="port", w=6, h=7.5)
 
-  figu("Relative size of adult sea lamprey population estimates (PEs) in Great Lakes index streams, ", YEAR, ".  Circle size represents size of PE, circle color represents the source of PE.",
+  #Figure 3 caption
+  figu("Relative size of adult sea lamprey population estimates in Great Lakes index streams, ", YEAR, ".  Circle size represents size of population estimate, circle color represents the method of index calculation.",
     FIG=FIG.bubble2, newpage="land", h=5.7)
 
 

@@ -1,6 +1,9 @@
 GLFC
 ====
 
+note teds repo 
+
+
 **GLFC** is a package of functions developed for the [Great Lakes Fishery Commission](http://www.glfc.org/)'s sea lamprey control program using the [R programming language](http://www.r-project.org/).
 
 An example of how to use the functions in **GLFC** to estimate indices of adult sea lamprey abundance in the Great Lakes is given in this [vignette](https://rawgit.com/JVAdams/GLFC/master/vignettes/Adult-Index.html).

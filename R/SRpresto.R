@@ -249,7 +249,7 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
 
 
 
-  #### Targets ####
+  #### Targets - this makes the StatusTargets.csv file ####
   sptargyrz <- list(1994:1998, 1988:1992, 1989:1993, 1991:1995, 1993:1997)
   sptargyrz <- list(1994:1998, 1995:1999, 1989:1993, 1991:1995, 1993:1997)
   TARGET <- data.frame(lake=1:5, wound.target=rep(c(5, 2), c(4, 1)),
@@ -271,7 +271,7 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
 
 
 
-  #### bubble maps - adult estimates and maximum larval estimates ####
+  #### bubble maps - adult estimates and maximum larval estimates, Fig 2 in current reports####
 
   # adult data
   stream <- read.csv(paste0(FOLDER, INDEX.STREAM))
@@ -314,7 +314,7 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
 
 
 
-  #### All lakewide data combined ####
+  #### All lakewide data combined, this makes the StatusMetrics.csv file ####
   a <- merge(adult, control, all=TRUE)
   ALL <- merge(a, trout, all=TRUE)
   ALL$treat.year <- ALL$spawner.year - 2
