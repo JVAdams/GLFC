@@ -271,7 +271,7 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
 
 
 
-  #### bubble maps - adult estimates and maximum larval estimates ####
+  #### bubble maps - adult estimates and maximum larval estimates, Fig 2 in current reports####
 
   # adult data
   stream <- read.csv(paste0(FOLDER, INDEX.STREAM))
