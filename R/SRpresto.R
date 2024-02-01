@@ -118,14 +118,14 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
 
   #### Functions and vectors that will be used later ####
 
-  # color-blind friendly colors
-  col.spa <- 6 # blue
-  col.day <- 2 # orange
-  col.tar <- 1 # black
-  col.tfm <- 5 # yellow
-  col.bay <- 8 # reddish purple
-  col.trt <- 3 # sky blue
-  col.wou <- 4 # bluish green
+  # color-blind friendly colors for plots
+  col.spa <- 6 # blue, for spawner numbers
+  col.day <- 7 # vermillion, for staff days, changed from 2 (orange)
+  col.tar <- 1 # black, for target lines
+  col.tfm <- 2 # orange, for TFM use, changed from 5 (yellow) as it was too hard to see
+  col.bay <- 8 # reddish purple, for Bayluscide use
+  col.trt <- 3 # sky blue, for lake trout abundance
+  col.wou <- 4 # bluish green, for lake trout wounding rates
   col.fg <- "white" # color of bar plot outlines
 
   # aspect ratios for lake maps, height/width
