@@ -596,7 +596,7 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
           xlab="", ylab="",
   				xlim=range(year.tk), ylim=range(days.tk)/100)
   			symbols(spawner.year[sel], staff.days[sel]/200,
-          rectangle=cbind(0.6, staff.days[sel]/100),
+          rectangle=cbind(0.8, staff.days[sel]/100),
   				add=TRUE, inches=FALSE, fg=col.fg, bg=blindcolz[col.day])
   			if (i==5) mtext("Control field days\n(hundreds)", side=4, line=4,
           cex=1.5*mycex)
@@ -622,7 +622,7 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
           ylab="",
   				xlim=range(year.tk), ylim=range(tfm.tk)/1000)
   			symbols(spawner.year[sel], tfmkgai[sel]/2000,
-          rectangle=cbind(0.6, tfmkgai[sel]/1000),
+          rectangle=cbind(0.8, tfmkgai[sel]/1000),
   				add=TRUE, inches=FALSE, fg=col.fg, bg=blindcolz[col.tfm])
   			if (i==5) mtext("TFM kg AI\n(thousands)", side=4, line=4, cex=1.5*mycex)
   			axis(1, at=year.tk)
@@ -646,7 +646,7 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
           ylab="",
   				xlim=range(year.tk), ylim=range(bayer.tk))
   			symbols(spawner.year[sel], bayerkgai[sel]/2,
-          rectangle=cbind(0.6, bayerkgai[sel]),
+          rectangle=cbind(0.8, bayerkgai[sel]),
   				add=TRUE, inches=FALSE, fg=col.fg, bg=blindcolz[col.bay])
   			if (i==5) mtext("Bayer kg AI", side=4, line=4, cex=1.5*mycex)
   			axis(1, at=year.tk)
@@ -861,7 +861,7 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
           xlim=range(year.tk),
   				ylim=range(days.tk)/100, xlab="", ylab="")
   			symbols(spawner.year[sel], staff.days[sel]/200,
-          rectangle=cbind(0.6, staff.days[sel]/100),
+          rectangle=cbind(0.8, staff.days[sel]/100),
   				add=TRUE, inches=FALSE, fg=col.fg, bg=blindcolz[col.day])
   			mtext("Control field days\n(hundreds)", side=4, line=3.5, cex=1.2*mycex)
   			axis(1, at=year.tk)
@@ -884,7 +884,7 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
           xlim=range(year.tk),
   				ylim=range(tfm.tk)/1000, xlab="", ylab="")
   			symbols(spawner.year[sel], tfmkgai[sel]/2000,
-          rectangle=cbind(0.6, tfmkgai[sel]/1000),
+          rectangle=cbind(0.8, tfmkgai[sel]/1000),
   				add=TRUE, inches=FALSE, fg=col.fg, bg=blindcolz[col.tfm])
   			mtext("TFM kg AI\n(thousands)", side=4, line=3.5, cex=1.2*mycex)
   			axis(1, at=year.tk)
@@ -907,7 +907,7 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
           xlim=range(year.tk),
   				ylim=range(bayer.tk), xlab="", ylab="")
   			symbols(spawner.year[sel], bayerkgai[sel]/2,
-          rectangle=cbind(0.6, bayerkgai[sel]),
+          rectangle=cbind(0.8, bayerkgai[sel]),
   				add=TRUE, inches=FALSE, fg=col.fg, bg=blindcolz[col.bay])
   			mtext("Bayer kg AI", side=4, line=3.5, cex=1.2*mycex)
   			axis(1, at=year.tk)
