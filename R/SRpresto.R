@@ -612,7 +612,7 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
   			plot(spawner.year[sel], index[sel]/1000, type="n", axes=FALSE, xlab="",
           ylab="",
   				xlim=range(year.tk), ylim=c(0, maxindex$ylimmax[i])/1000)
-  			points(spawner.year[sel], index[sel]/1000, type="o", pch=18, lwd=1,
+  			points(spawner.year[sel], index[sel]/1000, type="o", pch=18, lwd=2,
           cex=mycex, col=blindcolz[col.spa])
   			axis(2, las=2, adj=1)
   			}
@@ -636,7 +636,7 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
   			plot(spawner.year[sel], index[sel]/1000, type="n", axes=FALSE, xlab="",
           ylab="",
   				xlim=range(year.tk), ylim=c(0, maxindex$ylimmax[i])/1000)
-  			points(spawner.year[sel], index[sel]/1000, type="o", pch=18, lwd=1,
+  			points(spawner.year[sel], index[sel]/1000, type="o", pch=18, lwd=2,
           cex=mycex, col=blindcolz[col.spa])
   			axis(2, las=2, adj=1)
   			}
@@ -660,7 +660,7 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
   			plot(spawner.year[sel], index[sel]/1000, type="n", axes=FALSE, xlab="",
           ylab="",
   				xlim=range(year.tk), ylim=c(0, maxindex$ylimmax[i])/1000)
-  			points(spawner.year[sel], index[sel]/1000, type="o", pch=18, lwd=1,
+  			points(spawner.year[sel], index[sel]/1000, type="o", pch=18, lwd=2,
           cex=mycex, col=blindcolz[col.spa])
   			axis(2, las=2, adj=1)
   			}
