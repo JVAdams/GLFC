@@ -876,7 +876,7 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
   				xlim=range(year.tk), ylim=range(index.tk)/1000, xlab="", ylab="")
   			points(spawner.year[sel], index[sel]/1000, pch=18,
   			  col=blindcolz[col.spa])
-  			lines(spawner.year[sel], index[sel]/1000, lwd=1, col=blindcolz[col.spa])
+  			lines(spawner.year[sel], index[sel]/1000, lwd=2, col=blindcolz[col.spa])
   			axis(2, las=2, adj=1)
   			}
   		if (sum(!is.na(tfmkgai[sel]))>0) {
@@ -899,7 +899,7 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
   				xlim=range(year.tk), ylim=range(index.tk)/1000, xlab="", ylab="")
   			points(spawner.year[sel], index[sel]/1000, pch=18,
   			  col=blindcolz[col.spa])
-  			lines(spawner.year[sel], index[sel]/1000, lwd=1, col=blindcolz[col.spa])
+  			lines(spawner.year[sel], index[sel]/1000, lwd=2, col=blindcolz[col.spa])
   			axis(2, las=2, adj=1)
   			}
   		if (sum(!is.na(bayerkgai[sel]))>0) {
@@ -922,7 +922,7 @@ SRpresto <- function(FOLDER, INDEX.LAKE, INDEX.STREAM, MAXLARVAE,
   				xlim=range(year.tk), ylim=range(index.tk)/1000, xlab="", ylab="")
   			points(spawner.year[sel], index[sel]/1000, pch=18,
   			  col=blindcolz[col.spa])
-  			lines(spawner.year[sel], index[sel]/1000, lwd=1, col=blindcolz[col.spa])
+  			lines(spawner.year[sel], index[sel]/1000, lwd=2, col=blindcolz[col.spa])
   			axis(2, las=2, adj=1)
   			}
   		mtext("Spawning year", side=1, outer=TRUE, cex=1.2*mycex)
